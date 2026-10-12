@@ -3,7 +3,7 @@
 This file only adds what the official pen.dev skill does not say, or says in a place that is easy to miss. It never restates the API: read the official files first (`mcp__pencil__read_skill()` → `SKILL.md`, `pen-schema.md`, `execute.md`; `generate.md` before any `Generate`; `guide/components.md` before building Subs). "Official" lines point to the file and section to open. Items marked *observed* were found on real canvases and are not in the official docs.
 
 ## Contents
-1. Metadata is only kept at creation · 2. `Replace` on a normal layer · 3. Instances drop metadata · 4. Invalid fonts · 5. Translucent colours · 6. `Generate` is async · 7. No wrap · 8. Invisible text · 9. One scope per call · 10. Placement · 11. Failed `execute` · 12. Multiplayer · 13. `fit_content` / `fill_container` loop · 14. Screenshot discipline · 15. Variable opacity · 16. Hidden layers count as clipped · 17. Copied state frames lose frame props · 18. Transparent and dark-scoped overrides · 19. Opacity-0 empty states · 20. Insert index · 21. Copied anim ids, backdrop instances
+1. Metadata is only kept at creation · 2. `Replace` on a normal layer · 3. Instances drop metadata · 4. Invalid fonts · 5. Translucent colours · 6. `Generate` is async · 7. No wrap · 8. Invisible text · 9. One scope per call · 10. Placement · 11. Failed `execute` · 12. Multiplayer · 13. `fit_content` / `fill_container` loop · 14. Screenshot discipline · 15. Variable opacity · 16. Hidden layers count as clipped · 17. Copied state frames lose frame props · 18. Transparent and dark-scoped overrides · 19. Opacity-0 empty states · 20. Insert index · 21. Copied anim ids, backdrop instances · 22. Strikethrough not stored · 23. Moving layers in a master drops overrides
 
 ## 1. Metadata is only kept at creation *(observed)*
 - **Symptom:** `Update(id, {metadata:{…}})` returns without error, but a later `Get` shows the old or no metadata; CHK `rootmeta`, `anim` or `textclass` fails on a layer you "fixed".
@@ -128,3 +128,12 @@ This file only adds what the official pen.dev skill does not say, or says in a p
 - **Fix:**
   - Re-key copied ids to the target unit's own plan ids in the same call.
   - Leave backdrop refs untouched: CHK `anim` (`foreign`) and the manifest dump skip them by id (02 §5b).
+
+## 22. `strikethrough` / `underline` are not stored *(observed)*
+- **Symptom:** `Update(id, {strikethrough: true})` returns OK, but a later `Get` shows no such key and the compare price renders without a line. Inserting a new text with `strikethrough: true` drops it too.
+- **Cause:** the schema lists the property, but the current canvas does not persist it.
+- **Fix:** wrap the text in a vertical frame and draw the line as a sibling: `{type: "frame", layout: "vertical", gap: floor(h/2) - h, padding: [0, 0, h - floor(h/2) - 1, 0]}` with the text first and `{type: "rectangle", width: "fill_container", height: 1, fill: <text fill>}` second. The line follows the text width, so content overrides on instances still fit. The tool warns about circular sizing on the wrapper; the render is correct. Keep the text's visibility or opacity on the wrapper so the line hides with it.
+
+## 23. Moving a layer inside a component master drops instance overrides *(observed)*
+- **Symptom:** after `Move(textId, wrapperId)` inside a reusable component, every instance that had `descendants[textId]` (content, `enabled`, `opacity`) loses that override.
+- **Fix:** before the move, list all refs whose `descendants` keys end with the moved id and save the values; after the move, write them back with `Update(refId + "/" + id, {...})` (or onto the new wrapper, for `enabled` / `opacity`). Check one instance per key with `Get(refId).descendants`.
