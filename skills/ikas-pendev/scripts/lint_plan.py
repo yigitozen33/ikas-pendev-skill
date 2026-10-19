@@ -899,6 +899,11 @@ def lint_merchant_blocks(plan, rep):
             if not re.search(r"(?<![\w-])" + re.escape(name) + r"(?![\w-])", hay):
                 rep.add("§6.2", "ERROR", "%s/%s" % (e["kind"], sec), "L21",
                         "tree lacks `%s` (ikas block, 06-page-coverage §3b/§3c)" % name)
+    for sec, e in plan.entries.items():
+        hay = "\n".join(l for f in e["trees"] for _, l in f["body"])
+        if re.search(r"(?<![\w-])newsletter-[a-z-]+", hay) and not re.search(r"(?<![\w-])newsletter-consent(?![\w-])", hay):
+            rep.add("§6.2", "ERROR", "%s/%s" % (e["kind"], sec), "L21",
+                    "newsletter form without `newsletter-consent` (06-page-coverage §3c)")
     acc = plan.entries.get("Account")
     if acc:
         hay = "\n".join(l for f in acc["trees"] for _, l in f["body"])

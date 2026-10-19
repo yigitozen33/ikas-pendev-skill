@@ -39,6 +39,7 @@ Add a criterion when a review finds a behaviour defect that the canvas could not
 | PB-19 | ProductReviews; PRODUCT_DETAIL | The form always said the review would appear after approval, while the store auto-approved and showed it at once; the summary then counted the new review twice. |
 | PB-20 | ProductReviews; PRODUCT_DETAIL | Clicking a star never selected it in Chrome: focusing the button reset the hover fill under the pointer, the press target vanished between mousedown and mouseup and no click fired. |
 | PB-21 | always | The footer's marquee images loaded with the page and a pixelated footer photo carried text with no veil; both hurt first load (LCP) and legibility. |
+| PB-22 | Footer | The footer newsletter had no consent checkbox, so stores that need explicit permission (KVKK / commercial messages) could not use it. |
 
 The design-side counterpart of PB-03 to PB-11 and PB-13 is `06-page-coverage.md` §3d; of PB-14, `08-quality.md` §8; of PB-08, `SKILL.md` rule 14.
 

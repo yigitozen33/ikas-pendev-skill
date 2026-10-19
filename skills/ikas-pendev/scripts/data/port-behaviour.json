@@ -223,6 +223,16 @@
    "pageTypes": [],
    "rule": "Sayfanın ilk büyük görseli (hero ya da ürünün ana görseli) hemen yüklenir (loading=\"eager\", fetchpriority=\"high\"). Ekranın altındaki görseller, hover ile ya da marquee içinde görünen görseller ekrana yaklaşınca yüklenir (loading=\"lazy\" ya da IntersectionObserver); stiller yüklenmeden tetiklenen lazy yükleme olmaz. Görseller srcset/sizes ile çerçeve boyutuna uygun dosyayı ister. Yazı olan görsellerdeki perde (veil) opaklığı prop'tan gelir.",
    "test": "Ağ sekmesi açık, önbellek kapalı anasayfayı aç: ilk ekranda yalnızca görünen görseller iner, footer ve marquee görselleri sayfa aşağı kaydırılınca iner. Lighthouse'ta LCP görseli lazy değildir. Footer görseli 1440 ve 2560 genişlikte bulanık değildir."
+  },
+  {
+   "id": "PB-22",
+   "title": "Bülten onay kutusu",
+   "keys": [
+    "Footer"
+   ],
+   "pageTypes": [],
+   "rule": "Bülten formunun onay kutusu prop'la açılır (showConsentCheckbox) ve zorunlu ya da isteğe bağlı olur (consentRequired). Metin ve bağlantı prop'tur; bağlantı yeni sekmede açılır ve kutuyu işaretlemez. Zorunluyken işaretlenmeden gönderilen form kayıt yapmaz, consentErrorText'i alanın altında gösterir; işaretlenince hata kalkar. Kapalıyken form eskisi gibi tek alanla çalışır.",
+   "test": "Editörde kutuyu aç, zorunlu yap: işaretlemeden gönder, hata görünür ve kayıt olmaz; işaretleyip gönder, başarı metni görünür. Zorunluluğu kapat: işaretlemeden de gönderilir. Kutuyu kapat: form tek alanla çalışır."
   }
  ],
  "seed": [

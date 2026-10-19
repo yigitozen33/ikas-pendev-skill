@@ -26,6 +26,8 @@ grep -q '^- \*\*Yalnız masaüstü katmanlar:\*\* `filter-button`' "$OUT/plan-mi
 python3 "$S/lint_plan.py" "$OUT/plan-C.md" --globals "$EX/globals.md" > "$OUT/lint-C.txt" 2>&1 && ok "lint plan-C OK" || bad "lint plan-C OK" "$(tail -3 "$OUT/lint-C.txt")"
 grep -q "LINT OK (115 targets)" "$OUT/lint-C.txt" && ok "lint plan-C counts 115 targets" || bad "lint plan-C counts 115 targets" "$(tail -1 "$OUT/lint-C.txt")"
 python3 "$S/lint_plan.py" "$OUT/plan-mini.md" > "$OUT/lint-mini.txt" 2>&1 && ok "lint mini OK" || bad "lint mini OK" "$(grep ERROR "$OUT/lint-mini.txt" | head -5)"
+sed 's/→ hero-title /→ newsletter-field /' "$OUT/plan-mini.md" > "$OUT/plan-mini-newsletter.md"
+python3 "$S/lint_plan.py" "$OUT/plan-mini-newsletter.md" 2>&1 | grep -q 'L21 newsletter form without `newsletter-consent`' && ok "lint: a newsletter form needs newsletter-consent (06 §3c)" || bad "lint: a newsletter form needs newsletter-consent (06 §3c)"
 python3 "$S/lint_plan.py" "$FX/broken-plan.md" > "$OUT/lint-broken.txt" 2>&1 && bad "lint broken-plan fails" || ok "lint broken-plan fails"
 if [ -f "$EXP/lint-broken.txt" ]; then diff -q "$OUT/lint-broken.txt" "$EXP/lint-broken.txt" >/dev/null && ok "lint broken snapshot" || bad "lint broken snapshot" "$(diff "$OUT/lint-broken.txt" "$EXP/lint-broken.txt" | head -5)"; fi
 python3 "$S/lint_plan.py" --globals "$EX/globals.md" --components "$EX/components.md" > "$OUT/lint-phase1.txt" 2>&1 && ok "lint phase-1 gate on ornek docs" || bad "lint phase-1 gate on ornek docs" "$(grep ERROR "$OUT/lint-phase1.txt" | head -5)"
