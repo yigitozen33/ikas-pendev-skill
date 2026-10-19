@@ -68,6 +68,9 @@ if command -v node >/dev/null; then
   sed 's/"x": 260,/"x": 4,/; s/"x": 150,/"x": 4,/' "$FX/storefront-canvas.json" > "$OUT/storefront-favleft.json"
   node "$HERE/tools/mock_pen.js" "$OUT/checks-storefront.js" "$OUT/storefront-favleft.json" > "$OUT/storefront-favleft.txt" 2>&1
   ! grep -q 'card-fav corners differ' "$OUT/storefront-favleft.txt" && ok "storefront: card-fav top-left on every card type passes (any corner, one corner)" || bad "storefront: card-fav top-left on every card type passes (any corner, one corner)" "$(head -2 "$OUT/storefront-favleft.txt")"
+  python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); q=[r for r in d["children"] if r["name"]=="K/Overlay/QuickBuy@desktop"][0]; q["children"][-1]["children"][2]["height"]=40; json.dump(d,open(sys.argv[2],"w"))' "$FX/storefront-canvas.json" "$OUT/storefront-favbox.json"
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-storefront.js" "$OUT/storefront-favbox.json" > "$OUT/storefront-favbox.txt" 2>&1
+  grep -q 'QuickBuy>qb-actions heights 48/40' "$OUT/storefront-favbox.txt" && ! grep -q 'qb-actions heights' "$OUT/storefront.txt" && ok "storefront: a smaller favourite in the QuickBuy action row fails (06 §3a)" || bad "storefront: a smaller favourite in the QuickBuy action row fails (06 §3a)" "$(grep storefront "$OUT/storefront-favbox.txt")"
   python3 "$S/extract_targets.py" "$OUT/plan-mini.md" --js all --checks radius,hardcoded > "$OUT/checks-radius.js"
   node "$HERE/tools/mock_pen.js" "$OUT/checks-radius.js" "$FX/storefront-canvas.json" > "$OUT/radius.txt" 2>&1
   grep -q '^CHK|radius|PASS|' "$OUT/radius.txt" && ok "radius: product media and controls on one variable pass (02 §3)" || bad "radius: product media and controls on one variable pass (02 §3)" "$(grep radius "$OUT/radius.txt")"

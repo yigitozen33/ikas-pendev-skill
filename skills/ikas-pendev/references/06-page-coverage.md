@@ -80,13 +80,15 @@ QuickBuy is designed on every canvas, whether or not the reference has one. It i
 | Name, price, compare price | `qb-head`, `qb-price` | `product.name`, `getProductVariantFormattedFinalPrice` + `getProductVariantFormattedSellPrice` (compare) |
 | One group per variant type: label + values. Colour/image types use `qb-variant-swatches` → `VariantSwatch`; text types (size) use `qb-variant-row` → `VariantChip`. Never colour chips. A sold-out value uses the `stok yok` state | `qb-variant-group` | `getDisplayedProductVariantTypes`, `selectVariantValue`, `hasProductVariantStock` |
 | Validation message when a required option is missing (`$color-danger`) | `qb-variant-error` | TEXT prop (`chooseOptionText`) |
-| `QuantitySelector` + `Button` (Sepete ekle · Ekleniyor… · Tükendi) + `FavoriteButton` | `qb-actions` | `addItemToCart(variant, product, qty)`, `isAddToCartEnabled`, min/max per cart (`add-to-cart` template's `utils/cartLimits.ts`) |
+| `QuantitySelector` + `Button` (Sepete ekle · Ekleniyor… · Tükendi) + `FavoriteButton`, one row of equal controls (see below) | `qb-actions` | `addItemToCart(variant, product, qty)`, `isAddToCartEnabled`, min/max per cart (`add-to-cart` template's `utils/cartLimits.ts`) |
 | "Hızlı Öde" slot, drawn as a neutral 48 px frame because ikas renders the iframe | `qb-pay` | `PayWithIkas` (renders nothing when the merchant has not enabled it); BOOLEAN prop `showPayWithIkas` |
 | Stock note + `ArrowLink` to the product page | `qb-foot` | `variant.stockCount`, `getProductHref` |
 
 Layout:
 - **`@desktop`:** a centred window of about 960 × 600 on `$color-scrim`, `radius-card`, clipped. The image is on the left (half the width). The details column on the right is padded with `$space-panel`, and the actions are pinned to its bottom.
 - **`@mobile`:** a bottom sheet with a grabber and top corners `radius-card`. The thumbnail, name, price and close button share one row, followed by the colour swatches, size chips, actions, pay slot and footer.
+
+**One row, one control language.** The quantity selector, the add button and the favourite button in `qb-actions` (and in the product page's `pdp-actions`) are one row of controls: the same height, the same stroke and the same `radius-control`. The favourite button fills its box: never a round, bordered button inside a square, bordered frame, and never a size of its own. Its hover fill follows the box's corners. CHK `storefront` fails when the controls of `qb-actions` / `pdp-actions` differ in height.
 
 Behaviour:
 - After a successful add the popup closes and `CartDrawer` opens in its `dolu` state.
@@ -179,7 +181,7 @@ Each rule below comes from a review of a finished theme where the first build mi
 | Layer | Rule |
 |---|---|
 | `card-media` | The image frame. Every overlay control below sits inside it. |
-| `card-fav` | The favourite button sits inside `card-media`. **The design picks its place once** (a corner, its offset, its size and whether it is revealed on hover) and that place is the same **everywhere a card shows a favourite**: every card type (ProductCard, ProductCardSmall, list rows, rail cards), every list and page (home rails, category, search, favourites, cart rail, related products) and both devices. Sections never move or restyle it; a card type that needs a smaller button keeps the same corner. A hover-revealed button is always visible on touch (rule 14). The product page's own favourite button beside add-to-cart is a separate layer (`pdp-fav`) and is the only exception. |
+| `card-fav` | The favourite button sits inside `card-media`. **The design picks its place once** (a corner, its offset, its size and whether it is revealed on hover) and that place is the same **everywhere a card shows a favourite**: every card type (ProductCard, ProductCardSmall, list rows, rail cards), every list and page (home rails, category, search, favourites, cart rail, related products) and both devices. Sections never move or restyle it; a card type that needs a smaller button keeps the same corner. A hover-revealed button is always visible on touch (rule 14). The product page's own favourite button beside add-to-cart is a separate layer (`pdp-fav`, inside the `pdp-actions` row) and is the only exception; it follows the action-row rule of §3a. |
 | `card-swatches` | Colour dots + `+N`. They are **interactive**: hovering previews that colour's image and clicking selects it, without leaving the list. The selected dot has its own style. |
 | `card-cart` | Opens QuickBuy. QuickBuy opens with the colour chosen on the card. |
 | `card-customize` | Replaces `card-cart` when the product needs a personalisation before it can be added (an option set with a required field). It uses a **different icon** (pen, sliders) from the cart button, so the shopper sees before clicking that this product needs a choice on the product page, and it links straight to the product page. Hidden on the default card. |

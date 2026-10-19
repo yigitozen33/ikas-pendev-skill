@@ -14,7 +14,8 @@
 // storefront (06 §3d): P/Sub/ProductCard has card-media, card-fav, card-swatches, card-cart, card-customize and the
 // states "renk seçili", "ayrık varyant", "kişiselleştirme"; every card-fav (Sub roots plus the unit's Section
 // components and Overlay roots, instances resolved) sits in the same corner of its card-media, whatever corner;
-// QuickBuy has "renk karttan" and "kişiselleştirme" at both devices; a mobile MenuOverlay has menu-mega-title
+// QuickBuy has "renk karttan" and "kişiselleştirme" at both devices; the controls of every qb-actions / pdp-actions
+// row (QuickBuy and ProductDetail roots; a vertical one is checked per horizontal child row) share one height; a mobile MenuOverlay has menu-mega-title
 // when a desktop Header/MenuOverlay/Megamenu layer is named *mega*; ProductList has "— arama" at both devices
 // and a search-field (popular searches and the all-products state are optional). Each part runs only when its
 // key exists. Contract 1: WARN instead of FAIL.
@@ -325,6 +326,15 @@ if (MODE === "manifest") {
     if (allKeys.indexOf("QuickBuy") >= 0 && want("QuickBuy")) {
       parts++;
       ["renk karttan", "kişiselleştirme"].forEach(st => ["desktop", "mobile"].forEach(d => { if (!roots.some(r => keyOf(r) === "QuickBuy" && r.name.indexOf("@" + d + " — " + st) > 0)) miss.push("QuickBuy@" + d + " — " + st); }));
+    }
+    if ((allKeys.indexOf("QuickBuy") >= 0 && want("QuickBuy")) || (allKeys.indexOf("ProductDetail") >= 0 && want("ProductDetail"))) {
+      const nodes = {};
+      keyRoots("QuickBuy").concat(keyRoots("ProductDetail")).forEach(r => walk(r, (n, c) => { nodes[n.id] = { name: n.name || "", layout: n.layout, on: n.enabled !== false, h: Math.round(c.bounds.height), up: c.parentCtx ? c.parentCtx.node.id : null, root: keyOf(r) }; }, { resolveInstances: true }));
+      const kids = id => Object.keys(nodes).filter(k => nodes[k].up === id && nodes[k].on);
+      Object.keys(nodes).filter(k => /^(qb|pdp)-actions$/.test(nodes[k].name)).forEach(k => {
+        const rows = nodes[k].layout !== "vertical" ? [k] : kids(k).filter(x => nodes[x].layout !== "vertical" && kids(x).length > 1);
+        rows.forEach(rw => { const hs = kids(rw).map(x => nodes[x].h).filter((v, i, a) => a.indexOf(v) === i); if (hs.length > 1) miss.push(nodes[k].root + ">" + nodes[k].name + " heights " + hs.join("/")); });
+      });
     }
     if (allKeys.indexOf("MenuOverlay") >= 0 && want("MenuOverlay")) {
       const desk = roots.filter(r => ["Header", "MenuOverlay", "Megamenu"].indexOf(keyOf(r)) >= 0 && devOf(r.name) === "desktop");

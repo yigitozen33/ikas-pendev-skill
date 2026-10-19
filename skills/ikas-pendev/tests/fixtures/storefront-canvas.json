@@ -355,6 +355,44 @@
      "width": 480,
      "height": 600,
      "cornerRadius": "$radius-card"
+    },
+    {
+     "id": "qa1",
+     "name": "qb-actions",
+     "type": "frame",
+     "x": 500,
+     "y": 520,
+     "width": 420,
+     "height": 48,
+     "children": [
+      {
+       "id": "qa2",
+       "name": "qty",
+       "type": "frame",
+       "x": 0,
+       "y": 0,
+       "width": 120,
+       "height": 48
+      },
+      {
+       "id": "qa3",
+       "name": "add",
+       "type": "frame",
+       "x": 128,
+       "y": 0,
+       "width": 228,
+       "height": 48
+      },
+      {
+       "id": "qa4",
+       "name": "qb-fav",
+       "type": "frame",
+       "x": 364,
+       "y": 0,
+       "width": 48,
+       "height": 48
+      }
+     ]
     }
    ]
   },
