@@ -44,6 +44,7 @@ Add a criterion when a review finds a behaviour defect that the canvas could not
 | PB-24 | ProductList, FilterDrawer; CATEGORY, SEARCH | The price slider could not be held and dragged: the list refetched on every step, so the handle jumped back. |
 | PB-25 | ProductList, FilterDrawer; CATEGORY, SEARCH | Selected filter chips appeared twice, the desktop row and the mobile row both visible. |
 | PB-26 | Footer, LocaleSwitcher | On a single-language store the footer's Türkçe looked like a dropdown but did nothing when clicked. |
+| PB-27 | CartPage, CartDrawer; CART | A real code that did not apply to the cart showed as applied (the cart stored it) while the discount never came; a gift card entered in the same field showed an error. |
 
 The design-side counterpart of PB-03 to PB-11 and PB-13 is `06-page-coverage.md` §3d; of PB-14, `08-quality.md` §8; of PB-08, `SKILL.md` rule 14.
 
@@ -54,6 +55,7 @@ The criteria cannot be tested on an empty store. `seed-checklist.md` lists the p
 - Added for personalisation uploads: a product with a file-upload option (S-10).
 - Added for reviews: the review approval setting, tested on and off (S-11).
 - Added for the contact page: three stores, one without a photo (S-12).
+- Added for the cart: a coupon with a minimum amount and a gift card (S-13).
 
 - Seed data is created in the ikas admin panel (for example through Claude in Chrome, in the merchant's signed-in session) or through the ikas admin API. The agent never types the merchant's password; the merchant signs in.
 - Seed content follows the theme's copy rules (`08-quality.md` §6): Turkish, the brand's voice, real-length names. Images come from the theme's imagery direction, never from the reference.

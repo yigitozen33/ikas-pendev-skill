@@ -281,6 +281,19 @@
    "pageTypes": [],
    "rule": "locale-button yalnızca seçilebilecek başka dil, ülke ya da para birimi varken (baseStore.localeOptions birden fazla) açılır menü düğmesidir. Tek seçenek varken aynı yerde ok işaretsiz, tıklanmayan düz metin görünür; tıklanınca hiçbir şey olmayan bir düğme çizilmez.",
    "test": "Tek dilli mağazada footer'da dil alanı düz metindir, imleç el olmaz, ok yoktur. Admin'den ikinci bir dil ya da para birimi açılırsa alan düğmeye döner ve LocaleSwitcher'ı açar."
+  },
+  {
+   "id": "PB-27",
+   "title": "Kupon yalnızca indirim yapınca uygulanmış sayılır",
+   "keys": [
+    "CartPage",
+    "CartDrawer"
+   ],
+   "pageTypes": [
+    "CART"
+   ],
+   "rule": "Var olan ama bu sepete uymayan bir kod (alt limit, ürün kuralı) sepette couponCode olarak kalır ama indirim satırı üretmez. Kod ancak couponCode ile birlikte bir kupon indirimi (getIkasOrderCouponAdjustment) varsa uygulanmış gösterilir. Gönderir göndermez hiçbir şeye uymayan kod geri kaldırılır (removeCouponCode) ve hata metni görünür; sonradan uymaz olan kod üstü çizili, soluk, hata metni ve Kaldır ile görünür. Aynı alandan girilen hediye çeki kendi satırıyla başarı sayılır.",
+   "test": "Seed S-13'ün kodunu alt limitin altındaki sepette dene: hata metni çıkar, kod uygulanmış görünmez. Sepeti limitin üstüne çıkar ve dene: indirim satırı ve çip görünür. Sonra ürün çıkarıp limitin altına in: çip üstü çizili, hata metni ve Kaldır görünür. Uydurma bir kod \"geçersiz\" der."
   }
  ],
  "seed": [
@@ -439,6 +452,19 @@
     "PB-23"
    ],
    "what": "En az üç mağaza: ikisi fotoğraflı ve çalışma saatli, biri fotoğrafsız."
+  },
+  {
+   "id": "S-13",
+   "title": "Alt limitli kupon",
+   "keys": [
+    "CartPage",
+    "CartDrawer"
+   ],
+   "pageTypes": [],
+   "for": [
+    "PB-27"
+   ],
+   "what": "Alt sepet tutarı olan bir kupon kodu (ör. 1.000 TL üstü %10) ve bir hediye çeki kodu. Otomatik kampanyaların adı kupon kodu gibi okunmaz."
   }
  ]
 }
