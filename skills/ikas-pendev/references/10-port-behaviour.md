@@ -23,7 +23,7 @@ Add a criterion when a review finds a behaviour defect that the canvas could not
 | PB-03 | ProductCard | Section CSS loads in chunks in varying order; a Section rule that loaded later overrode the card's favourite position in some lists only. |
 | PB-04 | ProductCard; CATEGORY, SEARCH | With "show variant values separately" on, cards shared one key and one link, so lists flickered and every card opened the same colour. |
 | PB-05 | ProductCard, QuickBuy | Colours could only be explored inside QuickBuy, and QuickBuy opened with no colour chosen and the size group already in its error style. |
-| PB-06 | ProductCard, QuickBuy | A personalised product's card looked like a one-click add but led to the product page; shoppers skimming the button missed why. |
+| PB-06 | ProductCard, QuickBuy | A personalised product's card looked like a one-click add but led to the product page; shoppers skimming the button missed why. Only a required field sends the shopper there. |
 | PB-07 | MenuOverlay, Header | The mobile menu dropped the mega menu column titles, so links from different groups ran together with uneven gaps. |
 | PB-08 | always | Activity cards that open on hover stayed closed on touch, where there is no hover, and only a small link inside them navigated. |
 | PB-09 | BLOG, BLOG_CATEGORY | The blog category page listed every post and marked no tab, and a low list limit cut posts off. |
@@ -32,12 +32,14 @@ Add a criterion when a review finds a behaviour defect that the canvas could not
 | PB-12 | always | A fold that started open in unstyled HTML played its close animation on page load when the CSS arrived late. |
 | PB-13 | ProductList; CATEGORY, SEARCH | The result count showed twice on one layout and nowhere on another after the search field moved it. |
 | PB-14 | always | Category page, mobile menu and account panels used more and harsher dividers than the footer (`08-quality.md` §8). |
+| PB-15 | QuickBuy | QuickBuy sent every product with an option set or a bundle to the product page, because list data carries neither and add-to-cart rejects a product whose set is not loaded. |
 
 The design-side counterpart of PB-03 to PB-11 and PB-13 is `06-page-coverage.md` §3d; of PB-14, `08-quality.md` §8; of PB-08, `SKILL.md` rule 14.
 
 ## 3. Seed data
 
-The criteria cannot be tested on an empty store. `seed-checklist.md` lists the products, blog posts, menu and links the port creates before testing: a split multi-variant product with a sold-out value (S-01), a product with an option set (S-02), a product with no variants (S-03), a multi-colour product shown normally (S-04), two blog categories with three posts (S-05), a mega menu with three column titles (S-06) and four popular searches that point at the search page (S-07).
+The criteria cannot be tested on an empty store. `seed-checklist.md` lists the products, blog posts, menu and links the port creates before testing: a split multi-variant product with a sold-out value (S-01), a product with a required personalisation field (S-02), a product with no variants (S-03), a multi-colour product shown normally (S-04), two blog categories with three posts (S-05), a mega menu with three column titles (S-06) and four popular searches that point at the search page (S-07).
+- Added for QuickBuy: a product whose option set is entirely optional (S-08) and a bundle (S-09).
 
 - Seed data is created in the ikas admin panel (for example through Claude in Chrome, in the merchant's signed-in session) or through the ikas admin API. The agent never types the merchant's password; the merchant signs in.
 - Seed content follows the theme's copy rules (`08-quality.md` §6): Turkish, the brand's voice, real-length names. Images come from the theme's imagery direction, never from the reference.

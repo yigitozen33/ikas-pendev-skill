@@ -54,14 +54,14 @@
   },
   {
    "id": "PB-06",
-   "title": "Kişiselleştirmeli ürün",
+   "title": "Zorunlu kişiselleştirmeli ürün",
    "keys": [
     "ProductCard",
     "QuickBuy"
    ],
    "pageTypes": [],
-   "rule": "Option set'i olan üründe kart sepet yerine farklı ikonlu card-customize ile ürün sayfasına gider. QuickBuy yine açılırsa ekleme düğmesi yerine oklu, çerçeveli \"ürün sayfasına git\" düğmesi ve kısa bir not gösterir. Option set'i ve varyantı olmayan ürün doğrudan sepete eklenir.",
-   "test": "Seed S-02 kartında kalem/ayar ikonu görünür ve ürün sayfasını açar; Seed S-03 tek tıkla sepete eklenir."
+   "rule": "Zorunlu alanı olan option set'e bağlı üründe kart, sepet yerine farklı ikonlu card-customize ile ürün sayfasına gider. QuickBuy yine açılırsa ekleme düğmesi yerine oklu, çerçeveli \"ürün sayfasına git\" düğmesi ve kısa bir not gösterir; tıklanınca QuickBuy kapanır ve ürün sayfası QuickBuy'da seçilen varyantla açılır. Option set'i ve varyantı olmayan ürün doğrudan sepete eklenir.",
+   "test": "Seed S-02 kartında kalem/ayar ikonu görünür ve ürün sayfasını açar; QuickBuy'da beden seçip \"ürün sayfasına git\"e basınca QuickBuy kapanır, ürün sayfası o bedenle açılır. Seed S-03 tek tıkla sepete eklenir."
   },
   {
    "id": "PB-07",
@@ -144,6 +144,16 @@
    "pageTypes": [],
    "rule": "Sayı sınırı yok; her ayraç footer'daki ayraçlarla aynı renk, kalınlık ve aralıktadır. İçerik içi çizgiler (liste satırları, filtre grupları, menü grupları, hesap panelleri) önce boşlukla gruplanır, bir sınırda tek çizgi olur.",
    "test": "Kategori sayfası, mobil menü, sepet, hesap ve blog footer'la yan yana karşılaştırıldığında aynı ayraç dilini kullanır."
+  },
+  {
+   "id": "PB-15",
+   "title": "QuickBuy option set ve set ürünü kendisi yükler",
+   "keys": [
+    "QuickBuy"
+   ],
+   "pageTypes": [],
+   "rule": "Liste verisinde option set ve set ürün içeriği yüklü gelmez; sepete ekleme bunlar yüklenmeden reddedilir. QuickBuy açılınca ve varyant değişince option set'i (getProductOptionSet) ve set ürünün içeriğini (getBundleProductsOfVariant, initBundleProducts) kendisi yükler; yüklenene kadar ekle düğmesi yükleniyor durumundadır. Alanları isteğe bağlı setli ürün ve set ürün QuickBuy'dan sepete eklenir. Yalnızca zorunlu alanı olan ya da seti yüklenemeyen ürün ürün sayfasına yönlenir (PB-06).",
+   "test": "Seed S-08 ve S-09 için karttan QuickBuy'ı aç, beden seç, sepete ekle: ürün sayfasına gitmeden sepete eklenir ve sepette set içeriği / seçilen seçenekler görünür. Seed S-02 hâlâ \"ürün sayfasına git\" gösterir."
   }
  ],
  "seed": [
@@ -162,7 +172,7 @@
   },
   {
    "id": "S-02",
-   "title": "Kişiselleştirmeli ürün",
+   "title": "Zorunlu kişiselleştirmeli ürün",
    "keys": [
     "ProductCard",
     "ProductDetail"
@@ -171,7 +181,7 @@
    "for": [
     "PB-06"
    ],
-   "what": "Bir option set'e bağlı ürün: en az bir metin alanı ve bir seçim alanı, biri fiyatlı."
+   "what": "Bedenli bir ürün; option set'inde zorunlu bir metin alanı ve isteğe bağlı, fiyatlı bir seçim alanı var."
   },
   {
    "id": "S-03",
@@ -237,6 +247,32 @@
     "PB-11"
    ],
    "what": "Header arama paneli ve arama sayfası için 4 popüler arama bağlantısı; her biri arama sayfasını gösterir, etiketi aranacak kelimedir."
+  },
+  {
+   "id": "S-08",
+   "title": "İsteğe bağlı kişiselleştirmeli ürün",
+   "keys": [
+    "QuickBuy",
+    "ProductDetail"
+   ],
+   "pageTypes": [],
+   "for": [
+    "PB-15"
+   ],
+   "what": "Bedenli bir ürün; option set'indeki bütün alanlar isteğe bağlı (biri fiyatlı)."
+  },
+  {
+   "id": "S-09",
+   "title": "Set ürün",
+   "keys": [
+    "QuickBuy",
+    "ProductDetail"
+   ],
+   "pageTypes": [],
+   "for": [
+    "PB-15"
+   ],
+   "what": "En az iki ürünü içeren bir set (bundle) ürün; bir parçanın varyantı seçilebilir."
   }
  ]
 }

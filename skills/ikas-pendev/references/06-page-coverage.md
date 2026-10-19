@@ -182,7 +182,7 @@ Each rule below comes from a review of a finished theme where the first build mi
 | `card-fav` | The favourite button sits inside `card-media`. **The design picks its place once** (a corner, its offset, its size and whether it is revealed on hover) and that place is the same **everywhere a card shows a favourite**: every card type (ProductCard, ProductCardSmall, list rows, rail cards), every list and page (home rails, category, search, favourites, cart rail, related products) and both devices. Sections never move or restyle it; a card type that needs a smaller button keeps the same corner. A hover-revealed button is always visible on touch (rule 14). The product page's own favourite button beside add-to-cart is a separate layer (`pdp-fav`) and is the only exception. |
 | `card-swatches` | Colour dots + `+N`. They are **interactive**: hovering previews that colour's image and clicking selects it, without leaving the list. The selected dot has its own style. |
 | `card-cart` | Opens QuickBuy. QuickBuy opens with the colour chosen on the card. |
-| `card-customize` | Replaces `card-cart` when the product has an option set (kişiselleştirme). It uses a **different icon** (pen, sliders) from the cart button, so the shopper sees before clicking that this product needs a choice on the product page, and it links straight to the product page. Hidden on the default card. |
+| `card-customize` | Replaces `card-cart` when the product needs a personalisation before it can be added (an option set with a required field). It uses a **different icon** (pen, sliders) from the cart button, so the shopper sees before clicking that this product needs a choice on the product page, and it links straight to the product page. Hidden on the default card. |
 
 ProductCard states, each a `P/Sub/ProductCard — <state>` frame:
 - `renk seçili`: a swatch other than the first is selected and the image shows that colour.
@@ -191,7 +191,7 @@ ProductCard states, each a `P/Sub/ProductCard — <state>` frame:
 
 **QuickBuy additions (§3a):**
 - `renk karttan`: QuickBuy opens with the card's colour selected and no size selected. The size group is **not** in its error style until the shopper presses add.
-- `kişiselleştirme`: shown when the product has an option set. The add button becomes an outline button with an arrow, labelled to go to the product page, with a short note above it explaining why. Its style differs from the solid add button, so a shopper who skims does not mistake it for "add to cart". Both labels are TEXT props.
+- `kişiselleştirme`: shown only when the product has a **required** personalisation field. A product whose option set is entirely optional, and a bundle (set ürün), add to cart from QuickBuy; QuickBuy shows their option fields or bundle contents in the theme style and loads them itself, so its add button has a loading state while they load. The add button becomes an outline button with an arrow, labelled to go to the product page, with a short note above it explaining why. Its style differs from the solid add button, so a shopper who skims does not mistake it for "add to cart". Both labels are TEXT props.
 
 **MenuOverlay `@mobile`:** when the desktop navigation has a mega menu, the mobile menu keeps every column title (`menu-mega-title`) above its links. The vertical rhythm is one scale: the same gap between a title and its links everywhere, and a larger gap between groups. A mobile menu that drops the column titles and runs all links together is a gap.
 
