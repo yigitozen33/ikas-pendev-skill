@@ -130,6 +130,8 @@ The merchant switches these on in ikas admin (campaigns, campaign offers, bundle
 | `cart-recommendations` / `drawer-recommend` | product rail (stays in the empty cart) from a `PRODUCT_LIST` prop | product list types `PURCHASED_TOGETHER`, `RECOMMENDED`, `LAST_VIEWED`, `RELATED_PRODUCTS` |
 | CartLineItem states | `indirimli` (struck old price) · `hediye` (HEDİYE badge, fixed ×N, no remove) · `set` (bundle sub-list) · `kişiselleştirilmiş` (option values + Düzenle; an uploaded file shows as its file name, never as its storage URL) | `hasOrderLineItemDiscount`, `isOrderLineItemAutoCreated`, `item.variant.bundleProducts`, `item.options`, `editOrderLineItem` |
 
+**Editing a cart line.** Düzenle on a `kişiselleştirilmiş` or multi-variant line opens the place chosen in intake (07 §1 question 11), and that place gets a `— sepeti güncelle` state at both devices: the product page (`ProductDetail — sepeti güncelle`, default), QuickBuy (`QuickBuy — sepeti güncelle`: the line's variant, options and quantity pre-filled, the add button reads "Sepeti güncelle") or the cart drawer (an inline edit panel on the line). The update replaces the line in place (PB-17).
+
 **Required subs:** `OfferCard`, `BundleItem`, `RatingStars`, `ReviewCard` (plus the CartLineItem states above).
 
 **Product page composition:** Header · ProductDetail · ProductReviews · ProductGrid (purchased together / related) · ProductGrid (last viewed) · Footer.

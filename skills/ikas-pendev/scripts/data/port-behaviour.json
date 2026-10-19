@@ -167,6 +167,18 @@
    "pageTypes": [],
    "rule": "option-file alanı dosyayı gerçekten depoya yükler. Yükleme getProductOptionFileUrl'den alınan ön imzalı adrese FormData ile yapılır ve Content-Type başlığı elle yazılmaz: elle verilen \"multipart/form-data\" sınır (boundary) bilgisini düşürür ve depo isteği reddeder (\"Dosya yüklenemedi\"). Alan yükleniyor, yüklendi (dosya adı + kaldır) ve hata durumlarını gösterir; metinler TEXT prop'tur. Sepet satırı ve sipariş özeti dosyanın adını gösterir, depo adresini göstermez.",
    "test": "Seed S-10'da bir PNG yükle: hata çıkmaz, dosya adı görünür. Zorunlu alanları doldurup sepete ekle: sepet satırında dosya adı görünür (uzun bir https adresi değil). Satırı kaldır."
+  },
+  {
+   "id": "PB-17",
+   "title": "Sepet satırını düzenleme yerinde güncellenir",
+   "keys": [
+    "CartPage",
+    "CartDrawer",
+    "QuickBuy"
+   ],
+   "pageTypes": [],
+   "rule": "Düzenle, intake'te seçilen yeri açar (ürün sayfası, QuickBuy ya da drawer) ve satırın varyantı, seçenekleri ve adedi seçili gelir. Güncelleme editOrderLineItem ile tek adımda yapılır; eski satırı silip yenisini ekleme sırasında sepet boş görünmez, satır sırası ve toplamlar zıplamaz. QuickBuy ya da drawer seçildiyse müşteri sepetten ayrılmaz; güncelleme bitince sepet yeni satırı gösterir.",
+   "test": "Seed S-02 ve S-08'i sepete ekle, satırda Düzenle'ye bas: seçilen yer satırın seçimleriyle açılır. Bedeni ve bir seçeneği değiştirip güncelle: satır aynı sırada yeni değerlerle görünür, araya boş sepet ya da çift satır girmez."
   }
  ],
  "seed": [
@@ -192,7 +204,8 @@
    ],
    "pageTypes": [],
    "for": [
-    "PB-06"
+    "PB-06",
+    "PB-17"
    ],
    "what": "Bedenli bir ürün; option set'inde zorunlu bir metin alanı ve isteğe bağlı, fiyatlı bir seçim alanı var."
   },
@@ -270,7 +283,8 @@
    ],
    "pageTypes": [],
    "for": [
-    "PB-15"
+    "PB-15",
+    "PB-17"
    ],
    "what": "Bedenli bir ürün; option set'indeki bütün alanlar isteğe bağlı (biri fiyatlı)."
   },
