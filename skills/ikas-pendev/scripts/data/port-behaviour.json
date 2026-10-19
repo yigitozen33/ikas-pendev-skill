@@ -270,6 +270,17 @@
    ],
    "rule": "Seçili filtre çipleri her kırılımda tam bir yerde görünür (canvas'ta seçilen yerde: filtre çubuğu, liste üstü ya da çekmece). Masaüstü ve mobil için ayrı çizilen çip satırları, birini gizleyen kural aynı ya da daha yüksek özgüllükte yazılır; section CSS'i parça parça yüklendiğinde ikisi birden görünmez (PB-03). Çipin ×'i yalnızca o değeri, \"Tümünü temizle\" hepsini kaldırır.",
    "test": "Kategoride iki filtre seç (bir beden, bir renk): masaüstünde, tablette ve mobilde çipleri say, her biri bir kez görünür. Bir çipin ×'ine bas: yalnızca o filtre kalkar."
+  },
+  {
+   "id": "PB-26",
+   "title": "Tek dilde dil düğmesi düz metin",
+   "keys": [
+    "Footer",
+    "LocaleSwitcher"
+   ],
+   "pageTypes": [],
+   "rule": "locale-button yalnızca seçilebilecek başka dil, ülke ya da para birimi varken (baseStore.localeOptions birden fazla) açılır menü düğmesidir. Tek seçenek varken aynı yerde ok işaretsiz, tıklanmayan düz metin görünür; tıklanınca hiçbir şey olmayan bir düğme çizilmez.",
+   "test": "Tek dilli mağazada footer'da dil alanı düz metindir, imleç el olmaz, ok yoktur. Admin'den ikinci bir dil ya da para birimi açılırsa alan düğmeye döner ve LocaleSwitcher'ı açar."
   }
  ],
  "seed": [
