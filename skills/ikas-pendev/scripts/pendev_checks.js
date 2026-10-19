@@ -10,7 +10,7 @@
 //
 // Output: CHK|<id>|PASS|FAIL|WARN|<n>|<detail<=200>  ...  SUMMARY|pass=..|fail=..|warn=..|mode=..
 // CHK ids: vars ds sections overlays pages anim hardcoded textclass clip rootmeta bgprop
-//          parity props data placeholder refassets storefront dividers
+//          parity props data placeholder refassets storefront dividers radius
 // storefront (06 §3d): P/Sub/ProductCard has card-media, card-fav, card-swatches, card-cart, card-customize and the
 // states "renk seçili", "ayrık varyant", "kişiselleştirme"; every card-fav (Sub roots plus the unit's Section
 // components and Overlay roots, instances resolved) sits in the same corner of its card-media, whatever corner;
@@ -18,6 +18,11 @@
 // when a desktop Header/MenuOverlay/Megamenu layer is named *mega*; ProductList has "— arama" at both devices
 // and a search-field (popular searches and the all-products state are optional). Each part runs only when its
 // key exists. Contract 1: WARN instead of FAIL.
+// radius (02 §3): every product media layer (card-media, pdp-media, pdp-thumb, qb-media, cline-media, offer-media,
+// bundle-media, iprev-thumb; Sub roots, Section components, Overlay roots, instances resolved) has the same
+// cornerRadius (missing = 0) -> FAIL when they differ; the control Subs (Button, FormField, VariantChip,
+// QuantitySelector) whose root sets a cornerRadius share one value -> WARN when they differ. PASS with a note
+// when neither group is on the canvas.
 // dividers (08 §8): WARN when a visible divider layer of a Section component (*divider*, *separator*, *rule,
 // *line, *hairline, or a rectangle/line at most 2px thick) has a style (fill, stroke, opacity, thickness) that no
 // Footer divider has. No count limit. PASS with a note when the Footer has no divider to compare with.
@@ -104,7 +109,7 @@ if (MODE === "manifest") {
   };
   const U = roots.filter(inUnit);
   if (unit && !isBand && (EXP.sections || []).indexOf(unit) < 0 && (EXP.overlays || []).indexOf(unit) < 0) chk("sections", "FAIL", 0, "unknown unit key " + unit + " (not a plan Section/Overlay)");
-  const run = id => { if (EXP.only && EXP.only.indexOf(id) < 0) return false; if (!unit) return true; if (unit === "DS") return ["vars", "ds", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Page") return ["pages", "rootmeta", "placeholder"].indexOf(id) >= 0; if (unit === "Motion") return ["hardcoded", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Sub") return ["anim", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets", "storefront"].indexOf(id) >= 0; if (unit === "Overlays") return ["overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "parity", "props", "data", "placeholder", "refassets", "storefront"].indexOf(id) >= 0; return ["sections", "overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers"].indexOf(id) >= 0; };
+  const run = id => { if (EXP.only && EXP.only.indexOf(id) < 0) return false; if (!unit) return true; if (unit === "DS") return ["vars", "ds", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Page") return ["pages", "rootmeta", "placeholder"].indexOf(id) >= 0; if (unit === "Motion") return ["hardcoded", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Sub") return ["anim", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; if (unit === "Overlays") return ["overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "parity", "props", "data", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; return ["sections", "overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers", "radius"].indexOf(id) >= 0; };
   const find = nm => roots.find(r => r.name === nm);
   const findPre = pre => roots.filter(r => r.name === pre || r.name.indexOf(pre + " ") === 0);
 
@@ -168,7 +173,7 @@ if (MODE === "manifest") {
     const ok = want.length - miss.length;
     chk("anim", miss.length || foreign.length ? "FAIL" : (extra.length && !unit ? "WARN" : "PASS"), ok, ok + "/" + want.length + (miss.length ? " missing:" + miss.join(",") : "") + (foreign.length ? " foreign:" + foreign.join(",") : "") + (extra.length ? " extra:" + extra.join(",") : ""));
   }
-  const W = { hc: { fill: 0, stroke: 0, fontSize: 0, fontFamily: 0 }, hcx: [], texts: 0, tcMiss: 0, tcBad: 0, tcx: [], noProp: 0, clip: 0, clipx: [], ref: 0, refx: [] };
+  const W = { hc: { fill: 0, stroke: 0, fontSize: 0, fontFamily: 0, cornerRadius: 0 }, hcx: [], texts: 0, tcMiss: 0, tcBad: 0, tcx: [], noProp: 0, clip: 0, clipx: [], ref: 0, refx: [] };
   const lit = f => { if (typeof f === "string") return f[0] === "#"; if (Array.isArray(f)) return f.some(lit); if (f && typeof f === "object") { if (f.type === "color") return typeof f.color === "string" && f.color[0] === "#"; if (f.type === "gradient") return (f.colors || []).some(x => x && typeof x.color === "string" && x.color[0] === "#"); if (f.type === "mesh_gradient") return (f.colors || []).some(x => typeof x === "string" && x[0] === "#"); } return false; };
   const imgs = f => Array.isArray(f) ? f.reduce((a, x) => a.concat(imgs(x)), []) : (f && typeof f === "object" && f.type === "image" && typeof f.url === "string" ? [f.url] : []);
   const host = EXP.referenceHost || "";
@@ -178,6 +183,7 @@ if (MODE === "manifest") {
       const k = [];
       if (lit(n.fill)) k.push("fill");
       if (lit(n.stroke)) k.push("stroke");
+      if ([].concat(n.cornerRadius === undefined ? [] : n.cornerRadius).some(v => typeof v === "number" && v !== 0)) k.push("cornerRadius");
       if (n.type === "text") {
         if (typeof n.fontSize === "number") k.push("fontSize");
         if (typeof n.fontFamily === "string" && n.fontFamily[0] !== "$") k.push("fontFamily");
@@ -201,8 +207,8 @@ if (MODE === "manifest") {
     }));
   }
   if (run("hardcoded")) {
-    const t = W.hc.fill + W.hc.stroke + W.hc.fontSize + W.hc.fontFamily;
-    chk("hardcoded", t ? (CONTRACT < 2 ? "WARN" : "FAIL") : "PASS", t, "fill=" + W.hc.fill + " stroke=" + W.hc.stroke + " fontSize=" + W.hc.fontSize + " fontFamily=" + W.hc.fontFamily + (W.hcx.length ? " e.g. " + W.hcx.join(",") : ""));
+    const t = W.hc.fill + W.hc.stroke + W.hc.fontSize + W.hc.fontFamily + W.hc.cornerRadius;
+    chk("hardcoded", t ? (CONTRACT < 2 ? "WARN" : "FAIL") : "PASS", t, "fill=" + W.hc.fill + " stroke=" + W.hc.stroke + " fontSize=" + W.hc.fontSize + " fontFamily=" + W.hc.fontFamily + " cornerRadius=" + W.hc.cornerRadius + (W.hcx.length ? " e.g. " + W.hcx.join(",") : ""));
   }
   if (run("textclass")) {
     if (CONTRACT >= 2) chk("textclass", W.tcMiss + W.tcBad ? "FAIL" : "PASS", W.tcMiss + W.tcBad, "texts=" + W.texts + " none=" + W.tcMiss + " invalid=" + W.tcBad + (W.tcx.length ? " e.g. " + W.tcx.join(",") : ""));
@@ -335,6 +341,20 @@ if (MODE === "manifest") {
       if (!has(keyRoots("ProductList"), "search-field")) miss.push("ProductList>search-field");
     }
     chk("storefront", miss.length ? (CONTRACT < 2 ? "WARN" : "FAIL") : "PASS", miss.length, parts ? (miss.length ? "missing:" + miss.join(",") : parts + " part(s) complete") : "no ProductCard/QuickBuy/MenuOverlay/ProductList in scope");
+  }
+  if (run("radius")) {
+    const MEDIA = /^(card-media|pdp-media|pdp-thumb|qb-media|cline-media|offer-media|bundle-media|iprev-thumb)$/;
+    const norm = v => { const a = [].concat(v === undefined ? 0 : v); return String(a.every(x => x === a[0]) ? a[0] : a.join(" ")); };
+    const scan = roots.filter(r => band(r) === "Sub" || band(r) === "Overlay" || (band(r) === "Section" && r.name.indexOf(" \u2014 ") < 0));
+    const media = {};
+    scan.forEach(r => walk(r, n => { if (MEDIA.test(n.name || "")) (media[norm(n.cornerRadius)] = media[norm(n.cornerRadius)] || []).push(keyOf(r) + ">" + n.name); }, { resolveInstances: true }));
+    const ctl = {};
+    ["Button", "FormField", "VariantChip", "QuantitySelector"].forEach(nm => { const r = find(P + "/Sub/" + nm); if (r) { const n = Get(r.id, { depth: 1 }); if (n && n.cornerRadius !== undefined) (ctl[norm(n.cornerRadius)] = ctl[norm(n.cornerRadius)] || []).push(nm); } });
+    const fmt = o => Object.keys(o).map(k => k + "×" + o[k].length + " (" + o[k].filter((v, i, a) => a.indexOf(v) === i).slice(0, 3).join(" / ") + ")").join("; ");
+    const mk = Object.keys(media), ck = Object.keys(ctl);
+    if (mk.length > 1) chk("radius", CONTRACT < 2 ? "WARN" : "FAIL", mk.length, "product media radius differs (02 \u00a73): " + fmt(media));
+    else if (ck.length > 1) chk("radius", "WARN", ck.length, "control Subs radius differs (02 \u00a73): " + fmt(ctl));
+    else chk("radius", "PASS", mk.length + ck.length, mk.length || ck.length ? "product media " + (mk[0] || "-") + ", controls " + (ck[0] || "-") : "no product media or control Subs on the canvas");
   }
   if (run("dividers")) {
     const DIV = /divider|separator|hairline|(^|-)(rule|line)$/i;

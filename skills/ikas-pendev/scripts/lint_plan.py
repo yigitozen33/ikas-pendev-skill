@@ -25,7 +25,7 @@ Checks
   L08 impl vocabulary (gsap / lenis / framer-motion are errors)
   L09 §7 totals, per-section counts, recipe lists, id ranges, recipe usage
   L10 §6.5 Motion States coverage (WARN)
-  L11 §3 core variable set (37 contract 1 / 41 contract 2) and variable types
+  L11 §3 core variable set (37 contract 1 / 41 contract 2), radius roles and variable types
   L12 §3 theme axes: device on text-*/space-*/size-logo, mode on colours, #RRGGBBAA
   L13 fonts: a family on the pen.dev deny list (INVALID_FONTS) -> ERROR
   L14 WCAG contrast >= 4.5 (contract 2 ERROR, contract 1 WARN)
@@ -66,6 +66,7 @@ CORE37 = [
 ]
 EXTRA_C2 = ["color-transparent", "size-logo", "color-danger", "color-success"]
 ALPHA_OK = {"color-scrim", "color-transparent"}
+RADIUS_ROLES = ["radius-control", "radius-card", "radius-media", "radius-pill"]  # 02 §3 radius roles
 
 PROP_TYPES = [
     "TEXT", "RICH_TEXT", "NUMBER", "NUMBER_RANGE", "BOOLEAN", "IMAGE", "IMAGE_LIST", "VIDEO", "SVG",
@@ -1027,15 +1028,18 @@ def lint_variables(plan, rep, contract):
         if name not in data:
             rep.add("§3", "ERROR", name, "L11", "core variable missing (contract %d needs %d)" % (contract, len(core)))
     for name in data:
-        if name not in core:
+        if name not in core and not name.startswith("radius-"):
             rep.add("§3", "WARN", loc_of(name, lines.get(name)), "L11", "variable outside the core set")
+        elif name.startswith("radius-") and name not in RADIUS_ROLES:
+            rep.add("§3", "WARN", loc_of(name, lines.get(name)), "L11",
+                    "radius variable outside the roles %s (02 §3)" % ", ".join(RADIUS_ROLES))
     for name, var in data.items():
         ln = lines.get(name)
         if not isinstance(var, dict) or "type" not in var or "value" not in var:
             rep.add("§3", "ERROR", loc_of(name, ln), "L11", "variable needs {type, value}")
             continue
         want = ("color" if name.startswith("color-") else "string" if name.startswith("font-")
-                else "number" if re.match(r"^(text|space|size|opacity)-", name) else None)
+                else "number" if re.match(r"^(text|space|size|opacity|radius)-", name) else None)
         if want and var["type"] != want:
             rep.add("§3", "ERROR", loc_of(name, ln), "L11", "type %s, expected %s" % (var["type"], want))
         val = var["value"]

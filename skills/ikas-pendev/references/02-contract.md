@@ -114,7 +114,21 @@ Rules:
 - With the `mode` axis, ikas gets two colour schemes (e.g. `Paper`, `Ink`); the slots above are their slot names.
 - Exact typography global names are set in the globals runbook (`09-handoff.md`); the column shows the default.
 
-**Allowed raw values** (everything else is a variable; `pendev_checks.js` CHK `hardcoded` flags raw fill/fontSize/fontFamily):
+**Radius roles.** Corner radius is a design-system decision, not a per-layer one: the same kind of surface has the same radius everywhere, on every page and device. Every non-zero `cornerRadius` is a `$radius-*` variable (number, `—` axis or `device`), declared after the 41 and listed in plan §3; `globals-runbook.md` carries them to `global.css` as `--radius-*`.
+
+| Variable | Used by | Required |
+|---|---|---|
+| `radius-control` | every control: Button, FormField, VariantChip, QuantitySelector, the favourite box beside add-to-cart, search and coupon fields, filter chips | yes, when any control is rounded |
+| `radius-card` | cards, panels, overlay windows and sheets, OfferCard, BundleItem, ReviewCard, account panels | yes, when any card is rounded |
+| `radius-media` | product images: `card-media`, `pdp-media`, `pdp-thumb`, `qb-media`, `cline-media`, `offer-media`, `bundle-media`, `iprev-thumb`. Without it they use `radius-card` | optional |
+| `radius-pill` | fully rounded chips or buttons, when the design has them | optional |
+
+- A theme with square corners declares none and uses `0`. A role is one value: a section never introduces its own radius (`08-quality.md` §3).
+- **Product media share one radius.** The layers in the `radius-media` row are the same product image in different places; they all carry the same `cornerRadius` variable, so an image never looks rounder in QuickBuy than on the card or the product page. A selection ring on a thumbnail is a separate layer drawn on top of the image, never a border that shows the surface around it.
+- Image files carry no corners: a generated or uploaded product image is a full-bleed rectangle with no baked radius, border or white margin; the corner comes only from the layer's `cornerRadius` (and from CSS in the port).
+- CHK `hardcoded` flags a raw non-zero `cornerRadius`; CHK `radius` fails when the product media layers differ and warns when the control Subs differ.
+
+**Allowed raw values** (everything else is a variable; `pendev_checks.js` CHK `hardcoded` flags raw fill/stroke/fontSize/fontFamily/cornerRadius):
 - `#RRGGBBAA` gradient stops, where pen.dev will not take a variable in a stop. The RGB part must equal a core colour (`color-bg`, `color-text`, `color-scrim`).
 - `0` (zero gap/padding, `opacity: 0` for stacked hidden siblings, radius 0).
 - Structural `1` px hairlines (form-field border, `link-line`) when `size-line` is thicker.

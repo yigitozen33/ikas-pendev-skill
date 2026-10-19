@@ -28,7 +28,8 @@
        "width": 32,
        "height": 32
       }
-     ]
+     ],
+     "cornerRadius": "$radius-card"
     },
     {
      "id": "c4",
@@ -117,7 +118,8 @@
        "width": 24,
        "height": 24
       }
-     ]
+     ],
+     "cornerRadius": "$radius-card"
     }
    ]
   },
@@ -333,6 +335,50 @@
      "opacity": 0.5
     }
    ]
+  },
+  {
+   "id": "qm1",
+   "name": "K/Overlay/QuickBuy@desktop",
+   "type": "frame",
+   "x": 0,
+   "y": 5000,
+   "width": 960,
+   "height": 600,
+   "cornerRadius": "$radius-card",
+   "children": [
+    {
+     "id": "qm2",
+     "name": "qb-media",
+     "type": "frame",
+     "x": 0,
+     "y": 0,
+     "width": 480,
+     "height": 600,
+     "cornerRadius": "$radius-card"
+    }
+   ]
+  },
+  {
+   "id": "sb1",
+   "name": "K/Sub/Button",
+   "type": "frame",
+   "x": 0,
+   "y": 6000,
+   "width": 200,
+   "height": 48,
+   "reusable": true,
+   "cornerRadius": "$radius-control"
+  },
+  {
+   "id": "sf1",
+   "name": "K/Sub/FormField",
+   "type": "frame",
+   "x": 300,
+   "y": 6000,
+   "width": 300,
+   "height": 48,
+   "reusable": true,
+   "cornerRadius": "$radius-control"
   }
  ]
 }

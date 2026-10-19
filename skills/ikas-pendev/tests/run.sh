@@ -68,6 +68,15 @@ if command -v node >/dev/null; then
   sed 's/"x": 260,/"x": 4,/; s/"x": 150,/"x": 4,/' "$FX/storefront-canvas.json" > "$OUT/storefront-favleft.json"
   node "$HERE/tools/mock_pen.js" "$OUT/checks-storefront.js" "$OUT/storefront-favleft.json" > "$OUT/storefront-favleft.txt" 2>&1
   ! grep -q 'card-fav corners differ' "$OUT/storefront-favleft.txt" && ok "storefront: card-fav top-left on every card type passes (any corner, one corner)" || bad "storefront: card-fav top-left on every card type passes (any corner, one corner)" "$(head -2 "$OUT/storefront-favleft.txt")"
+  python3 "$S/extract_targets.py" "$OUT/plan-mini.md" --js all --checks radius,hardcoded > "$OUT/checks-radius.js"
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-radius.js" "$FX/storefront-canvas.json" > "$OUT/radius.txt" 2>&1
+  grep -q '^CHK|radius|PASS|' "$OUT/radius.txt" && ok "radius: product media and controls on one variable pass (02 §3)" || bad "radius: product media and controls on one variable pass (02 §3)" "$(grep radius "$OUT/radius.txt")"
+  python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); d["children"][-3]["children"][0]["cornerRadius"]="$radius-control"; json.dump(d,open(sys.argv[2],"w"))' "$FX/storefront-canvas.json" "$OUT/radius-mixed.json"
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-radius.js" "$OUT/radius-mixed.json" > "$OUT/radius-mixed.txt" 2>&1
+  grep -q '^CHK|radius|FAIL|2|product media radius differs (02 §3): .*QuickBuy>qb-media' "$OUT/radius-mixed.txt" && ok "radius: QuickBuy media rounder than the card fails" || bad "radius: QuickBuy media rounder than the card fails" "$(grep radius "$OUT/radius-mixed.txt")"
+  python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); d["children"][-1]["cornerRadius"]=4; json.dump(d,open(sys.argv[2],"w"))' "$FX/storefront-canvas.json" "$OUT/radius-raw.json"
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-radius.js" "$OUT/radius-raw.json" > "$OUT/radius-raw.txt" 2>&1
+  grep -q '^CHK|hardcoded|FAIL|1|.*cornerRadius=1' "$OUT/radius-raw.txt" && grep -q '^CHK|radius|WARN|2|control Subs radius differs' "$OUT/radius-raw.txt" && ok "radius: raw cornerRadius is hardcoded, controls on two values warn" || bad "radius: raw cornerRadius is hardcoded, controls on two values warn" "$(grep 'hardcoded\|radius' "$OUT/radius-raw.txt")"
 fi
 
 # 6. analyze_site on offline fixture

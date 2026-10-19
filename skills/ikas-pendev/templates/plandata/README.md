@@ -90,7 +90,7 @@ Any long text field (`identity_md`, `tree`, `desktop`, `mobile`, `props`, `struc
 | `colors` | `"#RRGGBB[AA]"`, or `[default, alt]` when `modes` is set | `color-bg, color-text, color-muted, color-line, color-surface, color-inverse-bg, color-inverse-text, color-accent, color-accent-text, color-scrim` + c2: `color-transparent` (`#RRGGBB00`), `color-danger`, `color-success` |
 | `fonts` | family name | `font-display, font-ui, font-body, font-price, font-mono` |
 | `type` | `[desktop, mobile]` | `text-display, text-h2, text-h3, text-h4, text-title, text-ui, text-ui-sm, text-badge, text-label, text-body, text-price` |
-| `numbers` | number or `[desktop, mobile]` (equal pair renders as one value) | `space-page, space-grid, space-card, space-panel, space-xs, space-sm, space-md, space-section, size-header, size-line, opacity-inactive` + c2: `size-logo` (must be `[desktop, mobile]`) |
+| `numbers` | number or `[desktop, mobile]` (equal pair renders as one value) | `space-page, space-grid, space-card, space-panel, space-xs, space-sm, space-md, space-section, size-header, size-line, opacity-inactive` + c2: `size-logo` (must be `[desktop, mobile]`); radius roles `radius-control`, `radius-card`, optional `radius-media`, `radius-pill` (02 §3) |
 
 Contract 1 = 37 core variables, contract 2 = 41. Extra variables are allowed and rendered. `intro` replaces the default §3 sentence.
 

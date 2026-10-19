@@ -29,7 +29,6 @@
 §6.5|WARN|Z-M-01|L10 state recipe used but no Motion States row
 §6.5|WARN|M-22:L241|L10 Motion States row for an unused recipe
 §3|ERROR|color-success|L11 core variable missing (contract 2 needs 41)
-§3|WARN|radius-card:L52|L11 variable outside the core set
 §3|ERROR|color-line:L15|L12 #RRGGBBAA only allowed on color-scrim / color-transparent
 §3|ERROR|color-transparent:L22|L12 color-transparent must be #RRGGBB00
 §3|ERROR|text-h2:L30|L12 size variable themed by mode; use device
@@ -54,4 +53,4 @@
 §6.2|ERROR|Overlay/CartDrawer|L21 tree lacks `coupon-toggle` (ikas block, 06-page-coverage §3b/§3c)
 §6.2|ERROR|Overlay/CartDrawer|L21 tree lacks `drawer-recommend` (ikas block, 06-page-coverage §3b/§3c)
 §6.2|ERROR|Section/Header|L21 tree lacks `announcement-pager` (ikas block, 06-page-coverage §3b/§3c)
-LINT FAIL (47 errors, 9 warnings)
+LINT FAIL (47 errors, 8 warnings)

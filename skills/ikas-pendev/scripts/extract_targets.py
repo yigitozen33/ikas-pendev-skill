@@ -41,7 +41,7 @@ sys.path.insert(0, HERE)
 import lint_plan as L  # noqa: E402
 
 CHK_IDS = ("vars", "ds", "sections", "overlays", "pages", "anim", "hardcoded", "textclass", "clip",
-           "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers")
+           "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers", "radius")
 
 
 def plan_data(plan):
