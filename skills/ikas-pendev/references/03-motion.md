@@ -30,7 +30,7 @@ Layer names stay as written (kebab-case, they become CSS classes).
 9. **Scroll-driven elements are free layers.** Rotating/sliding images and parallax backgrounds are out of flow (`layoutPosition: "absolute"`) and drawn larger than their container.
 10. **Hover states are separate frames.** Each interactive component's hover state is drawn once as `P/Sub/<Name> — hover`, never again inside sections.
 11. **Every target is marked.** Every `layer` named in an `anim-targets` block exists in the design with exactly that name and carries `metadata.anim` (plus the id in `context`).
-12. **The mobile state is decided.** When a target's `mobile` field says off or different, the mobile frame is drawn that way (e.g. no sticky → normal flow).
+12. **The mobile state is decided.** When a target's `mobile` field says off or different, the mobile frame is drawn that way (e.g. no sticky → normal flow). Touch has no hover: content a hover or expand recipe reveals on desktop is drawn open on `@mobile`, with the whole card as the tap target, and the target's `mobile` field says so (`açık; kartın tamamı bağlantı`). See `SKILL.md` rule 14 and `06-page-coverage.md` §3d.
 
 ## 2. Motion tokens
 

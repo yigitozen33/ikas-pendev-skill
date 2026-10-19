@@ -5,7 +5,7 @@ A reference site rarely shows every page an ikas store needs (the reference behi
 ## Contents
 1. Global rules
 2. Coverage matrix
-3. Required overlays
+3. Required overlays (3a QuickBuy · 3b merchant blocks · 3c storefront completeness · 3d cards, menu and search)
 4. States
 5. Sections the reference does not have
 6. Custom pages
@@ -34,7 +34,7 @@ A reference site rarely shows every page an ikas store needs (the reference behi
 | `FORGOT_PASSWORD` | `forgot-password-section` | AuthForms (forgot variant) | — | default · success (mail sent) · error | ✓ |
 | `RECOVER_PASSWORD` | `recover-password-section` | AuthForms (recover variant) | — | default · success · invalid/expired token | ✓ |
 | `NOT_FOUND` | `not-found-section` | NotFound (big title, text, link home) | — | — | ✓ |
-| `SEARCH` | `category-list-section` (search mode) | ProductList with search heading (query + result count) | Search | results · no results · loading | ✓ |
+| `SEARCH` | `category-list-section` (search mode) | ProductList in search mode with its **own in-page search field** (§3d) | Search | searching (keyword in the field, count) · no results · loading · plus an all-products state when the design changes the layout without a keyword | ✓ |
 | `FAVORITES` | `favorites` pattern + ProductList grid | ProductList (favorites heading) | — | empty (logged in) · logged-out prompt · filled | ✓ |
 | `BLOG` | `blog-home-section` | blog listing (cards or rows, category tabs, pagination) | — | empty category | ○ |
 | `BLOG_POST` | `blog-post-section` | BlogPost (title, date, image, rich text) · related posts | — | — | ○ |
@@ -64,9 +64,9 @@ Every theme designs these five, each as its own root frame per state (`P/Overlay
 |---|---|---|
 | `CartDrawer` (mini cart) | Header | empty · filled · loading |
 | `SearchOverlay` | Header | open empty · typing with results · no results |
-| `MenuOverlay` / `MobileMenu` | Header | open (desktop may be a mega menu; mobile is required) |
+| `MenuOverlay` / `MobileMenu` | Header | open (desktop may be a mega menu; mobile is required and keeps the mega menu column titles, §3d) |
 | `FilterDrawer` | ProductList | `@mobile` open (desktop only if filters are a drawer there too) |
-| `QuickBuy` (hızlı al) | Header (global host; opened by every `ProductCard` cart button and any list row cart button) | açık (varyant seçili) · seçim eksik · ekleniyor — `@desktop` and `@mobile` |
+| `QuickBuy` (hızlı al) | Header (global host; opened by every `ProductCard` cart button and any list row cart button) | açık (varyant seçili) · renk karttan · seçim eksik · ekleniyor · kişiselleştirme — `@desktop` and `@mobile` (§3d) |
 
 Optional, when the reference or brief has them: Megamenu, InfoDrawer / size guide (ProductDetail), ConfirmModal, Toast, cookie bar (Header child), newsletter popup. Overlays port as sub-components rendered by the owner section (`04-ikas-constraints.md` §6).
 
@@ -168,7 +168,43 @@ The ikas MCP expects these pieces in every custom theme (templates, child compon
 
 **Conditional: asked in intake (07 §1), drawn only on "evet":** Toast, ConfirmModal, AddressModal, AccountMenu (fallbacks above), loyalty program (points in account and cart), raffle pages, brand page, technical spec table, extra customer fields at register, blog tags and author, product-list column toggle (3/4 desktop, 1/2 mobile).
 
-**Not designed (decided in code):** search within a list, "load previous page", numbered pagination as well as load-more (pick one), unit price.
+**Not designed (decided in code):** search inside a category list (the search page field of §3d is required), "load previous page", numbered pagination as well as load-more (pick one), unit price.
+
+### 3d. Product cards, mobile menu and search: required behaviour
+
+Each rule below comes from a review of a finished theme where the first build missed it. They hold on every canvas, whatever the reference shows. CHK `storefront` checks the layer names and state frames; CHK `dividers` warns about line noise (`08-quality.md` §2). The code side of each rule is in `10-port-behaviour.md`.
+
+**ProductCard (`P/Sub/ProductCard`), layer names fixed:**
+
+| Layer | Rule |
+|---|---|
+| `card-media` | The image frame. Every overlay control below sits inside it. |
+| `card-fav` | The favourite button sits inside `card-media`. **The design picks its place once** (a corner, its offset, its size and whether it is revealed on hover) and that place is the same **everywhere a card shows a favourite**: every card type (ProductCard, ProductCardSmall, list rows, rail cards), every list and page (home rails, category, search, favourites, cart rail, related products) and both devices. Sections never move or restyle it; a card type that needs a smaller button keeps the same corner. A hover-revealed button is always visible on touch (rule 14). The product page's own favourite button beside add-to-cart is a separate layer (`pdp-fav`) and is the only exception. |
+| `card-swatches` | Colour dots + `+N`. They are **interactive**: hovering previews that colour's image and clicking selects it, without leaving the list. The selected dot has its own style. |
+| `card-cart` | Opens QuickBuy. QuickBuy opens with the colour chosen on the card. |
+| `card-customize` | Replaces `card-cart` when the product has an option set (kişiselleştirme). It uses a **different icon** (pen, sliders) from the cart button, so the shopper sees before clicking that this product needs a choice on the product page, and it links straight to the product page. Hidden on the default card. |
+
+ProductCard states, each a `P/Sub/ProductCard — <state>` frame:
+- `renk seçili`: a swatch other than the first is selected and the image shows that colour.
+- `ayrık varyant`: the merchant has enabled "show variant values separately on category pages", so every colour is its own card. The card shows that colour's image and name and has **no** `card-swatches`.
+- `kişiselleştirme`: `card-customize` is visible and `card-cart` is hidden.
+
+**QuickBuy additions (§3a):**
+- `renk karttan`: QuickBuy opens with the card's colour selected and no size selected. The size group is **not** in its error style until the shopper presses add.
+- `kişiselleştirme`: shown when the product has an option set. The add button becomes an outline button with an arrow, labelled to go to the product page, with a short note above it explaining why. Its style differs from the solid add button, so a shopper who skims does not mistake it for "add to cart". Both labels are TEXT props.
+
+**MenuOverlay `@mobile`:** when the desktop navigation has a mega menu, the mobile menu keeps every column title (`menu-mega-title`) above its links. The vertical rhythm is one scale: the same gap between a title and its links everywhere, and a larger gap between groups. A mobile menu that drops the column titles and runs all links together is a gap.
+
+**Touch behaviour (rule 14):** content a desktop layout reveals on hover or by expanding (activity cards, collection tiles, image hover text) is drawn **open** on the `@mobile` component, and the whole card is the tap target (no separate small link). Draw it that way rather than describing it.
+
+**Popular searches (optional):** a theme may show popular search chips in SearchOverlay (`search-suggestions`) and on the search page (`search-popular`), each a LIST_OF_LINK prop. They are not required. When they exist, a chip that points at the search page searches for its own label (it opens the search page with that keyword, or searches in place on the search page); it is never a plain link to an empty search page.
+
+**Search page (`ProductList` in search mode):**
+- **Required: an in-page search field.** The search page draws its own search field (`search-field`: search icon, input, clear button), so a shopper can change the keyword without going back to the header. Typing searches the list. The result count appears exactly once, in a place the design picks (inside the field, `search-count`, or in the filter bar).
+- **The design decides the rest, and applies it consistently:** whether the field is always open or folds away when there is no keyword (the "all products" page), what opens a folded field, where that control sits, and whether popular searches appear. If the field folds, the page itself has a visible control that opens it; the header is not the only way in.
+- **The header behaves the same on every page.** Its search opens SearchOverlay on the search page too; the page's own field is a second entry, not a replacement.
+- **States:** `P/Section/ProductList@desktop — arama` and `@mobile — arama` (keyword in the field, count shown). When the layout without a keyword differs (folded field, another title), also `— tüm ürünler` at both devices.
+- Every string is a TEXT prop: page title, placeholder, clear label and, when used, the toggle and popular-searches labels.
 
 ## 4. States
 

@@ -22,6 +22,7 @@ What separates a designed theme from a generated one. Read before writing plan �
 | **Identical rhythm** | every section = title, subtitle, 4-column grid, same padding | vary density and scale: one full-bleed, one tight list, one oversized type moment |
 | **Stock team** | smiling people around a laptop, handshake, office | imagery from the art direction in `P/DS/Imagery` |
 | **Purple default** | violet-to-blue gradients, glassmorphism | colours from the reference analysis and the brief |
+| **Line noise** | a rule under every heading, between every list row, around every panel and filter group, in full-strength `$color-line` | group with spacing first; keep a line only where it separates two things that would otherwise read as one, in the footer's style (§8). CHK `dividers` warns |
 
 ## 3. Identity = MASTER + per-section overrides
 
@@ -73,3 +74,12 @@ Before marking a section (or sub) done in `build-log.md`, take one screenshot an
 2. **Slop:** does it avoid every anti-pattern in §2 (unless the brief asked for it)?
 3. **Rhythm:** is it visibly different in density or scale from the section above and below it?
 4. **Real content:** with Turkish copy, real-length product names, prices and both devices, does anything clip, wrap badly or fall back to a default font?
+
+## 8. Dividers
+
+Lines are the cheapest way to separate things, so they multiply. A theme reads calmer when spacing does most of the grouping:
+
+- **Spacing first.** A heading and its content, a filter group and its values, a menu title and its links are grouped by a smaller gap, not by a line.
+- **One line per boundary.** A boundary gets one line, never a border on both neighbours. No line directly above or below a panel edge, a sticky bar's own border or a full-bleed image.
+- **Soft colour.** Dividers inside content (list rows, filter groups, menu groups, account panels) use `$color-line` at about half strength: a softer variable in the palette, or the port's `color-mix(in srgb, var(--line) 50%, transparent)`. Full-strength `$color-line` is kept for structural edges (the header bottom, the footer top) and for inputs.
+- **The footer's language everywhere.** There is no count limit. What matters is that every divider speaks one language: the same colour, thickness and spacing as the footer's dividers, on the category page, the mobile menu, the cart, the account panels and the blog. Review them together, not one by one.
