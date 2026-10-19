@@ -294,6 +294,19 @@
    ],
    "rule": "Var olan ama bu sepete uymayan bir kod (alt limit, ürün kuralı) sepette couponCode olarak kalır ama indirim satırı üretmez. Kod ancak couponCode ile birlikte bir kupon indirimi (getIkasOrderCouponAdjustment) varsa uygulanmış gösterilir. Gönderir göndermez hiçbir şeye uymayan kod geri kaldırılır (removeCouponCode) ve hata metni görünür; sonradan uymaz olan kod üstü çizili, soluk, hata metni ve Kaldır ile görünür. Aynı alandan girilen hediye çeki kendi satırıyla başarı sayılır.",
    "test": "Seed S-13'ün kodunu alt limitin altındaki sepette dene: hata metni çıkar, kod uygulanmış görünmez. Sepeti limitin üstüne çıkar ve dene: indirim satırı ve çip görünür. Sonra ürün çıkarıp limitin altına in: çip üstü çizili, hata metni ve Kaldır görünür. Uydurma bir kod \"geçersiz\" der."
+  },
+  {
+   "id": "PB-28",
+   "title": "Ürün videosu kendiliğinden oynar",
+   "keys": [
+    "ProductDetail",
+    "ImagePreview"
+   ],
+   "pageTypes": [
+    "PRODUCT_DETAIL"
+   ],
+   "rule": "Ürün medyasındaki video (img.isVideo) galeride, küçük resminde ve lightbox'ta sessiz, döngülü ve satır içi (muted, loop, playsinline, autoplay) oynar; üstünde play düğmesi yoktur. Dokunmak ya da tıklamak durdurur ve play işaretini gösterir, tekrar dokunmak devam ettirir. prefers-reduced-motion açıkken video durmuş başlar ve play işareti görünür. Ekran dışındaki video duraklar.",
+   "test": "Seed S-14'te masaüstü küçük resim şeridinde videonun küçük resmi oynuyor, play işareti yok. Mobilde lightbox'ı aç: video sessiz oynar; dokun, durur ve play çıkar; tekrar dokun, devam eder. Azaltılmış hareket açıkken video durmuş gelir."
   }
  ],
  "seed": [
@@ -465,6 +478,18 @@
     "PB-27"
    ],
    "what": "Alt sepet tutarı olan bir kupon kodu (ör. 1.000 TL üstü %10) ve bir hediye çeki kodu. Otomatik kampanyaların adı kupon kodu gibi okunmaz."
+  },
+  {
+   "id": "S-14",
+   "title": "Videolu ürün",
+   "keys": [
+    "ProductDetail"
+   ],
+   "pageTypes": [],
+   "for": [
+    "PB-28"
+   ],
+   "what": "Görsellerinin arasında kısa (10–20 sn) bir video olan bir ürün; video ikinci sırada."
   }
  ]
 }
