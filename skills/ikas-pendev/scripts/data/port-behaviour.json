@@ -191,6 +191,30 @@
    ],
    "rule": "Ürün sayfasındaki küçük resim şeridi küçük resimleri kadar uzundur; galerinin yüksekliğine uzatılmaz. Kendi içinde yalnızca küçük resimler taşınca kayar, ucuna gelince sayfa kaymaya devam eder (overscroll-behavior kaydırmayı zincirler, şerit kaydırmayı tutmaz). Şeridin altındaki boş alan sayfanın parçasıdır.",
    "test": "Az görselli ve çok görselli iki üründe fareyi küçük resimlerin üstüne ve altlarındaki boş alana getirip tekerle kaydır: iki yerde de sayfa kayar; çok görselli üründe şerit önce kendi içinde kayar, sonunda sayfa devam eder."
+  },
+  {
+   "id": "PB-19",
+   "title": "Yorum sonrası metin mağaza ayarına uyar",
+   "keys": [
+    "ProductReviews"
+   ],
+   "pageTypes": [
+    "PRODUCT_DETAIL"
+   ],
+   "rule": "Yorum gönderilince gösterilen metin mağazanın yorum onayı ayarından gelir (IkasStorefrontConfig.customerReviewSettings.isAutoApprove): otomatik onay açıksa \"yayınlandı\" metni görünür ve yorum listeye hemen eklenir; kapalıysa \"onaylandıktan sonra yayınlanır\" metni görünür ve liste değişmez. Ayar okunamıyorsa tarafsız bir teşekkür metni gösterilir. Özet puan ve yorum sayısı yeni yorumu bir kez sayar.",
+   "test": "Seed S-11'in iki ayarında ürüne birer yorum gönder: açıkken yayınlandı metni ve listede yeni yorum, sayı bir artar; kapalıyken onay metni, liste ve sayı aynı kalır."
+  },
+  {
+   "id": "PB-20",
+   "title": "Yıldız puanı fareyle ve dokunarak seçilir",
+   "keys": [
+    "ProductReviews"
+   ],
+   "pageTypes": [
+    "PRODUCT_DETAIL"
+   ],
+   "rule": "Yorum formundaki yıldızlar fareyle, dokunarak ve klavyeyle seçilir. Basılan öğe mousedown ile mouseup arasında DOM'dan çıkmaz: önizleme dolgusu tıklamayı almaz (pointer-events: none), odaklanma önizlemeyi yalnızca klavyede (:focus-visible) sıfırlar. Aksi halde Chrome tıklama olayı üretmez ve puan seçilmez.",
+   "test": "Chrome masaüstünde fareyle 4. yıldıza, mobilde dokunarak 5. yıldıza bas: puan seçilir ve gönderilebilir. Tab + ok tuşlarıyla da seçilir."
   }
  ],
  "seed": [
@@ -324,6 +348,19 @@
     "PB-16"
    ],
    "what": "Option set'inde dosya yükleme (FILE) alanı olan bir ürün; dosya alanı zorunlu değil."
+  },
+  {
+   "id": "S-11",
+   "title": "Yorum onayı ayarı",
+   "keys": [
+    "ProductReviews"
+   ],
+   "pageTypes": [],
+   "for": [
+    "PB-19",
+    "PB-20"
+   ],
+   "what": "Yorumlar açık; test sırasında \"yorumları otomatik onayla\" bir kez açık bir kez kapalı. Test yorumları sonra silinir ya da gizlenir."
   }
  ]
 }
