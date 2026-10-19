@@ -154,6 +154,19 @@
    "pageTypes": [],
    "rule": "Liste verisinde option set ve set ürün içeriği yüklü gelmez; sepete ekleme bunlar yüklenmeden reddedilir. QuickBuy açılınca ve varyant değişince option set'i (getProductOptionSet) ve set ürünün içeriğini (getBundleProductsOfVariant, initBundleProducts) kendisi yükler; yüklenene kadar ekle düğmesi yükleniyor durumundadır. Alanları isteğe bağlı setli ürün ve set ürün QuickBuy'dan sepete eklenir. Yalnızca zorunlu alanı olan ya da seti yüklenemeyen ürün ürün sayfasına yönlenir (PB-06).",
    "test": "Seed S-08 ve S-09 için karttan QuickBuy'ı aç, beden seç, sepete ekle: ürün sayfasına gitmeden sepete eklenir ve sepette set içeriği / seçilen seçenekler görünür. Seed S-02 hâlâ \"ürün sayfasına git\" gösterir."
+  },
+  {
+   "id": "PB-16",
+   "title": "Kişiselleştirmede dosya yükleme",
+   "keys": [
+    "ProductDetail",
+    "QuickBuy",
+    "CartPage",
+    "CartDrawer"
+   ],
+   "pageTypes": [],
+   "rule": "option-file alanı dosyayı gerçekten depoya yükler. Yükleme getProductOptionFileUrl'den alınan ön imzalı adrese FormData ile yapılır ve Content-Type başlığı elle yazılmaz: elle verilen \"multipart/form-data\" sınır (boundary) bilgisini düşürür ve depo isteği reddeder (\"Dosya yüklenemedi\"). Alan yükleniyor, yüklendi (dosya adı + kaldır) ve hata durumlarını gösterir; metinler TEXT prop'tur. Sepet satırı ve sipariş özeti dosyanın adını gösterir, depo adresini göstermez.",
+   "test": "Seed S-10'da bir PNG yükle: hata çıkmaz, dosya adı görünür. Zorunlu alanları doldurup sepete ekle: sepet satırında dosya adı görünür (uzun bir https adresi değil). Satırı kaldır."
   }
  ],
  "seed": [
@@ -273,6 +286,18 @@
     "PB-15"
    ],
    "what": "En az iki ürünü içeren bir set (bundle) ürün; bir parçanın varyantı seçilebilir."
+  },
+  {
+   "id": "S-10",
+   "title": "Dosya yüklemeli ürün",
+   "keys": [
+    "ProductDetail"
+   ],
+   "pageTypes": [],
+   "for": [
+    "PB-16"
+   ],
+   "what": "Option set'inde dosya yükleme (FILE) alanı olan bir ürün; dosya alanı zorunlu değil."
   }
  ]
 }
