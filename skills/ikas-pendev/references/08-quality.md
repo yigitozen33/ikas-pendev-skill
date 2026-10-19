@@ -23,6 +23,7 @@ What separates a designed theme from a generated one. Read before writing plan �
 | **Identical rhythm** | every section = title, subtitle, 4-column grid, same padding | vary density and scale: one full-bleed, one tight list, one oversized type moment |
 | **Stock team** | smiling people around a laptop, handshake, office | imagery from the art direction in `P/DS/Imagery` |
 | **Purple default** | violet-to-blue gradients, glassmorphism | colours from the reference analysis and the brief |
+| **Soft hero** | a full-bleed photo that is blurry or pixelated on a large screen, or text on a busy photo with no veil | §9: files at 2× the frame, a `*-veil` layer with an opacity prop |
 | **Line noise** | a rule under every heading, between every list row, around every panel and filter group, in full-strength `$color-line` | group with spacing first; keep a line only where it separates two things that would otherwise read as one, in the footer's style (§8). CHK `dividers` warns |
 
 ## 3. Identity = MASTER + per-section overrides
@@ -84,3 +85,11 @@ Lines are the cheapest way to separate things, so they multiply. A theme reads c
 - **One line per boundary.** A boundary gets one line, never a border on both neighbours. No line directly above or below a panel edge, a sticky bar's own border or a full-bleed image.
 - **Soft colour.** Dividers inside content (list rows, filter groups, menu groups, account panels) use `$color-line` at about half strength: a softer variable in the palette, or the port's `color-mix(in srgb, var(--line) 50%, transparent)`. Full-strength `$color-line` is kept for structural edges (the header bottom, the footer top) and for inputs.
 - **The footer's language everywhere.** There is no count limit. What matters is that every divider speaks one language: the same colour, thickness and spacing as the footer's dividers, on the category page, the mobile menu, the cart, the account panels and the blog. Review them together, not one by one.
+
+## 9. Images
+
+- **Sharp at its largest size.** An image is generated (or upscaled) to at least 2× the widest frame it fills at any device: a full-bleed 1440 frame needs a ≥ 2880 px wide file, a 720 card ≥ 1440 px. A soft or pixelated image is upscaled before the handoff, not after the merchant notices. The handoff lists every image with its frame size so the port uploads the full-resolution file.
+- **Text over an image gets a veil.** Wherever text or controls sit on a photo (hero, footer banner, category tile, campaign card) a separate `*-veil` layer between them darkens or lightens the image, so the contrast gate (02 §10) passes on any photo the merchant uploads later. Its strength is a NUMBER prop (`overlayOpacity`, 0–100) with a sensible default; a veil that only covers the text's area (a centre or edge gradient) is fine.
+- **No baked frames.** The file is a plain rectangle: no rounded corners, border, white margin or shadow inside the image (02 §3, radius roles).
+- **Loading is part of the design.** Only the first large image of a page (usually the hero or the product's main image) loads at once; everything below the fold, and images that only appear on hover or inside a marquee, load when they come near the viewport (PB-21). Draw hover images as a separate hidden layer, so the port sees that they are not part of the first paint.
+

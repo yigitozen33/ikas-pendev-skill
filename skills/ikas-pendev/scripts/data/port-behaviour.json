@@ -215,6 +215,14 @@
    ],
    "rule": "Yorum formundaki yıldızlar fareyle, dokunarak ve klavyeyle seçilir. Basılan öğe mousedown ile mouseup arasında DOM'dan çıkmaz: önizleme dolgusu tıklamayı almaz (pointer-events: none), odaklanma önizlemeyi yalnızca klavyede (:focus-visible) sıfırlar. Aksi halde Chrome tıklama olayı üretmez ve puan seçilmez.",
    "test": "Chrome masaüstünde fareyle 4. yıldıza, mobilde dokunarak 5. yıldıza bas: puan seçilir ve gönderilebilir. Tab + ok tuşlarıyla da seçilir."
+  },
+  {
+   "id": "PB-21",
+   "title": "Görsel yükleme sırası",
+   "keys": [],
+   "pageTypes": [],
+   "rule": "Sayfanın ilk büyük görseli (hero ya da ürünün ana görseli) hemen yüklenir (loading=\"eager\", fetchpriority=\"high\"). Ekranın altındaki görseller, hover ile ya da marquee içinde görünen görseller ekrana yaklaşınca yüklenir (loading=\"lazy\" ya da IntersectionObserver); stiller yüklenmeden tetiklenen lazy yükleme olmaz. Görseller srcset/sizes ile çerçeve boyutuna uygun dosyayı ister. Yazı olan görsellerdeki perde (veil) opaklığı prop'tan gelir.",
+   "test": "Ağ sekmesi açık, önbellek kapalı anasayfayı aç: ilk ekranda yalnızca görünen görseller iner, footer ve marquee görselleri sayfa aşağı kaydırılınca iner. Lighthouse'ta LCP görseli lazy değildir. Footer görseli 1440 ve 2560 genişlikte bulanık değildir."
   }
  ],
  "seed": [
