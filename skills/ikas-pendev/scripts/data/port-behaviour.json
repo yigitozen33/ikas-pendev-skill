@@ -21,12 +21,10 @@
   {
    "id": "PB-03",
    "title": "Ortak Sub stilleri yükleme sırasına güvenmez",
-   "keys": [
-    "ProductCard"
-   ],
+   "keys": [],
    "pageTypes": [],
-   "rule": "Section'ların CSS'i parça parça ve farklı sırayla yüklenir. Bir section içinde ezilebilecek Sub kuralları (card-fav konumu, kart düğmeleri) üst sınıfla birlikte (.pcard .pcard__fav gibi) daha yüksek özgüllükle yazılır.",
-   "test": "card-fav'ı her listede kontrol et: anasayfa rafları, kategori, arama, ürün sayfası önerileri, sepet önerileri. Her yerde canvas'taki yerinde, aynı köşede ve aynı açılma davranışıyla (ör. hover ile) durur."
+   "rule": "Section'ların CSS'i parça parça ve farklı sırayla yüklenir. Bir section içinde ezilebilecek Sub kuralları (card-fav konumu, kart düğmeleri) ve kırılıma göre birini gizleyen kurallar (masaüstü/mobil çip satırları, menüler) üst sınıfla birlikte (.pcard .pcard__fav gibi) daha yüksek özgüllükle yazılır.",
+   "test": "card-fav'ı her listede kontrol et: anasayfa rafları, kategori, arama, ürün sayfası önerileri, sepet önerileri. Her yerde canvas'taki yerinde, aynı köşede ve aynı açılma davranışıyla (ör. hover ile) durur. Kırılıma göre gizlenen her öğe soğuk önbellekle açılan sayfada da tek görünür."
   },
   {
    "id": "PB-04",
@@ -258,6 +256,20 @@
    ],
    "rule": "Fiyat kaydırıcısı sürüklenirken yalnızca etiketler ve alanlar güncellenir; liste sürükleme bitince (pointerup / change) bir kez filtrelenir. Sayı alanları yazarken değil, alan bırakılınca ya da Enter ile uygular. Tutamaklar birbirini geçmez, en düşük ve en yüksek fiyatın dışına çıkmaz. Uygulanan aralık URL'ye yazılır; sayfa yenilenince ve geri gelinince aynı aralık seçili gelir.",
    "test": "Kategoride min tutamağı basılı tutup sürükle: etiket akar, liste ve ağ isteği sürükleme boyunca değişmez; bırakınca liste bir kez yenilenir ve URL'de fiyat aralığı görünür. Sayfayı yenile: aralık seçili kalır. Mobil filtre çekmecesinde dokunarak aynısını dene."
+  },
+  {
+   "id": "PB-25",
+   "title": "Seçili filtreler tek yerde",
+   "keys": [
+    "ProductList",
+    "FilterDrawer"
+   ],
+   "pageTypes": [
+    "CATEGORY",
+    "SEARCH"
+   ],
+   "rule": "Seçili filtre çipleri her kırılımda tam bir yerde görünür (canvas'ta seçilen yerde: filtre çubuğu, liste üstü ya da çekmece). Masaüstü ve mobil için ayrı çizilen çip satırları, birini gizleyen kural aynı ya da daha yüksek özgüllükte yazılır; section CSS'i parça parça yüklendiğinde ikisi birden görünmez (PB-03). Çipin ×'i yalnızca o değeri, \"Tümünü temizle\" hepsini kaldırır.",
+   "test": "Kategoride iki filtre seç (bir beden, bir renk): masaüstünde, tablette ve mobilde çipleri say, her biri bir kez görünür. Bir çipin ×'ine bas: yalnızca o filtre kalkar."
   }
  ],
  "seed": [

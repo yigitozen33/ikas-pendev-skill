@@ -20,7 +20,7 @@ Add a criterion when a review finds a behaviour defect that the canvas could not
 |---|---|---|
 | PB-01 | always | Focus rings appeared after every mouse click on header items and overlay buttons. Keyboard users need them; mouse users read them as a bug. |
 | PB-02 | always | The ikas Router follows `<a>` clicks even after `preventDefault`, so in-page chips and swatch links navigated away. |
-| PB-03 | ProductCard | Section CSS loads in chunks in varying order; a Section rule that loaded later overrode the card's favourite position in some lists only. |
+| PB-03 | always | Section CSS loads in chunks in varying order; a Section rule that loaded later overrode the card's favourite position in some lists only, and a breakpoint-hide rule lost to it so filter chips showed twice. |
 | PB-04 | ProductCard; CATEGORY, SEARCH | With "show variant values separately" on, cards shared one key and one link, so lists flickered and every card opened the same colour. |
 | PB-05 | ProductCard, QuickBuy | Colours could only be explored inside QuickBuy, and QuickBuy opened with no colour chosen and the size group already in its error style. |
 | PB-06 | ProductCard, QuickBuy | A personalised product's card looked like a one-click add but led to the product page; shoppers skimming the button missed why. Only a required field sends the shopper there. |
@@ -42,6 +42,7 @@ Add a criterion when a review finds a behaviour defect that the canvas could not
 | PB-22 | Footer | The footer newsletter had no consent checkbox, so stores that need explicit permission (KVKK / commercial messages) could not use it. |
 | PB-23 | StoreLocator, ContactForm | The store list rebuilt itself in a loop, so hovering one store made the first one jump and the feature image went blank. |
 | PB-24 | ProductList, FilterDrawer; CATEGORY, SEARCH | The price slider could not be held and dragged: the list refetched on every step, so the handle jumped back. |
+| PB-25 | ProductList, FilterDrawer; CATEGORY, SEARCH | Selected filter chips appeared twice, the desktop row and the mobile row both visible. |
 
 The design-side counterpart of PB-03 to PB-11 and PB-13 is `06-page-coverage.md` §3d; of PB-14, `08-quality.md` §8; of PB-08, `SKILL.md` rule 14.
 
