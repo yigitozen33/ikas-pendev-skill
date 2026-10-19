@@ -233,6 +233,17 @@
    "pageTypes": [],
    "rule": "Bülten formunun onay kutusu prop'la açılır (showConsentCheckbox) ve zorunlu ya da isteğe bağlı olur (consentRequired). Metin ve bağlantı prop'tur; bağlantı yeni sekmede açılır ve kutuyu işaretlemez. Zorunluyken işaretlenmeden gönderilen form kayıt yapmaz, consentErrorText'i alanın altında gösterir; işaretlenince hata kalkar. Kapalıyken form eskisi gibi tek alanla çalışır.",
    "test": "Editörde kutuyu aç, zorunlu yap: işaretlemeden gönder, hata görünür ve kayıt olmaz; işaretleyip gönder, başarı metni görünür. Zorunluluğu kapat: işaretlemeden de gönderilir. Kutuyu kapat: form tek alanla çalışır."
+  },
+  {
+   "id": "PB-23",
+   "title": "Seçim listesi kendini yeniden çizmez",
+   "keys": [
+    "StoreLocator",
+    "ContactForm"
+   ],
+   "pageTypes": [],
+   "rule": "Bir listede öğe seçmek (mağaza, konu, sekme) yalnızca seçili öğenin durumunu değiştirir; liste düğümleri yeniden oluşturulmaz. Prop'tan türetilen listeler (COMPONENT_LIST, LIST_OF_LINK) her çizimde yeni dizi üretmez (useMemo), alt bileşenler ebeveyne durum yazıp onu yeniden çizdirerek döngü kurmaz. Görsel değişiminde önceki görsel yenisi yüklenene kadar yerinde kalır; görseli olmayan öğe yer tutucu gösterir.",
+   "test": "İletişim sayfasında 4 saniye hiçbir şeye dokunma: MutationObserver liste altında 0 değişiklik sayar. Masaüstünde mağazaların üstünde gez, mobilde dokun: her seferinde tek öğe seçili, görsel boş kare göstermeden değişir; görselsiz mağazada yer tutucu görünür. Formda konu seçip mesaj yaz: seçim kaybolmaz."
   }
  ],
  "seed": [
@@ -379,6 +390,18 @@
     "PB-20"
    ],
    "what": "Yorumlar açık; test sırasında \"yorumları otomatik onayla\" bir kez açık bir kez kapalı. Test yorumları sonra silinir ya da gizlenir."
+  },
+  {
+   "id": "S-12",
+   "title": "Mağaza listesi",
+   "keys": [
+    "StoreLocator"
+   ],
+   "pageTypes": [],
+   "for": [
+    "PB-23"
+   ],
+   "what": "En az üç mağaza: ikisi fotoğraflı ve çalışma saatli, biri fotoğrafsız."
   }
  ]
 }
