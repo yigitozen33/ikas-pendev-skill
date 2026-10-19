@@ -47,7 +47,7 @@ Add a criterion when a review finds a behaviour defect that the canvas could not
 | PB-27 | CartPage, CartDrawer; CART | A real code that did not apply to the cart showed as applied (the cart stored it) while the discount never came; a gift card entered in the same field showed an error. |
 | PB-28 | ProductDetail, ImagePreview; PRODUCT_DETAIL | Video thumbnails and the mobile lightbox showed a play button over a still frame; the video should already be playing, and pause on a tap. |
 
-The design-side counterpart of PB-03 to PB-11 and PB-13 is `06-page-coverage.md` §3d; of PB-14, `08-quality.md` §8; of PB-08, `SKILL.md` rule 14.
+The design-side counterpart of PB-03 to PB-11, PB-13 and PB-15 is `06-page-coverage.md` §3d; of PB-14, `08-quality.md` §8; of PB-08, `SKILL.md` rule 14; of PB-16, PB-17, PB-19, PB-20, PB-27 and PB-28, the merchant blocks and states of `06-page-coverage.md` §3b–§3c; of PB-18, PB-22, PB-24 to PB-26, the §3c table; of PB-21, `08-quality.md` §9; of PB-23, the Contact row of §2.
 
 ## 3. Seed data
 
