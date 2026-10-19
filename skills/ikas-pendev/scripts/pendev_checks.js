@@ -10,7 +10,17 @@
 //
 // Output: CHK|<id>|PASS|FAIL|WARN|<n>|<detail<=200>  ...  SUMMARY|pass=..|fail=..|warn=..|mode=..
 // CHK ids: vars ds sections overlays pages anim hardcoded textclass clip rootmeta bgprop
-//          parity props data placeholder refassets
+//          parity props data placeholder refassets storefront dividers
+// storefront (06 §3d): P/Sub/ProductCard has card-media, card-fav, card-swatches, card-cart, card-customize and the
+// states "renk seçili", "ayrık varyant", "kişiselleştirme"; every card-fav (Sub roots plus the unit's Section
+// components and Overlay roots, instances resolved) sits in the same corner of its card-media, whatever corner;
+// QuickBuy has "renk karttan" and "kişiselleştirme" at both devices; a mobile MenuOverlay has menu-mega-title
+// when a desktop Header/MenuOverlay/Megamenu layer is named *mega*; ProductList has "— arama" at both devices
+// and a search-field (popular searches and the all-products state are optional). Each part runs only when its
+// key exists. Contract 1: WARN instead of FAIL.
+// dividers (08 §8): WARN when a visible divider layer of a Section component (*divider*, *separator*, *rule,
+// *line, *hairline, or a rectangle/line at most 2px thick) has a style (fill, stroke, opacity, thickness) that no
+// Footer divider has. No count limit. PASS with a note when the Footer has no divider to compare with.
 // data: every {data:<source>} / {code:<name>} of a key's §6.2 tree is found on its component roots (overlay: any
 // root) as textClass data+source / code (code also by layer name), as a context mark "data <source>" /
 // "code <name>", or inside a Sub the same tree line names; a context mark the plan does not know fails.
@@ -94,7 +104,7 @@ if (MODE === "manifest") {
   };
   const U = roots.filter(inUnit);
   if (unit && !isBand && (EXP.sections || []).indexOf(unit) < 0 && (EXP.overlays || []).indexOf(unit) < 0) chk("sections", "FAIL", 0, "unknown unit key " + unit + " (not a plan Section/Overlay)");
-  const run = id => { if (EXP.only && EXP.only.indexOf(id) < 0) return false; if (!unit) return true; if (unit === "DS") return ["vars", "ds", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Page") return ["pages", "rootmeta", "placeholder"].indexOf(id) >= 0; if (unit === "Motion") return ["hardcoded", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Sub") return ["anim", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Overlays") return ["overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "parity", "props", "data", "placeholder", "refassets"].indexOf(id) >= 0; return ["sections", "overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets"].indexOf(id) >= 0; };
+  const run = id => { if (EXP.only && EXP.only.indexOf(id) < 0) return false; if (!unit) return true; if (unit === "DS") return ["vars", "ds", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Page") return ["pages", "rootmeta", "placeholder"].indexOf(id) >= 0; if (unit === "Motion") return ["hardcoded", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Sub") return ["anim", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets", "storefront"].indexOf(id) >= 0; if (unit === "Overlays") return ["overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "parity", "props", "data", "placeholder", "refassets", "storefront"].indexOf(id) >= 0; return ["sections", "overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers"].indexOf(id) >= 0; };
   const find = nm => roots.find(r => r.name === nm);
   const findPre = pre => roots.filter(r => r.name === pre || r.name.indexOf(pre + " ") === 0);
 
@@ -276,6 +286,72 @@ if (MODE === "manifest") {
     });
     const bad = miss.length + stale.length;
     chk("data", bad ? (CONTRACT < 2 ? "WARN" : "FAIL") : "PASS", want - miss.length, (want - miss.length) + "/" + want + (miss.length ? " unmarked:" + miss.join(",") : "") + (stale.length ? " not-in-plan:" + stale.join(",") : ""));
+  }
+  if (run("storefront")) {
+    const ovKeys = EXP.overlays || [], allKeys = (EXP.sections || []).concat(ovKeys);
+    const want = k => !unit || unit === k || (unit === "Sub" && k === "ProductCard") || (unit === "Overlays" && ovKeys.indexOf(k) >= 0);
+    const keyRoots = k => roots.filter(r => (band(r) === "Section" || band(r) === "Overlay") && keyOf(r) === k);
+    const named = (r, re) => Get(r.id, n => (re.test(n.name || "") ? n.name : undefined), { resolveInstances: true });
+    const has = (rs, nm) => rs.some(r => named(r, new RegExp("^" + esc(nm) + "$")).length > 0);
+    const stateRoot = (pre, st) => find(pre + " — " + st);
+    const miss = []; let parts = 0;
+    const card = find(P + "/Sub/ProductCard");
+    if (card && want("ProductCard")) {
+      parts++;
+      ["card-media", "card-fav", "card-swatches", "card-cart", "card-customize"].forEach(nm => { if (!has([card], nm)) miss.push("ProductCard>" + nm); });
+      ["renk seçili", "ayrık varyant", "kişiselleştirme"].forEach(st => { if (!stateRoot(P + "/Sub/ProductCard", st)) miss.push("ProductCard — " + st); });
+    }
+    if (want("ProductCard") || !unit || (EXP.sections || []).indexOf(unit) >= 0 || unit === "Overlays") {
+      const abs = c => { let x = 0, y = 0, p = c; while (p) { x += p.bounds.x; y += p.bounds.y; p = p.parentCtx; } return { x: x, y: y, w: c.bounds.width, h: c.bounds.height }; };
+      const scan = roots.filter(r => band(r) === "Sub").concat(U.filter(r => (band(r) === "Section" && r.name.indexOf(" — ") < 0) || band(r) === "Overlay"));
+      const corners = {};
+      scan.filter((r, i) => scan.indexOf(r) === i).forEach(r => walk(r, (n, c) => {
+        if (n.name !== "card-fav") return;
+        let p = c.parentCtx;
+        while (p && p.node.name !== "card-media") p = p.parentCtx;
+        const k = !p ? "outside card-media" : (() => { const m = abs(p), f = abs(c); return (f.y - m.y <= m.y + m.h - (f.y + f.h) ? "top" : "bottom") + "-" + (f.x - m.x <= m.x + m.w - (f.x + f.w) ? "left" : "right"); })();
+        (corners[k] = corners[k] || []).push(rest(r));
+      }, { resolveInstances: true }));
+      const ks = Object.keys(corners);
+      if (ks.length) parts++;
+      if (ks.length > 1 || corners["outside card-media"]) miss.push("card-fav corners differ: " + ks.map(k => k + "×" + corners[k].length + " (" + corners[k].filter((v, i, a) => a.indexOf(v) === i).slice(0, 3).join(" / ") + ")").join("; "));
+    }
+    if (allKeys.indexOf("QuickBuy") >= 0 && want("QuickBuy")) {
+      parts++;
+      ["renk karttan", "kişiselleştirme"].forEach(st => ["desktop", "mobile"].forEach(d => { if (!roots.some(r => keyOf(r) === "QuickBuy" && r.name.indexOf("@" + d + " — " + st) > 0)) miss.push("QuickBuy@" + d + " — " + st); }));
+    }
+    if (allKeys.indexOf("MenuOverlay") >= 0 && want("MenuOverlay")) {
+      const desk = roots.filter(r => ["Header", "MenuOverlay", "Megamenu"].indexOf(keyOf(r)) >= 0 && devOf(r.name) === "desktop");
+      if (desk.some(r => named(r, /mega/i).length > 0)) {
+        parts++;
+        const mob = keyRoots("MenuOverlay").filter(r => devOf(r.name) === "mobile");
+        if (!has(mob, "menu-mega-title")) miss.push("MenuOverlay@mobile>menu-mega-title");
+      }
+    }
+    if (allKeys.indexOf("ProductList") >= 0 && want("ProductList")) {
+      parts++;
+      const pre = P + "/Section/ProductList@";
+      ["desktop", "mobile"].forEach(d => { if (!stateRoot(pre + d, "arama")) miss.push("ProductList@" + d + " — arama"); });
+      if (!has(keyRoots("ProductList"), "search-field")) miss.push("ProductList>search-field");
+    }
+    chk("storefront", miss.length ? (CONTRACT < 2 ? "WARN" : "FAIL") : "PASS", miss.length, parts ? (miss.length ? "missing:" + miss.join(",") : parts + " part(s) complete") : "no ProductCard/QuickBuy/MenuOverlay/ProductList in scope");
+  }
+  if (run("dividers")) {
+    const DIV = /divider|separator|hairline|(^|-)(rule|line)$/i;
+    const divs = r => { const out = []; walk(r, (n, c) => {
+      if (n.enabled === false) return;
+      const t = Math.min(c.bounds.width, c.bounds.height), thin = (n.type === "rectangle" || n.type === "line") && t <= 2 && Math.max(c.bounds.width, c.bounds.height) >= 24;
+      if (DIV.test(n.name || "") || thin) out.push([n.name || n.type, JSON.stringify([n.fill === undefined ? null : n.fill, n.stroke === undefined ? null : n.stroke, n.opacity === undefined ? 1 : n.opacity, thin ? Math.round(t) : null])]);
+    }); return out; };
+    const comp = r => band(r) === "Section" && r.name.indexOf(" \u2014 ") < 0;
+    const ref = new Set();
+    roots.filter(r => comp(r) && keyOf(r) === "Footer").forEach(r => divs(r).forEach(x => ref.add(x[1])));
+    if (!ref.size) chk("dividers", "PASS", 0, "no Footer divider to compare with (08 \u00a78)");
+    else {
+      const off = [];
+      U.filter(r => comp(r) && keyOf(r) !== "Footer").forEach(r => { const seen = new Set(); divs(r).forEach(x => { if (!ref.has(x[1]) && !seen.has(x[0])) { seen.add(x[0]); off.push(keyOf(r) + "@" + devOf(r.name) + ">" + x[0]); } }); });
+      chk("dividers", off.length ? "WARN" : "PASS", off.length, off.length ? "divider style differs from the Footer's (08 \u00a78): " + off.slice(0, 8).join(",") + (off.length > 8 ? ",+" + (off.length - 8) : "") : "every divider matches a Footer divider style");
+    }
   }
   if (run("placeholder")) {
     const ph = U.filter(r => r.placeholder).map(rest);

@@ -67,6 +67,8 @@ Emitted by `pendev_checks.js` as `CHK|<id>|PASS|FAIL|WARN|<n>|<detail≤200>`, c
 | `placeholder` | unfinished roots | no `P/` root has `placeholder: true` (during build: only the current unit may) | same |
 | `refassets` | reference leakage | no image-fill `url` and no text content contains the reference host or brand name from the brief | same |
 | `ds` | design-system frames | `P/DS/{Colors,Typography,Spacing,Icons,Motion,Imagery}` present (6/6) | 5/5, `Imagery` not required |
+| `storefront` | cards, menu and search (`06-page-coverage.md` §3d) | `P/Sub/ProductCard` has `card-media`, `card-fav`, `card-swatches`, `card-cart`, `card-customize` and the states `renk seçili`, `ayrık varyant`, `kişiselleştirme`; every `card-fav` on the canvas (all Sub roots, Section components and Overlays, instances resolved) sits inside a `card-media` and in the **same corner** of it, whichever corner the design chose; QuickBuy has `renk karttan` and `kişiselleştirme` at both devices; mobile MenuOverlay has `menu-mega-title` when a desktop layer is named `*mega*`; ProductList has `— arama` at both devices and `search-field` (in that state or the component). Popular searches and the all-products state are optional. Each part runs only when its key is in the plan | `WARN` |
+| `dividers` | divider language (`08-quality.md` §8) | `WARN` (never FAIL) when a visible divider layer in a Section component (`*divider*`, `*separator*`, `*rule`, `*line`, `*hairline`, or a rectangle/line ≤ 2 px thick) differs from every Footer divider in fill or stroke, opacity or thickness. No count limit; PASS with a note when the Footer has no divider | same |
 
 ## 4. Final checklist (plan §9)
 
@@ -88,8 +90,10 @@ Design side — every item maps to a CHK or a manual check:
 - [ ] Every text/background pair passes WCAG AA (`02-contract.md` §10; manual on the `P/DS/Colors` pairs).
 - [ ] Every Section root carries the `backgroundColor` COLOR prop (`bgprop`); root metadata complete (`rootmeta`).
 - [ ] No root left with `placeholder: true` (`placeholder`).
+- [ ] Product card, QuickBuy, mobile menu, SearchOverlay and the search page carry the §3d layers and states (`storefront`); content revealed on hover is drawn open on `@mobile` (rule 14, manual).
+- [ ] Every divider uses the Footer's divider style (`dividers` + manual look against the Footer).
 
-Port side (done later by the port, listed so the handoff carries it): theme globals created and re-listed with `list_theme_globals`; every section passes `check` and `build`; every anim target `done: true`.
+Port side (done later by the port, listed so the handoff carries it): theme globals created and re-listed with `list_theme_globals`; every section passes `check` and `build`; every anim target `done: true`; the seed data of `seed-checklist.md` exists in the dev store and every behaviour criterion in `port-manifest.md` is ticked after a click-through, one page at a time (`10-port-behaviour.md`).
 
 ## 5. verify-report format
 

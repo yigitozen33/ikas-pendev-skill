@@ -1,0 +1,338 @@
+{
+ "children": [
+  {
+   "id": "c1",
+   "name": "K/Sub/ProductCard",
+   "type": "frame",
+   "x": 0,
+   "y": 0,
+   "width": 300,
+   "height": 480,
+   "reusable": true,
+   "children": [
+    {
+     "id": "c2",
+     "name": "card-media",
+     "type": "frame",
+     "x": 0,
+     "y": 0,
+     "width": 300,
+     "height": 400,
+     "children": [
+      {
+       "id": "c3",
+       "name": "card-fav",
+       "type": "frame",
+       "x": 260,
+       "y": 8,
+       "width": 32,
+       "height": 32
+      }
+     ]
+    },
+    {
+     "id": "c4",
+     "name": "card-info",
+     "type": "frame",
+     "x": 0,
+     "y": 410,
+     "width": 300,
+     "height": 60,
+     "children": [
+      {
+       "id": "c5",
+       "name": "card-swatches",
+       "type": "frame",
+       "x": 0,
+       "y": 0,
+       "width": 80,
+       "height": 12
+      },
+      {
+       "id": "c6",
+       "name": "card-cart",
+       "type": "frame",
+       "x": 260,
+       "y": 0,
+       "width": 32,
+       "height": 32
+      },
+      {
+       "id": "c7",
+       "name": "card-customize",
+       "type": "frame",
+       "x": 260,
+       "y": 0,
+       "width": 32,
+       "height": 32,
+       "enabled": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "s1",
+   "name": "K/Sub/ProductCard — renk seçili",
+   "type": "frame",
+   "x": 400,
+   "y": 0,
+   "width": 300,
+   "height": 480
+  },
+  {
+   "id": "s2",
+   "name": "K/Sub/ProductCard — ayrık varyant",
+   "type": "frame",
+   "x": 800,
+   "y": 0,
+   "width": 300,
+   "height": 480
+  },
+  {
+   "id": "cs1",
+   "name": "K/Sub/ProductCardSmall",
+   "type": "frame",
+   "x": 1200,
+   "y": 0,
+   "width": 180,
+   "height": 260,
+   "reusable": true,
+   "children": [
+    {
+     "id": "cs2",
+     "name": "card-media",
+     "type": "frame",
+     "x": 0,
+     "y": 0,
+     "width": 180,
+     "height": 220,
+     "children": [
+      {
+       "id": "cs3",
+       "name": "card-fav",
+       "type": "frame",
+       "x": 150,
+       "y": 6,
+       "width": 24,
+       "height": 24
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "q-rendesktop",
+   "name": "K/Overlay/QuickBuy@desktop — renk karttan",
+   "type": "frame",
+   "x": 0,
+   "y": 1000,
+   "width": 1440,
+   "height": 900
+  },
+  {
+   "id": "q-renmobile",
+   "name": "K/Overlay/QuickBuy@mobile — renk karttan",
+   "type": "frame",
+   "x": 0,
+   "y": 1000,
+   "width": 390,
+   "height": 900
+  },
+  {
+   "id": "q-kişdesktop",
+   "name": "K/Overlay/QuickBuy@desktop — kişiselleştirme",
+   "type": "frame",
+   "x": 0,
+   "y": 1000,
+   "width": 1440,
+   "height": 900
+  },
+  {
+   "id": "q-kişmobile",
+   "name": "K/Overlay/QuickBuy@mobile — kişiselleştirme",
+   "type": "frame",
+   "x": 0,
+   "y": 1000,
+   "width": 390,
+   "height": 900
+  },
+  {
+   "id": "h1",
+   "name": "K/Section/HeroBanner@desktop",
+   "type": "frame",
+   "x": 0,
+   "y": 3000,
+   "width": 1440,
+   "height": 800,
+   "reusable": true,
+   "children": [
+    {
+     "id": "h2",
+     "name": "heading-divider",
+     "type": "rectangle",
+     "x": 0,
+     "y": 0,
+     "width": 1440,
+     "height": 1,
+     "fill": "$color-line",
+     "opacity": 0.5
+    },
+    {
+     "id": "h3",
+     "name": "list-separator",
+     "type": "rectangle",
+     "x": 0,
+     "y": 100,
+     "width": 1440,
+     "height": 1,
+     "fill": "$color-line",
+     "opacity": 0.5
+    },
+    {
+     "id": "h4",
+     "name": "panel-line",
+     "type": "rectangle",
+     "x": 0,
+     "y": 200,
+     "width": 1440,
+     "height": 1,
+     "fill": "$color-line",
+     "opacity": 0.5
+    },
+    {
+     "id": "h5",
+     "name": "stat-rule",
+     "type": "rectangle",
+     "x": 0,
+     "y": 300,
+     "width": 1440,
+     "height": 1,
+     "fill": "$color-line",
+     "opacity": 0.5
+    },
+    {
+     "id": "h6",
+     "name": "rectangle",
+     "type": "rectangle",
+     "x": 0,
+     "y": 400,
+     "width": 600,
+     "height": 2
+    },
+    {
+     "id": "h7",
+     "name": "hidden-divider",
+     "type": "rectangle",
+     "x": 0,
+     "y": 500,
+     "width": 1440,
+     "height": 1,
+     "enabled": false,
+     "fill": "$color-line",
+     "opacity": 0.5
+    },
+    {
+     "id": "h8",
+     "name": "row-divider",
+     "type": "rectangle",
+     "x": 0,
+     "y": 600,
+     "width": 1440,
+     "height": 1,
+     "fill": "$color-line",
+     "opacity": 1
+    }
+   ]
+  },
+  {
+   "id": "f1",
+   "name": "K/Section/Footer@desktop",
+   "type": "frame",
+   "x": 0,
+   "y": 4000,
+   "width": 1440,
+   "height": 400,
+   "reusable": true,
+   "children": [
+    {
+     "id": "f2",
+     "name": "col-divider-2",
+     "type": "rectangle",
+     "x": 400,
+     "y": 0,
+     "width": 1,
+     "height": 200,
+     "fill": "$color-line",
+     "opacity": 0.5
+    },
+    {
+     "id": "f3",
+     "name": "col-divider-3",
+     "type": "rectangle",
+     "x": 600,
+     "y": 0,
+     "width": 1,
+     "height": 200,
+     "fill": "$color-line",
+     "opacity": 0.5
+    },
+    {
+     "id": "f4",
+     "name": "col-divider-4",
+     "type": "rectangle",
+     "x": 800,
+     "y": 0,
+     "width": 1,
+     "height": 200,
+     "fill": "$color-line",
+     "opacity": 0.5
+    },
+    {
+     "id": "f5",
+     "name": "col-divider-5",
+     "type": "rectangle",
+     "x": 1000,
+     "y": 0,
+     "width": 1,
+     "height": 200,
+     "fill": "$color-line",
+     "opacity": 0.5
+    },
+    {
+     "id": "f6",
+     "name": "col-divider-6",
+     "type": "rectangle",
+     "x": 1200,
+     "y": 0,
+     "width": 1,
+     "height": 200,
+     "fill": "$color-line",
+     "opacity": 0.5
+    },
+    {
+     "id": "f7",
+     "name": "col-divider-7",
+     "type": "rectangle",
+     "x": 1400,
+     "y": 0,
+     "width": 1,
+     "height": 200,
+     "fill": "$color-line",
+     "opacity": 0.5
+    },
+    {
+     "id": "f8",
+     "name": "col-divider-8",
+     "type": "rectangle",
+     "x": 1600,
+     "y": 0,
+     "width": 1,
+     "height": 200,
+     "fill": "$color-line",
+     "opacity": 0.5
+    }
+   ]
+  }
+ ]
+}

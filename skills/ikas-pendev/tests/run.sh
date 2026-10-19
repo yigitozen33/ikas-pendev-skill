@@ -57,6 +57,18 @@ if command -v node >/dev/null; then sed -n '/^const dataMarks/p' "$OUT/checks-mi
   node "$OUT/datamarks.js" 2>"$OUT/datamarks.log" && ok "data mark grammar parses" || bad "data mark grammar parses" "$(cat "$OUT/datamarks.log")"
 fi
 python3 "$S/extract_targets.py" "$OUT/plan-mini.md" --js all --checks bogus >/dev/null 2>&1 && bad "extract rejects unknown CHK id" || ok "extract rejects unknown CHK id"
+python3 "$S/extract_targets.py" "$OUT/plan-mini.md" --js all --checks storefront,dividers > "$OUT/checks-storefront.js" && ok "extract --checks storefront,dividers renders" || bad "extract --checks storefront,dividers renders"
+if command -v node >/dev/null; then
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-storefront.js" "$FX/storefront-canvas.json" > "$OUT/storefront.txt" 2>&1
+  grep -q '^CHK|storefront|FAIL|1|missing:ProductCard — kişiselleştirme$' "$OUT/storefront.txt" && ok "storefront: missing ProductCard state fails, the rest passes (06 §3d)" || bad "storefront: missing ProductCard state fails, the rest passes (06 §3d)" "$(head -3 "$OUT/storefront.txt")"
+  grep -q '^CHK|dividers|WARN|2|divider style differs from the Footer.s (08 §8): HeroBanner@desktop>rectangle,HeroBanner@desktop>row-divider$' "$OUT/storefront.txt" && ok "dividers: styles unlike the Footer's warn, matching and hidden ones pass, no count limit (08 §8)" || bad "dividers: styles unlike the Footer's warn, matching and hidden ones pass, no count limit (08 §8)" "$(grep dividers "$OUT/storefront.txt")"
+  sed 's/"x": 150,/"x": 4,/' "$FX/storefront-canvas.json" > "$OUT/storefront-favmixed.json"
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-storefront.js" "$OUT/storefront-favmixed.json" > "$OUT/storefront-favmixed.txt" 2>&1
+  grep -q 'card-fav corners differ: top-right×1 (Sub/ProductCard); top-left×1 (Sub/ProductCardSmall)' "$OUT/storefront-favmixed.txt" && ok "storefront: card-fav in different corners on two card types fails" || bad "storefront: card-fav in different corners on two card types fails" "$(head -2 "$OUT/storefront-favmixed.txt")"
+  sed 's/"x": 260,/"x": 4,/; s/"x": 150,/"x": 4,/' "$FX/storefront-canvas.json" > "$OUT/storefront-favleft.json"
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-storefront.js" "$OUT/storefront-favleft.json" > "$OUT/storefront-favleft.txt" 2>&1
+  ! grep -q 'card-fav corners differ' "$OUT/storefront-favleft.txt" && ok "storefront: card-fav top-left on every card type passes (any corner, one corner)" || bad "storefront: card-fav top-left on every card type passes (any corner, one corner)" "$(head -2 "$OUT/storefront-favleft.txt")"
+fi
 
 # 6. analyze_site on offline fixture
 if [ -f "$FX/site/site-snapshot.html" ]; then
