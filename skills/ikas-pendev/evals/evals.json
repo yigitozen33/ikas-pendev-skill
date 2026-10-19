@@ -43,6 +43,38 @@
       ]
     },
     {
+      "id": "build-productcard-storefront",
+      "prompt": "ProductCard alt bileşenini pen.dev'de kur",
+      "expect_trigger": true,
+      "expected": [
+        "Puts card-fav inside card-media in one place the design picks and keeps that corner on every card type and list; hover-revealed buttons stay visible on touch",
+        "Draws card-swatches as interactive dots, card-cart, and a hidden card-customize with a different icon from the cart button",
+        "Draws the ProductCard states renk seçili, ayrık varyant (no swatches) and kişiselleştirme",
+        "Runs the checks for the unit and reports the CHK|storefront line"
+      ]
+    },
+    {
+      "id": "build-search-page",
+      "prompt": "arama sayfasını tasarla, tüm ürünler sayfasında arama alanı olsun",
+      "expect_trigger": true,
+      "expected": [
+        "Draws an in-page search-field and the ProductList — arama state at both devices, with the result count shown once",
+        "Treats folding, the control that opens the field and popular searches as design choices, applied consistently; the Header search still opens SearchOverlay",
+        "Makes every string a TEXT prop",
+        "If the user asks for options, draws them in a temp options frame first (rule 12)"
+      ]
+    },
+    {
+      "id": "handoff-behaviour-seed",
+      "prompt": "/ikas-pendev handoff",
+      "expect_trigger": true,
+      "expected": [
+        "Runs build_manifest.py and writes port-manifest.json/.md, globals-runbook.md and seed-checklist.md",
+        "port-manifest.md lists the Davranış kabul kriterleri (PB-nn) that apply to the plan",
+        "Tells the port to create the seed data in the dev store and test one page at a time in one tab, never typing the merchant's password"
+      ]
+    },
+    {
       "id": "non-trigger-app-review",
       "prompt": "ikas app review'a hazır mı, preflight çalıştır",
       "expect_trigger": false,

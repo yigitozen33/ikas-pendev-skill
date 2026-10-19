@@ -25,6 +25,8 @@ Turns a reference (screenshots and/or a live site) into an original ikas theme d
 11. **No eyebrow labels above headings.** Never put a small label, kicker, index or category line directly above a title (`01 / YENİ GELENLER`, `04 / BÜLTEN`, `KOLEKSİYON · 24 ÜRÜN`, `HESAP`, a coordinate over a store name). Headings open the block on their own. This holds in every design, for every strategy, even when the reference uses them; data that belongs with content (blog category and date, price, badges on media) is not an eyebrow.
 12. **Options go to a temp frame first.** Whenever the user asks for options, alternatives, proposals or "what else could we do" (seçenek, opsiyon, öneri, alternatif, "nasıl olur"), draw them as numbered options in a temporary frame (`<Konu> önerileri (geçici)`, no `P/` prefix) and leave the real design untouched. Only the option the user picks is transferred into the real unit (plan data → plan → lint → canvas → checks → build-log), and that option is then removed from the temp frame. Follow `references/07-checklists.md` §7.
 13. **ikas blocks in the theme's style.** Everything ikas expects the theme to draw is built from the theme's Subs and tokens and matches its forms, spacing and type: merchant blocks, option-set fields, filters, account panels, overlays. This applies to every type and state (`references/06-page-coverage.md` §3b–§3c).
+14. **Touch has no hover.** Content a desktop layout reveals on hover or by expanding (activity cards, collection tiles, image hover text) is drawn open on `@mobile`, and the whole card is the tap target. Controls that appear on hover (the card's favourite button) are always visible on touch.
+15. **The storefront floor is not optional.** Product cards (interactive colour dots, the favourite button in one place on every card type and list, personalisation button, split-variant state), QuickBuy's carried-over colour and personalisation states, the mobile menu's mega menu titles and the search page's own search field are drawn on every canvas (`references/06-page-coverage.md` §3d, CHK `storefront`), and every divider speaks the footer's language (`references/08-quality.md` §8, CHK `dividers`). The handoff carries the matching behaviour criteria and seed data to the port (`references/10-port-behaviour.md`).
 
 ## Arguments
 
@@ -49,7 +51,7 @@ If the last argument is a path, it is the project root; otherwise use the workin
 | 2 | plan | 1's outputs | `docs/pendev/plandata/`, `plan-<P>-<slug>.md` | `lint_plan.py plan.md --globals …` → `LINT OK`, contrast pass |
 | 3 | build | plan, official pen.dev skill | canvas, `docs/pendev/build-log.md` | per-unit `CHK` all PASS |
 | 4 | verify | canvas | `docs/pendev/verify-report.md` | `CHK` all PASS, or each FAIL has a written, user-accepted exception |
-| 5 | handoff | plan, canvas dump | `docs/port/port-manifest.{json,md}`, `globals-runbook.md` | `build_manifest.py` exit 0 |
+| 5 | handoff | plan, canvas dump | `docs/port/port-manifest.{json,md}`, `globals-runbook.md`, `seed-checklist.md` | `build_manifest.py` exit 0 |
 
 ### 0 · intake
 **Precondition, asked first and alone: the theme name** ("Temanın adı ne olsun?"). It is the brand name and fixes the brief title, the slug (Turkish letters folded: `Örnek Outdoor` → `ornek-outdoor`), the suggested prefix letter and the plan file. On the canvas it goes into every brand placement of `references/02-contract.md` §11 (logo wordmark, header, footer, copyright, contact, legal and e-mail texts). If the user has no name yet, offer three original ones (never the reference's). Then ask in Turkish with `AskUserQuestion`, up to three rounds of at most four questions (details: `references/07-checklists.md` §1): inputs and the viewport width of each screenshot; sector and three tone adjectives; interpretation strategy (same skeleton / near clone / free interpretation) and prefix letter (check `get_app_state` for a collision with existing root frames); reference policy confirmation; pages in scope (defaults from `references/06-page-coverage.md` pre-ticked, Contact always in); for the ikas ready-made page groups (membership: login/register/password/email verification; account: my account/orders/addresses/favorites) whether to keep ikas's ready-made pages or design them custom (06 §2a); locale, currency format, uppercase policy; palette modes (single / inverse sections / full dark); canvas and devices (1440 / 390 default); motion appetite. Fill `templates/00-brief.md` (theme name in the title and §2). Gate: the user says the brief is right.
@@ -67,7 +69,7 @@ Order: `ds` → `subs` → each Section in plan §6.2 order (desktop then mobile
 `python3 ${CLAUDE_SKILL_DIR}/scripts/extract_targets.py <plan> --js all` → execute → paste the `CHK|…` lines into `templates/verify-report.md` (if the call times out, split it with `--checks` / `--part`, see 07 §3). Add the two manual checks (Turkish glyph screenshot of `P/DS/Typography`; contrast pairs from 02 §10). Every FAIL either gets fixed or a one-line reasoned exception the user accepts.
 
 ### 5 · handoff
-`extract_targets.py <plan> --js manifest` → execute → save the `ROOT|…` lines to `docs/port/canvas-dump.txt` (large canvas: `--part 1/N` … `N/N`, concatenated). Run `python3 ${CLAUDE_SKILL_DIR}/scripts/build_manifest.py --plandata docs/pendev/plandata --plan <plan> --dump docs/port/canvas-dump.txt --globals docs/referans/globals.md -o docs/port/`. Read `references/09-handoff.md` §3 for the globals runbook the port will follow. Before starting, ask whether the temp options frame (rule 12) can be deleted; undecided options either go or become open questions. The handoff ends with the open questions list, not with code.
+`extract_targets.py <plan> --js manifest` → execute → save the `ROOT|…` lines to `docs/port/canvas-dump.txt` (large canvas: `--part 1/N` … `N/N`, concatenated). Run `python3 ${CLAUDE_SKILL_DIR}/scripts/build_manifest.py --plandata docs/pendev/plandata --plan <plan> --dump docs/port/canvas-dump.txt --globals docs/referans/globals.md -o docs/port/`. Read `references/09-handoff.md` §3 for the globals runbook the port will follow, and `references/10-port-behaviour.md` for the behaviour criteria (`port-manifest.md` → Davranış kabul kriterleri) and the seed data (`seed-checklist.md`) the port must create and click through, one page at a time. Before starting, ask whether the temp options frame (rule 12) can be deleted; undecided options either go or become open questions. The handoff ends with the open questions list, not with code.
 
 ## When to read which reference
 
@@ -78,10 +80,11 @@ Order: `ds` → `subs` → each Section in plan §6.2 order (desktop then mobile
 | Deciding layer structure for something that will move; writing anim-targets | `references/03-motion.md` |
 | Unsure whether a construct ports (prop type, font, package, responsive) | `references/04-ikas-constraints.md` |
 | About to execute on the canvas; something went wrong on the canvas | `references/05-pendev-pitfalls.md` (+ official `execute.md`) |
-| Deciding which pages, overlays and states are in scope | `references/06-page-coverage.md` |
+| Deciding which pages, overlays and states are in scope; product card, menu and search rules | `references/06-page-coverage.md` |
 | Intake questions, per-unit loop, CHK ids, verify-report format, options in a temp frame | `references/07-checklists.md` |
 | The design looks generic; writing Turkish copy; self-critique before "done" | `references/08-quality.md` |
 | Producing the port package or planning theme globals | `references/09-handoff.md` |
+| Behaviour the canvas cannot fix; seed data; how the port tests | `references/10-port-behaviour.md` |
 | Writing plandata | `templates/plandata/README.md` |
 
 ## Checklist (copy into the conversation and tick)
@@ -93,12 +96,12 @@ ikas-pendev:
 - [ ] 2 plan     plandata/ → plan-<P>-<slug>.md · lint → LINT OK · kontrast geçti · §1 ve §6.2 kullanıcıya gösterildi
 - [ ] 3 build    ds · subs · sections n/N · pages · overlays · motion  (her birim: CHK PASS + 1 ekran görüntüsü + build-log satırı)
 - [ ] 4 verify   verify-report.md · CHK all PASS ya da gerekçeli istisna
-- [ ] 5 handoff  port-manifest.json/.md + globals-runbook.md · açık sorular listelendi
+- [ ] 5 handoff  port-manifest.json/.md + globals-runbook.md + seed-checklist.md · davranış kriterleri ve açık sorular listelendi
 ```
 
 ## Anti-patterns (the brief always wins; see `references/08-quality.md`)
 
-Card around everything · gradients, shadows and large radii as defaults · centred hero + three feature cards · Inter/Roboto because nothing was chosen · emoji or hand-drawn icons · English or lorem filler and fake stats · every section at the same rhythm · eyebrow/index labels above headings (never, rule 11). Spend boldness in one place per page and name it in plan §1.
+Card around everything · gradients, shadows and large radii as defaults · centred hero + three feature cards · Inter/Roboto because nothing was chosen · emoji or hand-drawn icons · English or lorem filler and fake stats · every section at the same rhythm · a line under every heading and row (08 §8) · eyebrow/index labels above headings (never, rule 11). Spend boldness in one place per page and name it in plan §1.
 
 ## Reporting
 
