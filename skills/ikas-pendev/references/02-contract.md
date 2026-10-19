@@ -317,7 +317,7 @@ Each sub is a reusable root; each state is its own root `P/Sub/<Name> — <state
 | `RatingStars` | puanlı · yorumsuz | always |
 | `ReviewCard` | doğrulanmış alıcı · doğrulanmamış · görselli · mağaza yanıtlı | always |
 | `VariantSwatch` | varsayılan · seçili · hover · stok yok | always |
-| `PriceRange` | varsayılan · değer girilmiş | always (price filter) |
+| `PriceRange` | varsayılan · değer girilmiş · sürükleniyor (labels follow the handle, the list has not changed yet) | always (price filter) |
 | `SocialLoginButton` | Google · Facebook · hover | custom auth |
 | `Skeleton` | — | always (loading states) |
 

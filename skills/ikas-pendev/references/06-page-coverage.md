@@ -146,7 +146,7 @@ The ikas MCP expects these pieces in every custom theme (templates, child compon
 
 | Where | Required layers / roots | States | ikas source |
 |---|---|---|---|
-| ProductList + FilterDrawer | `filter-category-list`, `filter-swatch-values` (VariantSwatch), `filter-box-values` (VariantChip), `filter-range` (PriceRange), `filter-range-list`, Checkbox list, `filter-clear-all` | — | `IkasProductFilterDisplayType` (SWATCH, BOX, NUMBER_RANGE, NUMBER_RANGE_LIST, LIST), FilterSwatch/Box/Range values |
+| ProductList + FilterDrawer | `filter-category-list`, `filter-swatch-values` (VariantSwatch), `filter-box-values` (VariantChip), `filter-range` (PriceRange: two handles and two number fields; the labels follow while dragging and the list filters once on release), `filter-range-list`, Checkbox list, `filter-clear-all` | — | `IkasProductFilterDisplayType` (SWATCH, BOX, NUMBER_RANGE, NUMBER_RANGE_LIST, LIST), FilterSwatch/Box/Range values |
 | ProductDetail | `pdp-thumbs` (the thumbnail rail is as tall as its thumbnails, not as tall as the gallery; it scrolls inside only when the thumbnails overflow), `pdp-video` (play icon + duration among images), `pdp-variant-swatches` (colour/image swatches, text types stay chips), `pdp-stock-locations` (hidden) | `— sepeti güncelle` (editLineID), `— yükleniyor` (skeleton), `— mağazada stok` | `img.isVideo`, VariantBadge colour/image, `getProductAvailableStockLocations`, `editOrderLineItem` |
 | ProductCard / QuickBuy | `card-swatches` colour dots + `+N`; QuickBuy colour row uses VariantSwatch | — | CardProductVariants |
 | ProductReviews / ReviewCard | `review-images`, `merchant-reply`, `reviews-pagination` | ReviewCard `görselli`, `mağaza yanıtlı` | `review.images`, merchant reply, Pagination |

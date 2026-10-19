@@ -244,6 +244,20 @@
    "pageTypes": [],
    "rule": "Bir listede öğe seçmek (mağaza, konu, sekme) yalnızca seçili öğenin durumunu değiştirir; liste düğümleri yeniden oluşturulmaz. Prop'tan türetilen listeler (COMPONENT_LIST, LIST_OF_LINK) her çizimde yeni dizi üretmez (useMemo), alt bileşenler ebeveyne durum yazıp onu yeniden çizdirerek döngü kurmaz. Görsel değişiminde önceki görsel yenisi yüklenene kadar yerinde kalır; görseli olmayan öğe yer tutucu gösterir.",
    "test": "İletişim sayfasında 4 saniye hiçbir şeye dokunma: MutationObserver liste altında 0 değişiklik sayar. Masaüstünde mağazaların üstünde gez, mobilde dokun: her seferinde tek öğe seçili, görsel boş kare göstermeden değişir; görselsiz mağazada yer tutucu görünür. Formda konu seçip mesaj yaz: seçim kaybolmaz."
+  },
+  {
+   "id": "PB-24",
+   "title": "Fiyat aralığı bırakınca uygulanır",
+   "keys": [
+    "ProductList",
+    "FilterDrawer"
+   ],
+   "pageTypes": [
+    "CATEGORY",
+    "SEARCH"
+   ],
+   "rule": "Fiyat kaydırıcısı sürüklenirken yalnızca etiketler ve alanlar güncellenir; liste sürükleme bitince (pointerup / change) bir kez filtrelenir. Sayı alanları yazarken değil, alan bırakılınca ya da Enter ile uygular. Tutamaklar birbirini geçmez, en düşük ve en yüksek fiyatın dışına çıkmaz. Uygulanan aralık URL'ye yazılır; sayfa yenilenince ve geri gelinince aynı aralık seçili gelir.",
+   "test": "Kategoride min tutamağı basılı tutup sürükle: etiket akar, liste ve ağ isteği sürükleme boyunca değişmez; bırakınca liste bir kez yenilenir ve URL'de fiyat aralığı görünür. Sayfayı yenile: aralık seçili kalır. Mobil filtre çekmecesinde dokunarak aynısını dene."
   }
  ],
  "seed": [
