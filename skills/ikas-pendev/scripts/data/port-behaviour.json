@@ -1,0 +1,242 @@
+{
+ "schema": 1,
+ "note": "Port acceptance criteria and seed data. build_manifest.py copies the entries that apply to the plan into port-manifest.json (behaviour, seed) and renders them in port-manifest.md and seed-checklist.md. keys: Section/Overlay/Sub names; pageTypes: ikas page types; both empty = always. Text is Turkish because it is copied into generated documents. Rationale: references/10-port-behaviour.md.",
+ "behaviour": [
+  {
+   "id": "PB-01",
+   "title": "Odak çerçevesi yalnızca klavyede",
+   "keys": [],
+   "pageTypes": [],
+   "rule": "Fareyle tıklamada odak çerçevesi görünmez, Tab ile gezinmede görünür. Stiller :focus-visible ile yazılır; overlay açılırken koddan verilen odak, son giriş fareyse çerçeve çizmez.",
+   "test": "Header'da bir bağlantıya ve bir overlay düğmesine fareyle tıkla: çerçeve yok. Sayfayı yenile, Tab'a bas: çerçeve görünür."
+  },
+  {
+   "id": "PB-02",
+   "title": "Sayfada kalan bağlantılar Router'a gitmez",
+   "keys": [],
+   "pageTypes": [],
+   "rule": "ikas Router <a> tıklamalarını preventDefault'a bakmadan izler. Sayfada kalması gereken her bağlantı tıklaması (sayfa içi arama etiketi, karttaki renk noktası) preventDefault ile birlikte stopPropagation da çağırır.",
+   "test": "Bu bağlantılara tıkla: sayfa yeniden yüklenmez, gezinme olmaz, yalnızca durum değişir."
+  },
+  {
+   "id": "PB-03",
+   "title": "Ortak Sub stilleri yükleme sırasına güvenmez",
+   "keys": [
+    "ProductCard"
+   ],
+   "pageTypes": [],
+   "rule": "Section'ların CSS'i parça parça ve farklı sırayla yüklenir. Bir section içinde ezilebilecek Sub kuralları (card-fav konumu, kart düğmeleri) üst sınıfla birlikte (.pcard .pcard__fav gibi) daha yüksek özgüllükle yazılır.",
+   "test": "card-fav'ı her listede kontrol et: anasayfa rafları, kategori, arama, ürün sayfası önerileri, sepet önerileri. Her yerde canvas'taki yerinde, aynı köşede ve aynı açılma davranışıyla (ör. hover ile) durur."
+  },
+  {
+   "id": "PB-04",
+   "title": "Ayrık varyant kartları",
+   "keys": [
+    "ProductCard"
+   ],
+   "pageTypes": [
+    "CATEGORY",
+    "SEARCH"
+   ],
+   "rule": "\"Varyant değerlerini kategori sayfalarında ayrı göster\" açık ürünlerde her değer ayrı karttır. Liste key'i ürün id + varyant değeri id; kart linki o değeri seçili açar; ayrık kartta card-swatches yoktur.",
+   "test": "Seed S-01 kategoride her renk için bir kart gösterir; her kart kendi görseliyle ve kendi rengi seçili ürün sayfasını açar; konsolda yinelenen key uyarısı yok."
+  },
+  {
+   "id": "PB-05",
+   "title": "Kartta renk seçimi ve QuickBuy'a taşınması",
+   "keys": [
+    "ProductCard",
+    "QuickBuy"
+   ],
+   "pageTypes": [],
+   "rule": "Renk noktasına gelmek o rengin görselini önizler, tıklamak sayfa değiştirmeden seçer (selectVariantValue, route değişmez). QuickBuy kartta seçili renkle açılır; beden seçilmemiş gelir ve sepete ekle'ye basılana kadar hata stilinde görünmez.",
+   "test": "Kartta ikinci rengi seç, sepet düğmesine bas: QuickBuy o renkle açılır, beden boş ve kırmızı değil; bedensiz ekle'ye basınca seçim uyarısı çıkar."
+  },
+  {
+   "id": "PB-06",
+   "title": "Kişiselleştirmeli ürün",
+   "keys": [
+    "ProductCard",
+    "QuickBuy"
+   ],
+   "pageTypes": [],
+   "rule": "Option set'i olan üründe kart sepet yerine farklı ikonlu card-customize ile ürün sayfasına gider. QuickBuy yine açılırsa ekleme düğmesi yerine oklu, çerçeveli \"ürün sayfasına git\" düğmesi ve kısa bir not gösterir. Option set'i ve varyantı olmayan ürün doğrudan sepete eklenir.",
+   "test": "Seed S-02 kartında kalem/ayar ikonu görünür ve ürün sayfasını açar; Seed S-03 tek tıkla sepete eklenir."
+  },
+  {
+   "id": "PB-07",
+   "title": "Mobil menüde mega menü başlıkları",
+   "keys": [
+    "MenuOverlay",
+    "Header"
+   ],
+   "pageTypes": [],
+   "rule": "Mega menü sütun başlıkları mobil menüde de çizilir; başlık ile bağlantıları arasındaki boşluk her yerde aynı, gruplar arasındaki boşluk daha büyüktür.",
+   "test": "Seed S-06 menüsünü mobilde aç: her sütun başlığı bağlantılarının üstünde; gruplar arası boşluk eşit."
+  },
+  {
+   "id": "PB-08",
+   "title": "Dokunmatikte hover içeriği açık",
+   "keys": [],
+   "pageTypes": [],
+   "rule": "Masaüstünde hover ya da açılmayla görünen içerik (aktivite kartları, koleksiyon karoları, görsel üstü metin) masaüstü kırılımının altında açık gelir; kartın tamamı bağlantıdır.",
+   "test": "Tablet ve mobil genişlikte bu kartlar açık; kartın herhangi bir yerine dokununca hedef sayfa açılır."
+  },
+  {
+   "id": "PB-09",
+   "title": "Blog kategori sayfası kendi yazılarını listeler",
+   "keys": [],
+   "pageTypes": [
+    "BLOG",
+    "BLOG_CATEGORY"
+   ],
+   "rule": "Blog kategori sayfası URL'deki kategoriye göre listeler ve o kategorinin sekmesini seçili gösterir. Liste limiti kategorinin tüm yazılarını kapsar ya da sayfalama vardır.",
+   "test": "Seed S-05'in iki kategori sayfasını aç: her biri yalnızca kendi yazılarını ve kendi sekmesini seçili gösterir."
+  },
+  {
+   "id": "PB-10",
+   "title": "Popüler arama etiketleri kelimeyle arar (varsa)",
+   "keys": [
+    "SearchOverlay",
+    "Header"
+   ],
+   "pageTypes": [],
+   "rule": "Tema popüler arama etiketi gösteriyorsa, arama sayfasını gösteren etiket kendi etiketiyle arar (/search?s=<etiket> ya da arama sayfasında yerinde arama); boş arama sayfasına gitmez.",
+   "test": "Header arama panelindeki ve arama sayfasındaki etiketlere tıkla: o kelimenin sonuçları gelir. Etiket yoksa madde geçer."
+  },
+  {
+   "id": "PB-11",
+   "title": "Arama sayfası içi arama",
+   "keys": [
+    "ProductList"
+   ],
+   "pageTypes": [
+    "SEARCH"
+   ],
+   "rule": "Arama sayfasının kendi arama alanı vardır; yazdıkça (~300 ms gecikmeyle) listeyi arar ve alan odaktayken URL senkronu yazılanı ezmez. Alan kelime yokken kapanıyorsa sayfada onu açan görünür bir düğme vardır; açma/kapama canvas'taki düzene uyar. Header araması her sayfada kendi panelini açar.",
+   "test": "/search'te alana yaz: sonuçlar değişir, yazılan silinmez; × temizler. Alan kapanan bir tasarımsa sayfadaki düğme açar ve odaklar. Header araması arama sayfasında da paneli açar."
+  },
+  {
+   "id": "PB-12",
+   "title": "Açılır geçişler etkileşimden sonra",
+   "keys": [],
+   "pageTypes": [],
+   "rule": "Açılıp kapanan bölümlerin geçişi yalnızca kullanıcı etkileşiminden sonra etkinleşir. Geç yüklenen CSS sayfa açılışında kapanma animasyonu oynatmaz; prefers-reduced-motion'da geçiş yoktur.",
+   "test": "Sayfayı soğuk önbellekle aç: kapalı bölüm hiç görünüp kaybolmaz."
+  },
+  {
+   "id": "PB-13",
+   "title": "Sonuç sayısı tek yerde",
+   "keys": [
+    "ProductList"
+   ],
+   "pageTypes": [
+    "CATEGORY",
+    "SEARCH"
+   ],
+   "rule": "Sonuç sayısı her durumda tam bir yerde, canvas'ta seçilen yerde görünür (ör. arama alanında ya da filtre çubuğunda); iki yerde birden ya da hiç görünmemesi hatadır.",
+   "test": "Tüm ürünler, kelimeli arama ve kategori sayfasında masaüstü ve mobilde sayıyı say: bir kez ve canvas'taki yerinde görünür."
+  },
+  {
+   "id": "PB-14",
+   "title": "Ayraçlar footer'la aynı dilde",
+   "keys": [],
+   "pageTypes": [],
+   "rule": "Sayı sınırı yok; her ayraç footer'daki ayraçlarla aynı renk, kalınlık ve aralıktadır. İçerik içi çizgiler (liste satırları, filtre grupları, menü grupları, hesap panelleri) önce boşlukla gruplanır, bir sınırda tek çizgi olur.",
+   "test": "Kategori sayfası, mobil menü, sepet, hesap ve blog footer'la yan yana karşılaştırıldığında aynı ayraç dilini kullanır."
+  }
+ ],
+ "seed": [
+  {
+   "id": "S-01",
+   "title": "Ayrık gösterilen çok varyantlı ürün",
+   "keys": [
+    "ProductCard"
+   ],
+   "pageTypes": [],
+   "for": [
+    "PB-04",
+    "PB-05"
+   ],
+   "what": "En az 4 renk × 4 beden; \"varyant değerlerini kategori sayfalarında ayrı göster\" açık; her renge kendi görseli; bir renk/beden stoksuz; karşılaştırma fiyatı."
+  },
+  {
+   "id": "S-02",
+   "title": "Kişiselleştirmeli ürün",
+   "keys": [
+    "ProductCard",
+    "ProductDetail"
+   ],
+   "pageTypes": [],
+   "for": [
+    "PB-06"
+   ],
+   "what": "Bir option set'e bağlı ürün: en az bir metin alanı ve bir seçim alanı, biri fiyatlı."
+  },
+  {
+   "id": "S-03",
+   "title": "Varyantsız ürün",
+   "keys": [
+    "ProductCard"
+   ],
+   "pageTypes": [],
+   "for": [
+    "PB-06"
+   ],
+   "what": "Varyantı ve option set'i olmayan, stokta bir ürün (kart düğmesi doğrudan sepete ekler)."
+  },
+  {
+   "id": "S-04",
+   "title": "Birden fazla renkli normal ürün",
+   "keys": [
+    "ProductCard"
+   ],
+   "pageTypes": [],
+   "for": [
+    "PB-05"
+   ],
+   "what": "Ayrık gösterimi kapalı, 3+ renkli ve bedenli ürün (kartta renk noktaları çıkar)."
+  },
+  {
+   "id": "S-05",
+   "title": "Blog içerikleri",
+   "keys": [],
+   "pageTypes": [
+    "BLOG",
+    "BLOG_POST",
+    "BLOG_CATEGORY"
+   ],
+   "for": [
+    "PB-09"
+   ],
+   "what": "2 blog kategorisi ve toplam 3 yazı (her kategoride en az bir); her yazıda kapak görseli, özet ve gövde."
+  },
+  {
+   "id": "S-06",
+   "title": "Mega menü",
+   "keys": [
+    "Header",
+    "MenuOverlay"
+   ],
+   "pageTypes": [],
+   "for": [
+    "PB-07"
+   ],
+   "what": "En az bir ana menü öğesinde 3 sütun başlığı ve her başlığın altında bağlantılar."
+  },
+  {
+   "id": "S-07",
+   "title": "Popüler aramalar (tema gösteriyorsa)",
+   "keys": [
+    "SearchOverlay",
+    "ProductList"
+   ],
+   "pageTypes": [],
+   "for": [
+    "PB-10",
+    "PB-11"
+   ],
+   "what": "Header arama paneli ve arama sayfası için 4 popüler arama bağlantısı; her biri arama sayfasını gösterir, etiketi aranacak kelimedir."
+  }
+ ]
+}

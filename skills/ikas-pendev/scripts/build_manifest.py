@@ -18,11 +18,14 @@ Inputs:
               diffed against the plan per section.
 
 Outputs (in <outdir>): port-manifest.json (schema 1, references/09-handoff.md §1),
-port-manifest.md and globals-runbook.md (Turkish, §2 and §3).
+port-manifest.md, globals-runbook.md and seed-checklist.md (Turkish, §2, §3 and
+references/10-port-behaviour.md). The behaviour criteria and seed entries of
+data/port-behaviour.json whose scope matches the plan go into the manifest as `behaviour`
+and `seed`.
 
 Stdout: one `Q|<id>|<kind>|<where>|<text>` line per open question, one `FILE|<path>` line
 per written file, then the summary line
-  MANIFEST|sections=N|overlays=N|subs=N|pages=N|anims=N|open=N|blocking=N
+  MANIFEST|sections=N|overlays=N|subs=N|pages=N|anims=N|behaviour=N|seed=N|open=N|blocking=N
 With --json, a single JSON object (counts, openQuestions, files) replaces those lines.
 
 openQuestions kinds: missing-section, missing-frame, prop-mismatch, anim-missing-on-canvas,
@@ -41,6 +44,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+BEHAVIOUR = os.path.join(HERE, 'data', 'port-behaviour.json')
 import gen_plan as G  # noqa: E402  plandata loader + validator + target ids
 import lint_plan as L  # noqa: E402  anim-targets YAML subset parser + impl vocabulary
 
@@ -900,6 +904,54 @@ class Builder:
         return m
 
 
+# ---- behaviour criteria and seed data (references/10-port-behaviour.md) ------------------------
+
+def load_behaviour(path=BEHAVIOUR):
+    with open(path, encoding='utf-8') as f:
+        return json.load(f)
+
+
+def in_scope(e, keys, page_types):
+    """An entry applies when it names no scope, or one of its keys / page types is in the plan."""
+    ks, pts = e.get('keys') or [], e.get('pageTypes') or []
+    return (not ks and not pts) or bool(set(ks) & keys) or bool(set(pts) & page_types)
+
+
+def apply_behaviour(m, data):
+    """Add the criteria and seed entries that apply to this plan as m['behaviour'] / m['seed'].
+    A seed entry is kept only when at least one criterion it serves is kept."""
+    keys = ({s['key'] for s in m['sections']} | {o['name'] for s in m['sections'] for o in s['overlays']}
+            | {c['name'] for c in m['subComponents']})
+    page_types = {p['pageType'] for p in m['pages']}
+    beh = [collections.OrderedDict([('id', e['id']), ('title', e['title']), ('rule', e['rule']), ('test', e['test']),
+                                    ('done', False)])
+           for e in data.get('behaviour', []) if in_scope(e, keys, page_types)]
+    ids = {b['id'] for b in beh}
+    seed = []
+    for e in data.get('seed', []):
+        serves = [i for i in e.get('for', []) if i in ids]
+        if serves and in_scope(e, keys, page_types):
+            seed.append(collections.OrderedDict([('id', e['id']), ('title', e['title']), ('what', e['what']),
+                                                 ('for', serves), ('done', False)]))
+    m['behaviour'], m['seed'] = beh, seed
+    m.move_to_end('openQuestions')
+    return m
+
+
+def render_seed_md(m):
+    th = m['theme']
+    out = ['# Test verisi — %s (%s)' % (th['name'], th['prefix']), '',
+           'Port testlerinden önce dev mağazada oluşturulur: admin panelinde (mağaza sahibinin açtığı oturumda) ya da '
+           'admin API ile. Ajan mağaza şifresi yazmaz. İçerik temanın Türkçe metin kurallarına uyar; görseller temanın '
+           'görsel yönünden gelir. Testler tek sekmede, sayfa sayfa yapılır; önbellek için adrese `?cb=<n>` eklenir '
+           '(`references/10-port-behaviour.md` §3–§4).', '']
+    if not m.get('seed'):
+        return '\n'.join(out + ['Bu plan için test verisi gerekmiyor.']) + '\n'
+    for e in m['seed']:
+        out.append('- [ ] **%s · %s** — %s Kriterler: %s.' % (e['id'], e['title'], e['what'], ', '.join(e['for'])))
+    return '\n'.join(out) + '\n'
+
+
 # ---- coverage audit ---------------------------------------------------------------------------
 
 def var_names(d):
@@ -1119,6 +1171,15 @@ def render_manifest_md(d, m):
     out += ['', '| Kontrol | Sonuç | Not |', '|---|---|---|']
     for name, ok, note in checks:
         out.append('| %s | %s | %s |' % (name, 'geçti' if ok else 'kaldı', cell(note)))
+    out += ['', '## Davranış kabul kriterleri', '',
+            "Canvas görünüşü sabitler, davranışı sabitleyemez. Port her maddeyi canlı mağazada masaüstü ve 390 "
+            "genişlikte tıklayarak dener ve işaretler (`references/10-port-behaviour.md`). Gereken test verisi: "
+            "`seed-checklist.md`.", '']
+    if m.get('behaviour'):
+        for b in m['behaviour']:
+            out.append('- [ ] **%s · %s** — %s *Test:* %s' % (b['id'], b['title'], b['rule'], b['test']))
+    else:
+        out.append('Bu plan için kriter yok.')
     out += ['', '## Açık sorular', '']
     if oq:
         for i, q in enumerate(oq, 1):
@@ -1360,12 +1421,13 @@ def main(argv=None):
     if a.globals and not gmd:
         print('WARN|globals|%s has no §1a / §2a tables; plandata values are used' % a.globals, file=sys.stderr)
     b = Builder(data, contract, cat, plan, a.plan, roots, gmd)
-    m = b.build()
+    m = apply_behaviour(b.build(), load_behaviour())
     os.makedirs(a.outdir, exist_ok=True)
     files = []
     for fn, text in (('port-manifest.json', json.dumps(m, ensure_ascii=False, indent=1) + '\n'),
                      ('port-manifest.md', render_manifest_md(data, m)),
-                     ('globals-runbook.md', render_runbook(m))):
+                     ('globals-runbook.md', render_runbook(m)),
+                     ('seed-checklist.md', render_seed_md(m))):
         path = os.path.join(a.outdir, fn)
         with open(path, 'w', encoding='utf-8') as f:
             f.write(text)
@@ -1375,6 +1437,7 @@ def main(argv=None):
     counts = collections.OrderedDict([
         ('sections', len(m['sections'])), ('overlays', sum(len(s['overlays']) for s in m['sections']) + len(b.orphans)),
         ('subs', len(m['subComponents'])), ('pages', len(m['pages'])), ('anims', len(m['animTargets'])),
+        ('behaviour', len(m['behaviour'])), ('seed', len(m['seed'])),
         ('open', len(oq)), ('blocking', nblock)])
     if a.json:
         print(json.dumps(collections.OrderedDict([('counts', counts), ('openQuestions', oq), ('files', files)]),

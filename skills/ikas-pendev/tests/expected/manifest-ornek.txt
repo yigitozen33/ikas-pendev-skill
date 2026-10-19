@@ -1,1 +1,1 @@
-MANIFEST|sections=31|overlays=3|subs=20|pages=16|anims=115|open=19|blocking=0
+MANIFEST|sections=31|overlays=3|subs=20|pages=16|anims=115|behaviour=14|seed=7|open=19|blocking=0

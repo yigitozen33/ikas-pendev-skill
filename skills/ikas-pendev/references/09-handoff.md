@@ -2,7 +2,7 @@
 
 Phase 5 turns plan + canvas into a package a later port (human or an `ikas-port` skill) can execute without reading the canvas. It writes no ikas code and creates no theme globals: it prepares the runbook and stops at the user-approval step.
 
-Inputs: `docs/pendev/plandata/`, the rendered plan, `docs/port/canvas-dump.txt` (the `ROOT|…` lines from `extract_targets.py <plan> --js manifest`). Command: `python3 ${CLAUDE_SKILL_DIR}/scripts/build_manifest.py --plandata docs/pendev/plandata --plan <plan> --dump docs/port/canvas-dump.txt --globals docs/referans/globals.md -o docs/port/`. `--globals` makes the runbook use the final colour schemes (§1a, one scheme per column, the first is the default) and the breakpoint text styles (§2a: family, weight, line height, letter spacing, and laptop/tablet/mobile sizes as `breakpoints` overrides; an uppercase style becomes a runbook note, never `text_transform`) instead of the plandata estimates. Outputs: `port-manifest.json`, `port-manifest.md`, `globals-runbook.md`. On a large canvas the manifest `execute` can time out (`InternalError: interrupted`): render it as `--js manifest --part 1/N` … `N/N`, run each, and concatenate every `ROOT|…` line into one `canvas-dump.txt` (drop the per-part `SUMMARY` lines). A section's `frames.<device>` is always its component root (`@desktop`, `@mobile`), never a state frame; state frames are listed under `frames.<device>.states` with their node ids. Sections and overlays carry `desktopOnly` / `desktopOnlyStates` from plandata; the port hides those layers below the mobile breakpoint. Exit 1 when a plan section, page or anim target is missing on the canvas.
+Inputs: `docs/pendev/plandata/`, the rendered plan, `docs/port/canvas-dump.txt` (the `ROOT|…` lines from `extract_targets.py <plan> --js manifest`). Command: `python3 ${CLAUDE_SKILL_DIR}/scripts/build_manifest.py --plandata docs/pendev/plandata --plan <plan> --dump docs/port/canvas-dump.txt --globals docs/referans/globals.md -o docs/port/`. `--globals` makes the runbook use the final colour schemes (§1a, one scheme per column, the first is the default) and the breakpoint text styles (§2a: family, weight, line height, letter spacing, and laptop/tablet/mobile sizes as `breakpoints` overrides; an uppercase style becomes a runbook note, never `text_transform`) instead of the plandata estimates. Outputs: `port-manifest.json`, `port-manifest.md`, `globals-runbook.md`, `seed-checklist.md` (the store data the behaviour criteria need, `10-port-behaviour.md`). On a large canvas the manifest `execute` can time out (`InternalError: interrupted`): render it as `--js manifest --part 1/N` … `N/N`, run each, and concatenate every `ROOT|…` line into one `canvas-dump.txt` (drop the per-part `SUMMARY` lines). A section's `frames.<device>` is always its component root (`@desktop`, `@mobile`), never a state frame; state frames are listed under `frames.<device>.states` with their node ids. Sections and overlays carry `desktopOnly` / `desktopOnlyStates` from plandata; the port hides those layers below the mobile breakpoint. Exit 1 when a plan section, page or anim target is missing on the canvas.
 
 ## Contents
 1. `port-manifest.json` schema (schema 1)
@@ -49,12 +49,15 @@ Top-level keys are fixed; unknown keys are ignored by readers; `schema` bumps on
               "frames": { "desktop": "…", "mobile": "…" } }],
   "animTargets": [{ "id": "C-HDR-01", "section": "Header", "layer": "marquee-track", "via": "Marquee",
                     "recipe": "M-14", "trigger": "auto-loop", "impl": "css-keyframes", "done": false }],
+  "behaviour": [{ "id": "PB-01", "title": "Odak çerçevesi yalnızca klavyede", "rule": "…", "test": "…", "done": false }],
+  "seed":      [{ "id": "S-05", "title": "Blog içerikleri", "what": "…", "for": ["PB-09"], "done": false }],
   "openQuestions": [{ "id": "Q1", "kind": "prop-mismatch", "where": "Header.cartText",
                       "text": "Planda TEXT, canvas'ta prop yok" }]
 }
 ```
 
 Field rules:
+- `behaviour` / `seed` are the entries of `scripts/data/port-behaviour.json` whose scope (`keys`, `pageTypes`) matches the plan; a seed entry stays only when a kept criterion needs it. The port sets `done` after the click-through (`10-port-behaviour.md` §4).
 - `props[].from`: `plan`, `canvas` or `both`. A prop on one side only becomes an `openQuestions` entry (`kind: "prop-mismatch"`). `default` is `null` for every merchant-data type (`04-ikas-constraints.md` §1).
 - `dataBound` / `codeText` come from `textClass: data|code` (contract 2). Contract 1 has no text classes: both arrays are empty and one open question says so.
 - `anims` and `animTargets` are the union of `metadata.anim` and `context` ids; a plan id missing on the canvas is an error, not an open question.
@@ -84,6 +87,7 @@ Turkish, generated from the JSON; headings fixed:
 ## Sayfalar                  | Sayfa | ikas sayfa tipi | Section'lar (sırayla) |
 ## Animasyon hedefleri       impl'e göre sayılar; tam liste JSON'da
 ## Kapsama denetimi          (§5)
+## Davranış kabul kriterleri  - [ ] **PB-nn · başlık** — kural *Test:* adımlar   (10-port-behaviour.md)
 ## Açık sorular              numaralı liste
 ```
 
@@ -142,5 +146,6 @@ Stable (changing any of these is a breaking change → `schema` 2):
 - Root name → component name; layer name (kebab-case) → CSS class; `metadata.prop` + `propType` → config prop; `textClass` `data` + `source` vocabulary → store binding; `code` → generated text.
 - Anim id grammar, anim-targets YAML keys and the `impl` vocabulary (`03-motion.md`).
 - The globals runbook order and the approval step.
+- `behaviour` ids (`PB-nn`) and `seed` ids (`S-nn`): an id keeps its meaning; a retired criterion leaves its id unused.
 
 Not stable: node ids, canvas coordinates, sample copy and imagery on the canvas (sample content, never defaults), anything under `openQuestions`.

@@ -36,14 +36,14 @@ Her faz bir dosya bırakır ve bir kapıdan geçmeden sonraki faz başlamaz. Faz
 | 2 plan | `docs/pendev/plandata/`, `plan-<P>-<slug>.md` | `lint_plan.py` + kontrast |
 | 3 build | canvas, `docs/pendev/build-log.md` | birim başına CHK |
 | 4 verify | `docs/pendev/verify-report.md` | tüm CHK PASS |
-| 5 handoff | `docs/port/…` | `build_manifest.py` |
+| 5 handoff | `docs/port/…` (manifest, globals runbook, davranış kriterleri, test verisi listesi) | `build_manifest.py` |
 
 ## Depo düzeni
 
 ```
 skills/ikas-pendev/
 ├── SKILL.md            talimatlar (İngilizce; üretilen dokümanlar Türkçe)
-├── references/         sözleşme, motion kataloğu, ikas sınırları, pen.dev tuzakları, sayfa kapsamı, kontrol listeleri, kalite, aktarım
+├── references/         sözleşme, motion kataloğu, ikas sınırları, pen.dev tuzakları, sayfa kapsamı, kontrol listeleri, kalite, aktarım, port davranış kriterleri
 ├── templates/          brief, globals, components, verify-report, port-manifest şablonları; plan prose parçaları; plandata şeması
 ├── scripts/            gen_plan · lint_plan · extract_targets · pendev_checks.js · analyze_site · build_manifest
 ├── examples/ornek/     anonim örnek tema, contract 1 (brief, plandata, globals, components, verify-report)
