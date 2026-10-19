@@ -35,6 +35,7 @@ Add a criterion when a review finds a behaviour defect that the canvas could not
 | PB-15 | QuickBuy | QuickBuy sent every product with an option set or a bundle to the product page, because list data carries neither and add-to-cart rejects a product whose set is not loaded. |
 | PB-16 | ProductDetail, QuickBuy, CartPage, CartDrawer | Every personalisation upload failed with "Dosya yüklenemedi": the upload set the multipart header by hand and storage rejected it. Once fixed, the cart line printed the file's full storage URL. |
 | PB-17 | CartPage, CartDrawer, QuickBuy | Editing a cart line always opened the product page with an update button that shoppers missed; replacing a line by remove-then-add made the cart flash empty. |
+| PB-18 | ProductDetail; PRODUCT_DETAIL | The thumbnail rail was stretched to the gallery's height, so the wheel over its empty lower part tried to scroll the rail and the page stopped. |
 
 The design-side counterpart of PB-03 to PB-11 and PB-13 is `06-page-coverage.md` §3d; of PB-14, `08-quality.md` §8; of PB-08, `SKILL.md` rule 14.
 

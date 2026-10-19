@@ -179,6 +179,18 @@
    "pageTypes": [],
    "rule": "Düzenle, intake'te seçilen yeri açar (ürün sayfası, QuickBuy ya da drawer) ve satırın varyantı, seçenekleri ve adedi seçili gelir. Güncelleme editOrderLineItem ile tek adımda yapılır; eski satırı silip yenisini ekleme sırasında sepet boş görünmez, satır sırası ve toplamlar zıplamaz. QuickBuy ya da drawer seçildiyse müşteri sepetten ayrılmaz; güncelleme bitince sepet yeni satırı gösterir.",
    "test": "Seed S-02 ve S-08'i sepete ekle, satırda Düzenle'ye bas: seçilen yer satırın seçimleriyle açılır. Bedeni ve bir seçeneği değiştirip güncelle: satır aynı sırada yeni değerlerle görünür, araya boş sepet ya da çift satır girmez."
+  },
+  {
+   "id": "PB-18",
+   "title": "Küçük resim şeridi sayfa kaydırmasını yutmaz",
+   "keys": [
+    "ProductDetail"
+   ],
+   "pageTypes": [
+    "PRODUCT_DETAIL"
+   ],
+   "rule": "Ürün sayfasındaki küçük resim şeridi küçük resimleri kadar uzundur; galerinin yüksekliğine uzatılmaz. Kendi içinde yalnızca küçük resimler taşınca kayar, ucuna gelince sayfa kaymaya devam eder (overscroll-behavior kaydırmayı zincirler, şerit kaydırmayı tutmaz). Şeridin altındaki boş alan sayfanın parçasıdır.",
+   "test": "Az görselli ve çok görselli iki üründe fareyi küçük resimlerin üstüne ve altlarındaki boş alana getirip tekerle kaydır: iki yerde de sayfa kayar; çok görselli üründe şerit önce kendi içinde kayar, sonunda sayfa devam eder."
   }
  ],
  "seed": [
