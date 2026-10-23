@@ -1,0 +1,103 @@
+# 12 · E-commerce structure library — design note
+
+Status: **draft, not wired into the phases yet** (branch `ecommerce-library`). Nothing in SKILL.md reads this file until the library and its script exist.
+
+## Contents
+1. Principle
+2. pen.dev import test
+3. Library as a template, not an import
+4. What the library gives, what each theme decides
+5. Skeleton rules
+6. Structural choices per theme
+7. Similarity gate
+8. Next steps
+
+## 1. Principle
+
+**Share the skeleton, never the look.** No two themes may resemble each other. The library makes every theme complete (no missing part, state or port mark); it never makes two themes alike.
+
+Changing colour, font, spacing or corner radius alone is cosmetic: two themes that differ only there still read as the same theme. Themes must differ in structure: section layout, hero archetype, card anatomy, navigation pattern, grid, image ratio. A theme still has to read as a shop, so the prototypical parts stay recognisable: logo, navigation, cart, search, product grid, and gallery + buy box on the product page. Differentiation comes from the axes that do not define that prototype.
+
+## 2. pen.dev import test *(observed)*
+
+Test setup: a library file with two reusable components (a button and a cart line with a slot), flat `metadata` (`prop`, `anim`, `textClass`), `context`, and two-scheme colour variables. A theme file used them in two ways.
+
+**Live import** (`imports: {lib: "lib.pen"}`, instances `ref: "lib:<id>"`, variables `$lib:<name>`):
+
+| Result | Observation |
+|---|---|
+| works | Metadata and `context` reach every descendant, nested instances included, when read with `resolveInstances: true`. |
+| works | Instance overrides: content, fill, replacing a slot frame with a local frame. Metadata on the new local frame persists. |
+| blocks | Imported variables are read-only in the theme file: `Cannot change 'lib:radius-btn', because it's an imported variable`. The theme cannot give the library tokens its own values. |
+| blocks | The library's theme axis arrives as a separate axis `lib:mode`. Setting the theme's own `mode` on an instance does not switch library colours. |
+| blocks | A library component bound to a variable the library does not define is stored as `#000000`; it is not bound late by the importing file. |
+| caution | Inserting into a slot inside an imported instance fails; only replacing the whole slot works. One `execute` lost the editor connection after the file was reopened. |
+| caution | A metadata write on an instance descendant is not persisted (05 §1, §3). Metadata is inherited from the master only. |
+
+**Copy** (a script copies the reusable nodes and variable names from the library JSON into the theme file, and the theme writes its own values): metadata, `context` and node ids stay intact; the same skeleton renders with a different palette, radius and scheme names; scheme switching works; the theme may change the structure of its own copy.
+
+## 3. Library as a template, not an import
+
+Because of §2, `ikas-ecommerce.lib.pen` is never imported live. It is a template that the build phase copies from, once per theme:
+
+1. Copy only the components the theme's pages need.
+2. Copy the token **names**. Their values come from the theme's own `globals.md` (§1a colour schemes, §2a type styles, spacing, radius). The library holds no colour, font or size value of its own.
+3. Rebuild each copied component from the theme's reference and brief (§5). The copy supplies layer names, metadata, slots and state frames, not the drawing.
+
+After the copy the theme owns everything. Library fixes do not flow into existing themes; that is intended, since flowing changes would pull themes back toward each other.
+
+## 4. What the library gives, what each theme decides
+
+| Library (same in every theme) | Theme (decided from zero every time) |
+|---|---|
+| The parts of each component (cart line: image, name, variant, price, quantity − / +, remove) | Order and placement of the parts |
+| The states (empty, loading, error, out of stock, on sale, …) | Proportions: image ratio, column count, widths |
+| Port marks: layer names, `metadata.prop` / `anim` / `textClass`, slots | Density, spacing rhythm, type scale |
+| Evidence-backed must-haves (visible size buttons, − / + quantity, total cost near the CTA, …) | Hero archetype, card anatomy, navigation pattern, grid |
+| | Colour schemes, fonts, radius, elevation, motion |
+
+## 5. Skeleton rules
+
+- Components are grey anatomy frames: neutral fill, one placeholder font, no shadow, no radius.
+- Every size, gap, padding, radius, colour and font is a token reference. A literal value in a library component is a lint error.
+- Layout is the minimum that keeps the parts visible (a vertical stack in anatomy order). It is not a layout proposal, and the build must not keep it unless the theme's own choice (§6) is the same.
+- Each component carries its parts list and states as named child frames, so the build can check completeness by name.
+- No library component has a "default variant" of a structural axis. Every default pulls themes toward the median.
+
+## 6. Structural choices per theme
+
+The brief records one value per axis before the plan. The library offers no defaults.
+
+**Structural axes (A):**
+1. Section layout variants (hero, featured collection, …)
+2. Grid and columns (desktop / mobile columns, gutter, container width)
+3. Navigation pattern (header layout, mega menu, behaviour on scroll, announcement)
+4. Hero archetype (layout, height, text over or beside the image)
+5. Product card anatomy (info position, price line, hover image, quick add, badge, swatch, card shell)
+6. Image ratio and treatment (product ratio, hero ratio, crop, treatment)
+
+**Token axes (B):** typography pairing · type scale · case and tracking · corner radius · line vs surface vs elevation · colour strategy · density and spacing · iconography · motion personality.
+
+The value ranges for each axis are proposals and are not calibrated yet; the first themes calibrate them.
+
+## 7. Similarity gate
+
+A plan-phase script compares the new theme's axis choices with every earlier theme's.
+
+- **Fingerprint store:** the axis choices of earlier themes live on the user's machine, outside this public repo (for example `~/.claude/ikas-pendev/fingerprints.json`). They are never committed.
+- **Minimum difference (proposal):** the new theme differs from each earlier theme in at least 4 of the 6 structural axes (a mirrored layout counts as the same) and in at least 5 of the 9 token axes. One of the token differences is in typography and one is in colour strategy, not just hue.
+- **Generic-default warning (proposal):** warn when 3 or more axes sit on the median value (centred full-bleed hero with one button, 4-column grid of square cards with centred name and price, pill "Shop now" button, uniform section padding, trust-badge icon row, rounded corners everywhere).
+- **Later, optional:** layout fingerprint per template (`sectionType:variantId` sequence, normalised edit distance) and perceptual hashes of grey-blurred screenshots, so that themes that differ only in colour are caught.
+
+All thresholds are uncalibrated proposals.
+
+## 8. Next steps
+
+Each step is one revertable commit on `ecommerce-library`:
+
+1. Pick the inventory with the user (which components and states go into the first library).
+2. Build `ikas-ecommerce.lib.pen` as skeletons (§5).
+3. The copy script plus its tests.
+4. The axis table in the brief template and the similarity gate.
+5. Wire the build phase to start from the library.
+6. Update 05 §3 with the §2 observation (inherited metadata is readable; instance-level metadata is not stored).
