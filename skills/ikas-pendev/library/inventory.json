@@ -1,0 +1,2291 @@
+{
+  "version": 1,
+  "about": "Structure inventory for ikas-ecommerce.lib.pen (references/12-library.md). Parts, states and port marks only: no value, no layout. Layer and state names follow 02-contract.md §9 and 06-page-coverage.md §3; this file adds the evidence-backed must-haves. Part flags: req = always present and enabled; opt = present but enabled:false, switched on by the theme. ikas: yes = storefront API supports it, no = not in ikas (06 §3b), check = not verified yet.",
+  "basis": {
+    "baymard": "usability research: the share of large sites that get it wrong",
+    "platform": "every major theme platform has it; no usability evidence",
+    "contract": "already required by this skill (02 §9, 06 §3)",
+    "w3c": "accessibility requirement"
+  },
+  "kinds": {
+    "sub": "reusable root P/Sub/<Name>; becomes src/sub-components/<Name>",
+    "block": "frame copied into a section (ProductDetail, ProductList …); never a Sub",
+    "section": "shell section P/Section/<Name>@desktop|@mobile",
+    "overlay": "P/Overlay/<Name>@desktop|@mobile — <state>"
+  },
+  "states": {
+    "varsayılan": "default",
+    "hover": "pointer over",
+    "odak": "focus-visible ring; every interactive part (baymard: 48% drop it)",
+    "basılı": "active / pressed",
+    "pasif": "disabled",
+    "seçili": "selected",
+    "mevcut": "current scope or page",
+    "stok yok": "sold out / unavailable value",
+    "indirimli": "sale price with struck compare price",
+    "sepette": "already in the cart",
+    "yükleniyor": "loading or skeleton",
+    "güncelleniyor": "a change is being saved",
+    "eklendi": "success after an add",
+    "boş": "no items",
+    "dolu": "has items",
+    "hata": "error with a specific message",
+    "sonuç yok": "no results",
+    "açık": "expanded / open",
+    "kapalı": "collapsed / closed",
+    "alt sınır": "at minimum",
+    "üst sınır": "at maximum",
+    "yapışkan": "pinned while scrolling",
+    "şeffaf": "transparent over media",
+    "misafir": "signed out",
+    "üye": "signed in",
+    "medya yok": "image placeholder",
+    "duraklatıldı": "moving content paused"
+  },
+  "components": [
+    {
+      "name": "Button",
+      "layer": "primitive",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "platform"
+      ],
+      "parts": [
+        {
+          "layer": "btn-label",
+          "req": true
+        },
+        {
+          "layer": "btn-icon",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "btn-spinner",
+          "req": true,
+          "note": "shown in yükleniyor"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "hover",
+        "odak",
+        "basılı",
+        "pasif",
+        "yükleniyor",
+        "eklendi",
+        "stok yok"
+      ],
+      "axes": [
+        "importance: primary / secondary / tertiary / link",
+        "size: sm / md / lg"
+      ]
+    },
+    {
+      "name": "ArrowLink",
+      "layer": "primitive",
+      "kind": "sub",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "link-text",
+          "req": true
+        },
+        {
+          "layer": "link-icon",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "link-line",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "hover",
+        "odak",
+        "mevcut"
+      ],
+      "must": [
+        {
+          "rule": "link text names the destination, never a bare 'Shop now'",
+          "basis": "baymard",
+          "figure": "66%"
+        }
+      ]
+    },
+    {
+      "name": "IconButton",
+      "layer": "primitive",
+      "kind": "sub",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "icon",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "hover",
+        "odak",
+        "pasif"
+      ],
+      "must": [
+        {
+          "rule": "accessible name as a TEXT prop (aria-label)",
+          "basis": "w3c"
+        }
+      ]
+    },
+    {
+      "name": "FormField",
+      "layer": "primitive",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "field-label",
+          "req": true
+        },
+        {
+          "layer": "field-input",
+          "req": true
+        },
+        {
+          "layer": "field-required",
+          "req": true,
+          "note": "required or optional mark"
+        },
+        {
+          "layer": "field-help",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "field-error",
+          "req": true,
+          "note": "$color-danger, hidden outside hata"
+        }
+      ],
+      "states": [
+        "boş",
+        "dolu",
+        "odak",
+        "hata",
+        "pasif"
+      ],
+      "axes": [
+        "control: input / textarea / select"
+      ],
+      "must": [
+        {
+          "rule": "error text names the field's own problem (adaptive), not a generic 'invalid'",
+          "basis": "baymard",
+          "figure": "94%"
+        },
+        {
+          "rule": "visible label on every field",
+          "basis": "baymard",
+          "figure": "37%"
+        }
+      ]
+    },
+    {
+      "name": "Checkbox",
+      "layer": "primitive",
+      "kind": "sub",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "check-box",
+          "req": true
+        },
+        {
+          "layer": "check-label",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "seçili",
+        "odak",
+        "pasif",
+        "hata"
+      ],
+      "must": [
+        {
+          "rule": "a group of options carries a group label",
+          "basis": "baymard",
+          "figure": "18%"
+        }
+      ]
+    },
+    {
+      "name": "Radio",
+      "layer": "primitive",
+      "kind": "sub",
+      "basis": [
+        "platform"
+      ],
+      "parts": [
+        {
+          "layer": "radio-dot",
+          "req": true
+        },
+        {
+          "layer": "radio-label",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "seçili",
+        "odak",
+        "pasif"
+      ]
+    },
+    {
+      "name": "Switch",
+      "layer": "primitive",
+      "kind": "sub",
+      "basis": [
+        "platform"
+      ],
+      "parts": [
+        {
+          "layer": "switch-track",
+          "req": true
+        },
+        {
+          "layer": "switch-label",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "seçili",
+        "odak",
+        "pasif"
+      ]
+    },
+    {
+      "name": "Badge",
+      "layer": "primitive",
+      "kind": "sub",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "badge-text",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ],
+      "axes": [
+        "type: one frame per badge type (YENİ · İNDİRİM · ÇOK SATAN · TÜKENDİ · HEDİYE …)",
+        "count bubble"
+      ]
+    },
+    {
+      "name": "AccordionItem",
+      "layer": "primitive",
+      "kind": "sub",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "acc-head",
+          "req": true
+        },
+        {
+          "layer": "acc-icon",
+          "req": true
+        },
+        {
+          "layer": "acc-body",
+          "req": true
+        }
+      ],
+      "states": [
+        "açık",
+        "kapalı",
+        "odak"
+      ]
+    },
+    {
+      "name": "Tabs",
+      "layer": "primitive",
+      "kind": "sub",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "tab-list",
+          "req": true
+        },
+        {
+          "layer": "tab-panel",
+          "req": true
+        }
+      ],
+      "states": [
+        "seçili",
+        "varsayılan",
+        "hover",
+        "odak"
+      ]
+    },
+    {
+      "name": "SectionHeading",
+      "layer": "primitive",
+      "kind": "sub",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "heading-title",
+          "req": true
+        },
+        {
+          "layer": "heading-text",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "heading-link",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
+    },
+    {
+      "name": "Spinner",
+      "layer": "primitive",
+      "kind": "sub",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "spinner",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
+    },
+    {
+      "name": "Skeleton",
+      "layer": "primitive",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "platform"
+      ],
+      "parts": [
+        {
+          "layer": "skeleton-block",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ],
+      "axes": [
+        "shape: line / block / media"
+      ]
+    },
+    {
+      "name": "SkipLink",
+      "layer": "primitive",
+      "kind": "sub",
+      "basis": [
+        "platform",
+        "w3c"
+      ],
+      "parts": [
+        {
+          "layer": "skip-text",
+          "req": true
+        }
+      ],
+      "states": [
+        "odak"
+      ],
+      "note": "visible only on keyboard focus"
+    },
+    {
+      "name": "Price",
+      "layer": "element",
+      "kind": "sub",
+      "basis": [
+        "platform"
+      ],
+      "parts": [
+        {
+          "layer": "price-current",
+          "req": true
+        },
+        {
+          "layer": "price-compare",
+          "req": true,
+          "note": "hidden unless indirimli"
+        },
+        {
+          "layer": "price-discount",
+          "opt": true,
+          "ikas": "yes",
+          "note": "percent off"
+        },
+        {
+          "layer": "price-unit",
+          "opt": true,
+          "ikas": "yes",
+          "note": "unit price text (per kg, per l) when the merchant sets one"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "indirimli",
+        "stok yok",
+        "güncelleniyor"
+      ],
+      "must": [
+        {
+          "rule": "a slot for the unit price",
+          "basis": "baymard",
+          "figure": "81% on product pages"
+        }
+      ]
+    },
+    {
+      "name": "VariantSwatch",
+      "layer": "element",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "swatch-fill",
+          "req": true
+        },
+        {
+          "layer": "swatch-ring",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "seçili",
+        "hover",
+        "odak",
+        "stok yok"
+      ],
+      "must": [
+        {
+          "rule": "accessible name for every swatch (label or tooltip)",
+          "basis": "baymard"
+        }
+      ]
+    },
+    {
+      "name": "VariantChip",
+      "layer": "element",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "chip-label",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "seçili",
+        "hover",
+        "odak",
+        "stok yok"
+      ],
+      "must": [
+        {
+          "rule": "sizes are visible buttons, never hidden in a dropdown",
+          "basis": "baymard",
+          "figure": "57%"
+        }
+      ]
+    },
+    {
+      "name": "FilterChip",
+      "layer": "element",
+      "kind": "sub",
+      "basis": [
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "chip-label",
+          "req": true
+        },
+        {
+          "layer": "chip-remove",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "hover",
+        "odak"
+      ],
+      "note": "applied filter; the list of chips ends with 'clear all'"
+    },
+    {
+      "name": "RatingStars",
+      "layer": "element",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "stars",
+          "req": true
+        },
+        {
+          "layer": "rating-score",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "rating-count",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "boş"
+      ],
+      "must": [
+        {
+          "rule": "the review count sits next to the stars",
+          "basis": "baymard"
+        }
+      ]
+    },
+    {
+      "name": "QuantitySelector",
+      "layer": "element",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "qty-minus",
+          "req": true
+        },
+        {
+          "layer": "qty-value",
+          "req": true
+        },
+        {
+          "layer": "qty-plus",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "alt sınır",
+        "üst sınır",
+        "güncelleniyor"
+      ],
+      "must": [
+        {
+          "rule": "− and + buttons around the value, in the cart too",
+          "basis": "baymard",
+          "figure": "97%"
+        }
+      ]
+    },
+    {
+      "name": "StockNote",
+      "layer": "element",
+      "kind": "sub",
+      "basis": [
+        "platform",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "stock-text",
+          "req": true
+        },
+        {
+          "layer": "stock-icon",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "stok yok"
+      ],
+      "axes": [
+        "level: in stock / low stock (theme threshold on variant.stock) / sold out"
+      ]
+    },
+    {
+      "name": "CartCount",
+      "layer": "element",
+      "kind": "sub",
+      "basis": [
+        "platform"
+      ],
+      "parts": [
+        {
+          "layer": "cart-icon",
+          "req": true
+        },
+        {
+          "layer": "cart-count",
+          "req": true
+        }
+      ],
+      "states": [
+        "boş",
+        "dolu"
+      ]
+    },
+    {
+      "name": "FavoriteButton",
+      "layer": "element",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "fav-icon",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "seçili",
+        "hover",
+        "odak"
+      ],
+      "note": "one place and size everywhere a card shows it (06 §3d)"
+    },
+    {
+      "name": "PriceRange",
+      "layer": "element",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "range-track",
+          "req": true
+        },
+        {
+          "layer": "range-handle-min",
+          "req": true
+        },
+        {
+          "layer": "range-handle-max",
+          "req": true
+        },
+        {
+          "layer": "range-fields",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "dolu",
+        "güncelleniyor"
+      ]
+    },
+    {
+      "name": "ProductCard",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "card-media",
+          "req": true
+        },
+        {
+          "layer": "card-title",
+          "req": true
+        },
+        {
+          "layer": "card-price",
+          "req": true,
+          "note": "Price instance"
+        },
+        {
+          "layer": "card-swatches",
+          "req": true,
+          "note": "colour dots + +N"
+        },
+        {
+          "layer": "card-cart",
+          "req": true,
+          "note": "opens QuickBuy"
+        },
+        {
+          "layer": "card-fav",
+          "req": true
+        },
+        {
+          "layer": "card-badges",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "card-rating",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "card-brand",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "card-media-alt",
+          "opt": true,
+          "ikas": "yes",
+          "note": "second image on hover"
+        },
+        {
+          "layer": "card-in-cart",
+          "req": true,
+          "note": "'in cart' mark, hidden outside sepette"
+        },
+        {
+          "layer": "card-customize",
+          "req": true,
+          "note": "replaces card-cart when a personalisation is required"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "hover",
+        "odak",
+        "stok yok",
+        "indirimli",
+        "sepette",
+        "medya yok",
+        "yükleniyor",
+        "renk seçili",
+        "ayrık varyant",
+        "kişiselleştirme"
+      ],
+      "must": [
+        {
+          "rule": "one card definition for every list, rail and search result",
+          "basis": "platform"
+        },
+        {
+          "rule": "an 'in cart' mark on products already in the cart",
+          "basis": "baymard",
+          "figure": "96%"
+        },
+        {
+          "rule": "one click area for the whole card",
+          "basis": "baymard"
+        }
+      ]
+    },
+    {
+      "name": "ProductCardSmall",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "card-media",
+          "req": true
+        },
+        {
+          "layer": "card-title",
+          "req": true
+        },
+        {
+          "layer": "card-price",
+          "req": true
+        },
+        {
+          "layer": "card-fav",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "hover",
+        "odak"
+      ]
+    },
+    {
+      "name": "BlogCard",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "blog-media",
+          "req": true
+        },
+        {
+          "layer": "blog-title",
+          "req": true
+        },
+        {
+          "layer": "blog-date",
+          "req": true
+        },
+        {
+          "layer": "blog-summary",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "hover",
+        "odak"
+      ]
+    },
+    {
+      "name": "CartLineItem",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "cline-media",
+          "req": true
+        },
+        {
+          "layer": "cline-title",
+          "req": true,
+          "note": "links to the product"
+        },
+        {
+          "layer": "cline-variant",
+          "req": true
+        },
+        {
+          "layer": "cline-price",
+          "req": true
+        },
+        {
+          "layer": "cline-qty",
+          "req": true,
+          "note": "QuantitySelector"
+        },
+        {
+          "layer": "cline-total",
+          "req": true
+        },
+        {
+          "layer": "cline-remove",
+          "req": true
+        },
+        {
+          "layer": "cline-error",
+          "req": true
+        },
+        {
+          "layer": "cline-options",
+          "opt": true,
+          "ikas": "yes",
+          "note": "personalisation values + Düzenle"
+        },
+        {
+          "layer": "cline-bundle",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "cart-line-limit",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "güncelleniyor",
+        "indirimli",
+        "hediye",
+        "set",
+        "kişiselleştirilmiş",
+        "adet sınırı",
+        "hata"
+      ],
+      "must": [
+        {
+          "rule": "quantity with − / + and a visible remove on every line",
+          "basis": "baymard",
+          "figure": "97%"
+        }
+      ]
+    },
+    {
+      "name": "OrderSummary",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "sum-subtotal",
+          "req": true
+        },
+        {
+          "layer": "cart-adjustments",
+          "req": true,
+          "note": "campaign, coupon, gift card rows"
+        },
+        {
+          "layer": "sum-shipping",
+          "req": true,
+          "note": "estimated delivery time from the shipping method when known"
+        },
+        {
+          "layer": "sum-total",
+          "req": true
+        },
+        {
+          "layer": "sum-cta",
+          "req": true
+        },
+        {
+          "layer": "coupon-toggle",
+          "req": true,
+          "note": "collapsed coupon entry"
+        },
+        {
+          "layer": "coupon-applied",
+          "req": true
+        },
+        {
+          "layer": "sum-payment-icons",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "yükleniyor",
+        "hata",
+        "kupon uygulandı",
+        "kupon geçersiz",
+        "kupon uygulanmadı"
+      ],
+      "must": [
+        {
+          "rule": "every extra cost visible before checkout",
+          "basis": "baymard",
+          "figure": "40% of abandonments"
+        }
+      ]
+    },
+    {
+      "name": "OfferCard",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "offer-media",
+          "req": true
+        },
+        {
+          "layer": "offer-title",
+          "req": true
+        },
+        {
+          "layer": "offer-price",
+          "req": true
+        },
+        {
+          "layer": "offer-toggle",
+          "req": true
+        },
+        {
+          "layer": "offer-variant",
+          "req": true
+        }
+      ],
+      "states": [
+        "seçili değil",
+        "seçili",
+        "sepette",
+        "stok yok"
+      ]
+    },
+    {
+      "name": "BundleItem",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "bundle-media",
+          "req": true
+        },
+        {
+          "layer": "bundle-title",
+          "req": true
+        },
+        {
+          "layer": "bundle-variant",
+          "req": true
+        },
+        {
+          "layer": "bundle-qty",
+          "req": true
+        },
+        {
+          "layer": "bundle-price",
+          "req": true
+        }
+      ],
+      "states": [
+        "adet düzenlenebilir",
+        "adet sabit",
+        "stok yok"
+      ]
+    },
+    {
+      "name": "ReviewCard",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "review-stars",
+          "req": true
+        },
+        {
+          "layer": "review-author",
+          "req": true
+        },
+        {
+          "layer": "review-date",
+          "req": true
+        },
+        {
+          "layer": "review-text",
+          "req": true
+        },
+        {
+          "layer": "review-images",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "merchant-reply",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "doğrulanmış alıcı",
+        "doğrulanmamış",
+        "görselli",
+        "mağaza yanıtlı"
+      ],
+      "must": [
+        {
+          "rule": "reviewer images open and can be browsed",
+          "basis": "baymard",
+          "figure": "63%"
+        },
+        {
+          "rule": "a merchant reply has its own style",
+          "basis": "baymard",
+          "figure": "89%"
+        }
+      ]
+    },
+    {
+      "name": "Pagination",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "platform"
+      ],
+      "parts": [
+        {
+          "layer": "page-prev",
+          "req": true
+        },
+        {
+          "layer": "page-numbers",
+          "req": true
+        },
+        {
+          "layer": "page-next",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "mevcut",
+        "pasif"
+      ],
+      "note": "or a load-more button; the theme picks one (06 §3c)"
+    },
+    {
+      "name": "Breadcrumbs",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "platform"
+      ],
+      "parts": [
+        {
+          "layer": "crumb-home",
+          "req": true
+        },
+        {
+          "layer": "crumb-item",
+          "req": true
+        },
+        {
+          "layer": "crumb-current",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
+    },
+    {
+      "name": "Hotspot",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "hotspot-dot",
+          "req": true
+        },
+        {
+          "layer": "hotspot-card",
+          "req": true
+        }
+      ],
+      "states": [
+        "kapalı",
+        "açık"
+      ]
+    },
+    {
+      "name": "SocialLoginButton",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "social-icon",
+          "req": true
+        },
+        {
+          "layer": "social-label",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "hover"
+      ],
+      "axes": [
+        "provider: Google / Facebook"
+      ]
+    },
+    {
+      "name": "ProductGallery",
+      "layer": "component",
+      "kind": "block",
+      "host": "ProductDetail",
+      "basis": [
+        "contract",
+        "platform"
+      ],
+      "parts": [
+        {
+          "layer": "pdp-media",
+          "req": true
+        },
+        {
+          "layer": "pdp-thumbs",
+          "req": true
+        },
+        {
+          "layer": "pdp-zoom",
+          "req": true,
+          "note": "opens ImagePreview"
+        },
+        {
+          "layer": "pdp-video",
+          "opt": true,
+          "ikas": "yes",
+          "note": "check isVideo wherever product media shows"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "medya yok",
+        "yükleniyor",
+        "video duraklatıldı"
+      ]
+    },
+    {
+      "name": "BuyBox",
+      "layer": "component",
+      "kind": "block",
+      "host": "ProductDetail",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "pdp-head",
+          "req": true
+        },
+        {
+          "layer": "pdp-price",
+          "req": true
+        },
+        {
+          "layer": "pdp-rating",
+          "req": true
+        },
+        {
+          "layer": "pdp-variants",
+          "req": true
+        },
+        {
+          "layer": "pdp-actions",
+          "req": true,
+          "note": "QuantitySelector + Button + FavoriteButton, one row"
+        },
+        {
+          "layer": "pdp-stock",
+          "req": true
+        },
+        {
+          "layer": "pdp-stock-locations",
+          "opt": true,
+          "ikas": "yes",
+          "note": "in-store stock"
+        },
+        {
+          "layer": "pdp-shipping",
+          "req": true,
+          "note": "shipping cost or free-shipping line next to the CTA"
+        },
+        {
+          "layer": "pdp-returns",
+          "req": true,
+          "note": "return policy link"
+        },
+        {
+          "layer": "pdp-campaign",
+          "req": true
+        },
+        {
+          "layer": "pdp-pay",
+          "req": true
+        },
+        {
+          "layer": "pdp-offers",
+          "req": true
+        },
+        {
+          "layer": "pdp-bundle",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "pdp-tiers",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "pdp-options",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "pdp-group",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "pdp-back-in-stock",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "stok yok",
+        "seçim eksik",
+        "ekleniyor",
+        "eklendi",
+        "hata",
+        "set ürün",
+        "kademeli indirim",
+        "ürün grubu",
+        "haber ver kaydedildi",
+        "haber ver giriş gerekli"
+      ],
+      "must": [
+        {
+          "rule": "total cost estimate (shipping) next to add to cart",
+          "basis": "baymard",
+          "figure": "67%"
+        },
+        {
+          "rule": "return policy visible from the buy box",
+          "basis": "baymard",
+          "figure": "44%"
+        },
+        {
+          "rule": "add to cart stays usable and explains a missing selection",
+          "basis": "baymard"
+        }
+      ]
+    },
+    {
+      "name": "ListToolbar",
+      "layer": "component",
+      "kind": "block",
+      "host": "ProductList",
+      "basis": [
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "list-count",
+          "req": true
+        },
+        {
+          "layer": "list-sort",
+          "req": true
+        },
+        {
+          "layer": "list-filter-toggle",
+          "req": true,
+          "note": "sticky and labelled on mobile"
+        },
+        {
+          "layer": "list-columns",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "açık",
+        "yükleniyor"
+      ],
+      "must": [
+        {
+          "rule": "sort by price, rating, bestseller and newest",
+          "basis": "baymard",
+          "figure": "64%"
+        }
+      ]
+    },
+    {
+      "name": "FacetFilter",
+      "layer": "component",
+      "kind": "block",
+      "host": "ProductList",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "filter-group",
+          "req": true,
+          "note": "AccordionItem per facet"
+        },
+        {
+          "layer": "filter-category-list",
+          "req": true
+        },
+        {
+          "layer": "filter-checkbox-list",
+          "req": true
+        },
+        {
+          "layer": "filter-swatch-values",
+          "req": true
+        },
+        {
+          "layer": "filter-box-values",
+          "req": true
+        },
+        {
+          "layer": "filter-range",
+          "req": true,
+          "note": "PriceRange"
+        },
+        {
+          "layer": "filter-range-list",
+          "req": true
+        },
+        {
+          "layer": "filter-applied",
+          "req": true,
+          "note": "FilterChip list"
+        },
+        {
+          "layer": "filter-clear-all",
+          "req": true
+        },
+        {
+          "layer": "filter-show-results",
+          "req": true,
+          "note": "mobile 'show N results'"
+        },
+        {
+          "layer": "filter-count",
+          "opt": true,
+          "ikas": "check",
+          "note": "result count per option; not confirmed in the ikas docs, draw hidden"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "dolu",
+        "güncelleniyor",
+        "sonuç yok"
+      ],
+      "must": [
+        {
+          "rule": "applied filters shown as chips with clear all",
+          "basis": "baymard"
+        }
+      ]
+    },
+    {
+      "name": "SearchField",
+      "layer": "component",
+      "kind": "block",
+      "host": "ProductList",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "search-icon",
+          "req": true
+        },
+        {
+          "layer": "search-input",
+          "req": true
+        },
+        {
+          "layer": "search-clear",
+          "req": true
+        },
+        {
+          "layer": "search-submit",
+          "req": true
+        },
+        {
+          "layer": "search-count",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "boş",
+        "dolu",
+        "odak"
+      ],
+      "must": [
+        {
+          "rule": "a submit button on mobile",
+          "basis": "baymard",
+          "figure": "21–27%"
+        }
+      ]
+    },
+    {
+      "name": "NoResults",
+      "layer": "component",
+      "kind": "block",
+      "host": "ProductList",
+      "basis": [
+        "baymard",
+        "platform"
+      ],
+      "parts": [
+        {
+          "layer": "empty-title",
+          "req": true
+        },
+        {
+          "layer": "empty-suggestions",
+          "req": true,
+          "note": "categories or simpler queries"
+        },
+        {
+          "layer": "empty-products",
+          "req": true,
+          "note": "product rail"
+        },
+        {
+          "layer": "empty-help",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "sonuç yok"
+      ],
+      "must": [
+        {
+          "rule": "more than a search tip: related categories and products",
+          "basis": "baymard",
+          "figure": "~50%"
+        }
+      ]
+    },
+    {
+      "name": "NewsletterForm",
+      "layer": "component",
+      "kind": "block",
+      "host": "Footer",
+      "basis": [
+        "contract",
+        "platform"
+      ],
+      "parts": [
+        {
+          "layer": "newsletter-input",
+          "req": true
+        },
+        {
+          "layer": "newsletter-submit",
+          "req": true
+        },
+        {
+          "layer": "newsletter-consent",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "eklendi",
+        "hata",
+        "bülten onay hatası"
+      ]
+    },
+    {
+      "name": "AddressForm",
+      "layer": "component",
+      "kind": "block",
+      "host": "Account",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "address-fields",
+          "req": true,
+          "note": "name, phone, country → city → district, address"
+        },
+        {
+          "layer": "address-corporate",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "address-phone-note",
+          "req": true,
+          "note": "why the phone is asked"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "hata",
+        "yükleniyor"
+      ],
+      "must": [
+        {
+          "rule": "explain why the phone number is needed",
+          "basis": "baymard",
+          "figure": "49%"
+        }
+      ]
+    },
+    {
+      "name": "Header",
+      "layer": "shell",
+      "kind": "section",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "header-logo",
+          "req": true
+        },
+        {
+          "layer": "header-nav",
+          "req": true
+        },
+        {
+          "layer": "header-search",
+          "req": true
+        },
+        {
+          "layer": "header-account",
+          "req": true
+        },
+        {
+          "layer": "header-fav",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "header-cart",
+          "req": true,
+          "note": "CartCount"
+        },
+        {
+          "layer": "header-menu-toggle",
+          "req": true,
+          "note": "mobile, labelled, apart from the logo"
+        },
+        {
+          "layer": "announcement",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "announcement-pager",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "mevcut",
+        "yapışkan",
+        "şeffaf",
+        "duyurular",
+        "duraklatıldı"
+      ],
+      "must": [
+        {
+          "rule": "the current scope is highlighted in the navigation",
+          "basis": "baymard",
+          "figure": "96%"
+        },
+        {
+          "rule": "moving announcements can be paused",
+          "basis": "w3c"
+        }
+      ]
+    },
+    {
+      "name": "Footer",
+      "layer": "shell",
+      "kind": "section",
+      "basis": [
+        "contract",
+        "platform"
+      ],
+      "parts": [
+        {
+          "layer": "footer-groups",
+          "req": true
+        },
+        {
+          "layer": "footer-brand",
+          "req": true
+        },
+        {
+          "layer": "footer-legal",
+          "req": true,
+          "note": "policy links + copyright"
+        },
+        {
+          "layer": "locale-button",
+          "req": true
+        },
+        {
+          "layer": "footer-newsletter",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "footer-social",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "footer-payment",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "açık"
+      ],
+      "note": "mobile groups may be accordions"
+    },
+    {
+      "name": "MenuOverlay",
+      "layer": "overlay",
+      "kind": "overlay",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "menu-level",
+          "req": true
+        },
+        {
+          "layer": "menu-mega-title",
+          "req": true
+        },
+        {
+          "layer": "menu-view-all",
+          "req": true
+        },
+        {
+          "layer": "menu-back",
+          "req": true
+        },
+        {
+          "layer": "menu-auth",
+          "req": true
+        }
+      ],
+      "states": [
+        "açık",
+        "mevcut"
+      ],
+      "must": [
+        {
+          "rule": "product categories on the first level",
+          "basis": "baymard",
+          "figure": "22%"
+        },
+        {
+          "rule": "'view all' on every level",
+          "basis": "baymard",
+          "figure": "42%"
+        }
+      ]
+    },
+    {
+      "name": "MegaMenu",
+      "layer": "overlay",
+      "kind": "overlay",
+      "optional": true,
+      "basis": [
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "mega-groups",
+          "req": true
+        },
+        {
+          "layer": "mega-group-title",
+          "req": true,
+          "note": "clickable"
+        },
+        {
+          "layer": "mega-view-all",
+          "req": true
+        },
+        {
+          "layer": "mega-media",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "açık",
+        "mevcut"
+      ],
+      "must": [
+        {
+          "rule": "links split into manageable groups",
+          "basis": "baymard",
+          "figure": "51%"
+        },
+        {
+          "rule": "group titles are links",
+          "basis": "baymard",
+          "figure": "31%"
+        }
+      ]
+    },
+    {
+      "name": "CartDrawer",
+      "layer": "overlay",
+      "kind": "overlay",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "drawer-lines",
+          "req": true
+        },
+        {
+          "layer": "drawer-adjustments",
+          "req": true
+        },
+        {
+          "layer": "coupon-toggle",
+          "req": true
+        },
+        {
+          "layer": "drawer-recommend",
+          "req": true
+        },
+        {
+          "layer": "drawer-actions",
+          "req": true
+        }
+      ],
+      "states": [
+        "boş",
+        "dolu",
+        "yükleniyor"
+      ],
+      "must": [
+        {
+          "rule": "the empty cart has a way forward and a product rail",
+          "basis": "platform"
+        }
+      ]
+    },
+    {
+      "name": "SearchOverlay",
+      "layer": "overlay",
+      "kind": "overlay",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "search-field",
+          "req": true
+        },
+        {
+          "layer": "search-suggestions",
+          "opt": true,
+          "ikas": "yes",
+          "note": "popular searches as a LIST_OF_LINK prop; ikas has no recent/popular API"
+        },
+        {
+          "layer": "search-scopes",
+          "opt": true,
+          "ikas": "yes",
+          "note": "category / brand suggestions, styled apart from query suggestions"
+        },
+        {
+          "layer": "search-products",
+          "req": true
+        }
+      ],
+      "states": [
+        "açık",
+        "yazarken",
+        "sonuç yok"
+      ]
+    },
+    {
+      "name": "FilterDrawer",
+      "layer": "overlay",
+      "kind": "overlay",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "filter-body",
+          "req": true,
+          "note": "FacetFilter"
+        },
+        {
+          "layer": "filter-show-results",
+          "req": true
+        }
+      ],
+      "states": [
+        "açık"
+      ]
+    },
+    {
+      "name": "QuickBuy",
+      "layer": "overlay",
+      "kind": "overlay",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "qb-media",
+          "req": true
+        },
+        {
+          "layer": "qb-head",
+          "req": true
+        },
+        {
+          "layer": "qb-price",
+          "req": true
+        },
+        {
+          "layer": "qb-variant-group",
+          "req": true
+        },
+        {
+          "layer": "qb-variant-error",
+          "req": true
+        },
+        {
+          "layer": "qb-bundle",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "qb-actions",
+          "req": true
+        },
+        {
+          "layer": "qb-pay",
+          "req": true
+        },
+        {
+          "layer": "qb-foot",
+          "req": true
+        }
+      ],
+      "states": [
+        "açık",
+        "renk karttan",
+        "seçim eksik",
+        "ekleniyor",
+        "kişiselleştirme",
+        "set ürün"
+      ]
+    },
+    {
+      "name": "CookieBar",
+      "layer": "overlay",
+      "kind": "overlay",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "cookie-text",
+          "req": true
+        },
+        {
+          "layer": "cookie-actions",
+          "req": true
+        }
+      ],
+      "states": [
+        "açık"
+      ]
+    },
+    {
+      "name": "ImagePreview",
+      "layer": "overlay",
+      "kind": "overlay",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "preview-media",
+          "req": true
+        },
+        {
+          "layer": "preview-nav",
+          "req": true
+        },
+        {
+          "layer": "preview-close",
+          "req": true
+        }
+      ],
+      "states": [
+        "açık"
+      ]
+    },
+    {
+      "name": "LocaleSwitcher",
+      "layer": "overlay",
+      "kind": "overlay",
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "locale-language",
+          "req": true
+        }
+      ],
+      "states": [
+        "açık"
+      ],
+      "note": "language and country; currency follows the routing, there is no standalone currency switch"
+    },
+    {
+      "name": "Toast",
+      "layer": "overlay",
+      "kind": "overlay",
+      "optional": true,
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "toast-icon",
+          "req": true
+        },
+        {
+          "layer": "toast-text",
+          "req": true
+        },
+        {
+          "layer": "toast-close",
+          "req": true
+        }
+      ],
+      "states": [
+        "başarılı",
+        "hata",
+        "bilgi"
+      ]
+    },
+    {
+      "name": "ConfirmModal",
+      "layer": "overlay",
+      "kind": "overlay",
+      "optional": true,
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "confirm-text",
+          "req": true
+        },
+        {
+          "layer": "confirm-actions",
+          "req": true
+        }
+      ],
+      "states": [
+        "açık"
+      ]
+    },
+    {
+      "name": "AddressModal",
+      "layer": "overlay",
+      "kind": "overlay",
+      "optional": true,
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "address-form",
+          "req": true,
+          "note": "AddressForm"
+        }
+      ],
+      "states": [
+        "ekle",
+        "yükleniyor",
+        "hata"
+      ]
+    },
+    {
+      "name": "AccountMenu",
+      "layer": "overlay",
+      "kind": "overlay",
+      "optional": true,
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "account-links",
+          "req": true
+        },
+        {
+          "layer": "account-auth",
+          "req": true
+        }
+      ],
+      "states": [
+        "misafir",
+        "üye"
+      ]
+    },
+    {
+      "name": "InfoDrawer",
+      "layer": "overlay",
+      "kind": "overlay",
+      "optional": true,
+      "basis": [
+        "contract"
+      ],
+      "parts": [
+        {
+          "layer": "info-title",
+          "req": true
+        },
+        {
+          "layer": "info-body",
+          "req": true
+        }
+      ],
+      "states": [
+        "açık"
+      ],
+      "note": "size guide or shipping info from merchant content; ikas has no size-chart API"
+    },
+    {
+      "name": "StickyAddToCart",
+      "layer": "overlay",
+      "kind": "overlay",
+      "optional": true,
+      "basis": [
+        "platform"
+      ],
+      "parts": [
+        {
+          "layer": "sticky-title",
+          "req": true
+        },
+        {
+          "layer": "sticky-price",
+          "req": true
+        },
+        {
+          "layer": "sticky-cta",
+          "req": true
+        }
+      ],
+      "states": [
+        "açık"
+      ],
+      "note": "no usability evidence found; a theme choice"
+    }
+  ],
+  "not_in_ikas": [
+    "size-chart API (merchant content or a product attribute)",
+    "product compare",
+    "pre-order",
+    "free-shipping progress bar",
+    "installment table",
+    "offer countdown",
+    "wallet express checkout (only the Pay with ikas slot on the product page)",
+    "save for later",
+    "recent or popular searches API",
+    "rating facet",
+    "search inside a facet list",
+    "address autocomplete",
+    "360 / AR media",
+    "standalone currency switch",
+    "order note and gift note input",
+    "buying a gift card",
+    "blog comments",
+    "price range ('from') helper"
+  ]
+}

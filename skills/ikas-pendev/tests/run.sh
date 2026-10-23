@@ -209,5 +209,23 @@ python3 "$S/build_manifest.py" --plandata "$EX/plandata.json" --plan "$OUT/plan-
 python3 -I "$S/huemint.py" --fixture "$FX/huemint-response.json" --lock 'color-bg=#EFEBE2' > "$SC/huemint.md" 2>&1 && [ "$(grep -c '^| [0-9]' "$SC/huemint.md")" = "4" ] && sed -n '/^| 1 /p' "$SC/huemint.md" | grep -q '🔒.*| geçti |$' && ok "huemint: offline candidates parsed, invalid ones dropped, passing first" || bad "huemint: offline candidates parsed, invalid ones dropped, passing first" "$(head -5 "$SC/huemint.md")"
 python3 -I "$S/huemint.py" --fixture "$FX/huemint-response.json" --lock 'color-xx=#EFEBE2' >/dev/null 2>&1; [ $? = 2 ] && ok "huemint rejects an unknown role lock" || bad "huemint rejects an unknown role lock"
 
+# 9 · structure library inventory (12-library.md)
+python3 -I - "$SK/library/inventory.json" > "$OUT/inventory.txt" 2>&1 <<'PY' && ok "library inventory: unique names, kebab layers, every part req or opt, opt parts ikas-checked" || bad "library inventory: unique names, kebab layers, every part req or opt, opt parts ikas-checked" "$(cat "$OUT/inventory.txt")"
+import json, re, sys
+d = json.load(open(sys.argv[1])); errs = []
+names = [c["name"] for c in d["components"]]
+errs += [f"duplicate {n}" for n in set(names) if names.count(n) > 1]
+for c in d["components"]:
+    if c["kind"] not in d["kinds"]: errs.append(f"{c['name']}: kind {c['kind']}")
+    if not c.get("states"): errs.append(f"{c['name']}: no states")
+    for b in c["basis"] + [m["basis"] for m in c.get("must", [])]:
+        if b not in d["basis"]: errs.append(f"{c['name']}: basis {b}")
+    for p in c["parts"]:
+        if not re.fullmatch(r"[a-z][a-z0-9-]*", p["layer"]): errs.append(f"{c['name']}: layer {p['layer']}")
+        if bool(p.get("req")) == bool(p.get("opt")): errs.append(f"{c['name']}.{p['layer']}: req xor opt")
+        if p.get("opt") and p.get("ikas") not in ("yes", "check"): errs.append(f"{c['name']}.{p['layer']}: opt part needs ikas yes|check")
+print("\n".join(errs)); sys.exit(1 if errs else 0)
+PY
+
 echo "----"; echo "passed=$pass failed=$fail"
 [ "$fail" = "0" ]

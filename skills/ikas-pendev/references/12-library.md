@@ -95,7 +95,7 @@ All thresholds are uncalibrated proposals.
 
 Each step is one revertable commit on `ecommerce-library`:
 
-1. Pick the inventory with the user (which components and states go into the first library).
+1. Pick the inventory with the user. Done: `library/inventory.json`. Scope: primitives, commerce elements and components, shells (Header, Footer) and overlays; sections and pages come later. Optional parts are present but `enabled:false`, and only parts the ikas storefront API supports are listed (`not_in_ikas` names the rest).
 2. Build `ikas-ecommerce.lib.pen` as skeletons (§5).
 3. The copy script plus its tests.
 4. The axis table in the brief template and the similarity gate.
