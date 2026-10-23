@@ -278,5 +278,27 @@ PY
 python3 -I "$S/copy_library.py" "$CL/pd" -o "$CL/broken.pen" > "$CL/missing.log" 2>&1; [ $? = 1 ] && grep -q 'not in plandata variables: space-xs' "$CL/missing.log" && [ ! -e "$CL/broken.pen" ] && ok "copy_library stops when plandata lacks a token the library uses" || bad "copy_library stops when plandata lacks a token the library uses" "$(cat "$CL/missing.log")"
 python3 -I "$S/copy_library.py" "$FX/mini-plandata" -o "$CL/x.pen" --with Nope >/dev/null 2>&1; [ $? = 2 ] && ok "copy_library rejects an unknown --with name" || bad "copy_library rejects an unknown --with name"
 
+# 10 · structural identity and similarity gate (12-library.md §6–§7)
+AX="$OUT/axes"; rm -rf "$AX"; mkdir -p "$AX"; export IKAS_PENDEV_FINGERPRINTS="$AX/store.json"
+python3 -I - "$SK/library/axes.json" "$AX" <<'PY'
+import json, sys
+ax = json.load(open(sys.argv[1])); out = sys.argv[2]
+def write(name, pick, extra=""):
+    rows = [f"| {a} | {k} | `{pick(a, k, f)}` | gerekçe |" for a, s in ax["axes"].items() for k, f in s["fields"].items()]
+    open(f"{out}/{name}.md", "w").write("# Globals\n\n## 0. Yapısal kimlik\n\n| Eksen | Alan | Seçim | Gerekçe |\n|---|---|---|---|\n" + "\n".join(rows) + "\n\n## 1. Renk\n" + extra)
+last = lambda a, k, f: f["values"][-1]
+write("a", last)
+write("b", lambda a, k, f: f["values"][0] if a in ("A2", "A3") else f["values"][-1])
+write("c", lambda a, k, f: f["values"][0])
+write("generic", lambda a, k, f: f["median"], "font-body: Inter\n")
+PY
+python3 -I "$S/axes.py" check "$SK/templates/globals.md" --slug tpl > "$AX/tpl.txt" 2>&1; [ $? = 1 ] && grep -q 'A1.collection `…` not in' "$AX/tpl.txt" && ok "axes: the unfilled template fails (no defaults)" || bad "axes: the unfilled template fails (no defaults)" "$(head -3 "$AX/tpl.txt")"
+python3 -I "$S/axes.py" check "$AX/a.md" --slug a > "$AX/a.txt" 2>&1 && grep -q 'AXES OK' "$AX/a.txt" && python3 -I "$S/axes.py" record "$AX/a.md" --slug a >/dev/null && ok "axes: a valid theme passes and is recorded" || bad "axes: a valid theme passes and is recorded" "$(cat "$AX/a.txt")"
+python3 -I "$S/axes.py" check "$AX/b.md" --slug b > "$AX/b.txt" 2>&1; [ $? = 1 ] && grep -q "too close to 'a': 2/6 structural axes differ (need 4); 0/9 token axes differ (need 5); same B7, B12" "$AX/b.txt" && ok "axes: a theme that only changes two structural axes is too close" || bad "axes: a theme that only changes two structural axes is too close" "$(cat "$AX/b.txt")"
+python3 -I "$S/axes.py" check "$AX/c.md" --slug c > "$AX/c.txt" 2>&1 && ok "axes: a theme that differs on every axis passes" || bad "axes: a theme that differs on every axis passes" "$(cat "$AX/c.txt")"
+python3 -I "$S/axes.py" check "$AX/a.md" --slug a > "$AX/self.txt" 2>&1 && ok "axes: a theme is not compared with its own record" || bad "axes: a theme is not compared with its own record" "$(cat "$AX/self.txt")"
+IKAS_PENDEV_FINGERPRINTS="$AX/empty.json" python3 -I "$S/axes.py" check "$AX/generic.md" --slug g > "$AX/g.txt" 2>&1 && grep -q 'WARN|§0|L23 15 axes on the generic default' "$AX/g.txt" && grep -q 'WARN|§2|L23 generic font family in globals: Inter' "$AX/g.txt" && ok "axes: generic defaults and generic fonts warn" || bad "axes: generic defaults and generic fonts warn" "$(cat "$AX/g.txt")"
+unset IKAS_PENDEV_FINGERPRINTS
+
 echo "----"; echo "passed=$pass failed=$fail"
 [ "$fail" = "0" ]

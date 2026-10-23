@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "about": "Differentiation axes (references/12-library.md §6–§7). Each axis has fields; each field has allowed values and the generic default ('median') that makes themes look alike. Two themes differ on an axis when any of its fields differs. Ranges and thresholds are uncalibrated proposals.",
+  "gate": {
+    "structural_min_diff": 4,
+    "token_min_diff": 5,
+    "token_must_differ": ["B7", "B12"],
+    "generic_warn_at": 3
+  },
+  "forbidden_fonts": ["Inter", "Roboto", "Open Sans", "Lato", "Arial", "Helvetica", "system-ui"],
+  "axes": {
+    "A1": {"tier": "structural", "name": "Section düzen varyantları", "fields": {
+      "collection": {"values": ["grid", "slider", "big-small", "lookbook"], "median": "grid"},
+      "story": {"values": ["split", "overlay", "stacked", "full-bleed", "editorial"], "median": "split"}}},
+    "A2": {"tier": "structural", "name": "Grid ve sütunlar", "fields": {
+      "desktop_cols": {"values": ["2", "3", "4", "5", "masonry"], "median": "4"},
+      "mobile_cols": {"values": ["1", "2", "slider"], "median": "2"},
+      "gutter": {"values": ["none", "hairline", "tight", "wide"], "median": "tight"},
+      "container": {"values": ["full", "wide", "standard", "narrow"], "median": "standard"}}},
+    "A3": {"tier": "structural", "name": "Navigasyon kalıbı", "fields": {
+      "logo": {"values": ["left", "center"], "median": "left"},
+      "menu": {"values": ["inline", "split", "hamburger", "rail", "bottom"], "median": "inline"},
+      "mega": {"values": ["image", "text", "none"], "median": "text"},
+      "behaviour": {"values": ["static", "sticky", "hide-on-scroll", "transparent"], "median": "sticky"},
+      "announcement": {"values": ["none", "static", "rotating", "marquee"], "median": "static"}}},
+    "A4": {"tier": "structural", "name": "Hero arketipi", "fields": {
+      "type": {"values": ["centered-overlay", "split", "asymmetric", "stacked", "collage", "video", "product"], "median": "centered-overlay"},
+      "height": {"values": ["content", "60vh", "100vh"], "median": "100vh"},
+      "text": {"values": ["over", "beside"], "median": "over"}}},
+    "A5": {"tier": "structural", "name": "Ürün kartı anatomisi", "fields": {
+      "info": {"values": ["below-left", "below-center", "overlay-hover", "side"], "median": "below-center"},
+      "price": {"values": ["inline", "own-line", "right"], "median": "own-line"},
+      "hover_image": {"values": ["yes", "no"], "median": "yes"},
+      "quick_add": {"values": ["icon", "full-width", "on-hover"], "median": "icon"},
+      "badge": {"values": ["pill", "text", "none"], "median": "pill"},
+      "swatch": {"values": ["dots", "text", "none"], "median": "dots"},
+      "shell": {"values": ["bare", "bordered", "filled"], "median": "bare"}}},
+    "A6": {"tier": "structural", "name": "Görsel oranı ve işlemesi", "fields": {
+      "product_ratio": {"values": ["1:1", "4:5", "3:4", "2:3", "natural"], "median": "1:1"},
+      "hero_ratio": {"values": ["16:9", "21:9", "4:5", "full"], "median": "full"},
+      "treatment": {"values": ["cover", "contain-tinted", "duotone", "grain", "framed"], "median": "cover"}}},
+    "B7": {"tier": "token", "name": "Tipografi eşleşmesi", "fields": {
+      "display": {"values": ["didone", "oldstyle", "slab", "grotesk", "geometric", "mono", "condensed", "script"], "median": "grotesk"},
+      "body": {"values": ["same", "contrast"], "median": "same"}}},
+    "B8": {"tier": "token", "name": "Tip ölçeği", "fields": {
+      "ratio": {"values": ["calm", "medium", "dramatic"], "median": "medium"},
+      "heading_weight": {"values": ["thin", "regular", "bold", "black"], "median": "bold"}}},
+    "B9": {"tier": "token", "name": "Harf durumu ve aralığı", "fields": {
+      "headings": {"values": ["sentence", "title", "upper"], "median": "sentence"},
+      "tracking": {"values": ["tight", "normal", "wide"], "median": "normal"},
+      "labels": {"values": ["upper", "sentence"], "median": "sentence"}}},
+    "B10": {"tier": "token", "name": "Köşe yarıçapı", "fields": {
+      "radius": {"values": ["none", "small", "medium", "large", "full"], "median": "medium"}}},
+    "B11": {"tier": "token", "name": "Çizgi, yüzey ya da gölge", "fields": {
+      "surface": {"values": ["line", "surface", "elevation", "brutalist"], "median": "elevation"}}},
+    "B12": {"tier": "token", "name": "Renk stratejisi", "fields": {
+      "strategy": {"values": ["monochrome", "neutral-accent", "tonal", "vivid", "expressive"], "median": "neutral-accent"},
+      "temperature": {"values": ["cool", "warm", "tinted"], "median": "cool"},
+      "ground": {"values": ["light", "dark", "mixed"], "median": "light"}}},
+    "B13": {"tier": "token", "name": "Yoğunluk ve boşluk", "fields": {
+      "base": {"values": ["4", "8"], "median": "8"},
+      "section": {"values": ["tight", "medium", "airy"], "median": "medium"},
+      "rhythm": {"values": ["uniform", "varied"], "median": "uniform"}}},
+    "B14": {"tier": "token", "name": "İkonografi", "fields": {
+      "style": {"values": ["line-thin", "line-regular", "line-bold", "filled", "duotone", "text"], "median": "line-regular"}}},
+    "B15": {"tier": "token", "name": "Hareket kişiliği", "fields": {
+      "personality": {"values": ["off", "soft-fade", "editorial-stagger", "spring", "marquee-parallax"], "median": "soft-fade"},
+      "hover": {"values": ["zoom", "image-swap", "underline", "colour", "none"], "median": "zoom"}}}
+  }
+}

@@ -66,7 +66,7 @@ After the copy the theme owns everything. Library fixes do not flow into existin
 
 ## 6. Structural choices per theme
 
-The brief records one value per axis before the plan. The library offers no defaults.
+The analyze phase records one value per axis field in `globals.md` §0 "Yapısal kimlik", from the reference measurement and the brief's interpretation strategy, with a one-line reason. The vocabulary is `library/axes.json`; the library and the template offer no defaults.
 
 **Structural axes (A):**
 1. Section layout variants (hero, featured collection, …)
@@ -82,9 +82,9 @@ The value ranges for each axis are proposals and are not calibrated yet; the fir
 
 ## 7. Similarity gate
 
-A plan-phase script compares the new theme's axis choices with every earlier theme's.
+`scripts/axes.py check` compares the new theme's §0 with every earlier theme's (rule id L23); `axes.py record` stores a theme once its plan gate passed. An axis differs when any of its fields differs.
 
-- **Fingerprint store:** the axis choices of earlier themes live on the user's machine, outside this public repo (for example `~/.claude/ikas-pendev/fingerprints.json`). They are never committed.
+- **Fingerprint store:** the axis choices of earlier themes live on the user's machine, outside this public repo (default `~/.claude/ikas-pendev/fingerprints.json`, override `--store` or `IKAS_PENDEV_FINGERPRINTS`): slugs, dates and axis values only. They are never committed.
 - **Minimum difference (proposal):** the new theme differs from each earlier theme in at least 4 of the 6 structural axes (a mirrored layout counts as the same) and in at least 5 of the 9 token axes. One of the token differences is in typography and one is in colour strategy, not just hue.
 - **Generic-default warning (proposal):** warn when 3 or more axes sit on the median value (centred full-bleed hero with one button, 4-column grid of square cards with centred name and price, pill "Shop now" button, uniform section padding, trust-badge icon row, rounded corners everywhere).
 - **Later, optional:** layout fingerprint per template (`sectionType:variantId` sequence, normalised edit distance) and perceptual hashes of grey-blurred screenshots, so that themes that differ only in colour are caught.
@@ -104,6 +104,6 @@ Each step is one revertable commit on `ecommerce-library`:
    - Every token is written from plandata. A token the plan lacks stops the copy before anything is written.
    - It prints a WARN for components the skill already requires but the plan does not name, and an INFO for library-only ones (Price, CartCount …) a plan may build inline.
    - It runs once per theme file, with the file closed in pen.dev.
-4. The axis table in the brief template and the similarity gate.
+4. The axis table and the similarity gate. Done: `library/axes.json` (15 axes, their fields, allowed values and generic defaults), `templates/globals.md` §0, `scripts/axes.py` (check / record / list). The layout-fingerprint and perceptual-hash checks of §7 are not built yet.
 5. Wire the build phase to start from the library.
 6. Update 05 §3 with the §2 observation (inherited metadata is readable; instance-level metadata is not stored).

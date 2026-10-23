@@ -9,6 +9,57 @@ Sütunlar: referans değeri → pen.dev değişkeni (`$ad`) → ikas karşılı�
 
 ---
 
+## 0. Yapısal kimlik
+
+Temanın iskeleti hangi yapısal ve stil seçimleriyle kurulacak (`references/12-library.md` §6). Her satıra `library/axes.json`'daki değerlerden biri yazılır; varsayılan yoktur. Seçimler referansın ölçümünden ve brief'in yorum stratejisinden gelir. Gerekçe bir cümledir. Kapı: `axes.py check` (önceki temalardan yeterince ayrışıyor mu, kaç eksen jenerik varsayılanda).
+
+| Eksen | Alan | Seçim | Gerekçe |
+|---|---|---|---|
+| A1 Section düzen varyantları | collection | `…` | … |
+| A1 Section düzen varyantları | story | `…` | … |
+| A2 Grid ve sütunlar | desktop_cols | `…` | … |
+| A2 Grid ve sütunlar | mobile_cols | `…` | … |
+| A2 Grid ve sütunlar | gutter | `…` | … |
+| A2 Grid ve sütunlar | container | `…` | … |
+| A3 Navigasyon kalıbı | logo | `…` | … |
+| A3 Navigasyon kalıbı | menu | `…` | … |
+| A3 Navigasyon kalıbı | mega | `…` | … |
+| A3 Navigasyon kalıbı | behaviour | `…` | … |
+| A3 Navigasyon kalıbı | announcement | `…` | … |
+| A4 Hero arketipi | type | `…` | … |
+| A4 Hero arketipi | height | `…` | … |
+| A4 Hero arketipi | text | `…` | … |
+| A5 Ürün kartı anatomisi | info | `…` | … |
+| A5 Ürün kartı anatomisi | price | `…` | … |
+| A5 Ürün kartı anatomisi | hover_image | `…` | … |
+| A5 Ürün kartı anatomisi | quick_add | `…` | … |
+| A5 Ürün kartı anatomisi | badge | `…` | … |
+| A5 Ürün kartı anatomisi | swatch | `…` | … |
+| A5 Ürün kartı anatomisi | shell | `…` | … |
+| A6 Görsel oranı ve işlemesi | product_ratio | `…` | … |
+| A6 Görsel oranı ve işlemesi | hero_ratio | `…` | … |
+| A6 Görsel oranı ve işlemesi | treatment | `…` | … |
+| B7 Tipografi eşleşmesi | display | `…` | … |
+| B7 Tipografi eşleşmesi | body | `…` | … |
+| B8 Tip ölçeği | ratio | `…` | … |
+| B8 Tip ölçeği | heading_weight | `…` | … |
+| B9 Harf durumu ve aralığı | headings | `…` | … |
+| B9 Harf durumu ve aralığı | tracking | `…` | … |
+| B9 Harf durumu ve aralığı | labels | `…` | … |
+| B10 Köşe yarıçapı | radius | `…` | … |
+| B11 Çizgi, yüzey ya da gölge | surface | `…` | … |
+| B12 Renk stratejisi | strategy | `…` | … |
+| B12 Renk stratejisi | temperature | `…` | … |
+| B12 Renk stratejisi | ground | `…` | … |
+| B13 Yoğunluk ve boşluk | base | `…` | … |
+| B13 Yoğunluk ve boşluk | section | `…` | … |
+| B13 Yoğunluk ve boşluk | rhythm | `…` | … |
+| B14 İkonografi | style | `…` | … |
+| B15 Hareket kişiliği | personality | `…` | … |
+| B15 Hareket kişiliği | hover | `…` | … |
+
+---
+
 ## 1. Renk
 
 | Token | Referans | pen.dev | ikas |
