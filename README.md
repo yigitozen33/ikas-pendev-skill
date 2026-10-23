@@ -9,6 +9,7 @@ Her projede aynı düzeni kurar: design system frame'leri → alt bileşenler �
 - **Brief'i soru-cevapla çıkarır.** Önce tema adını (marka adı) sorar, sonra gerektiği kadar turda girdileri, sektörü ve tonu, sayfa kapsamını, referans renklerinin aktarılıp aktarılmayacağını, renk şeması sayısını, ikas hazır sayfalarını (üyelik, hesap) ve koşullu özellikleri sorar. Dil (`tr-TR`), fiyat biçimi ve büyük harf kullanımını sormaz, kendisi belirler.
 - **Referansı ölçer.** URL verilirse CSS'ten token'ları okur (`[ölçüldü]`), ekran görüntüsünden tahmin eder (`[tahmini]`). Referansın görseli, metni, logosu ve marka adı tasarıma girmez.
 - **ikas renk şemalarını kurar.** 2–4 renk şeması üretir; mağaza sahibi editörde her bölüm için birini seçer. Renkler iki palet kaynağından gelir: **qrco MCP** (küratörlü katalog, anlamsal roller, kontrast ölçümü) ve **Huemint API** (marka ve web paletleriyle eğitilmiş model). Skill önce sektörün renk psikolojisine ve alanların rolüne göre bir gerekçe yazar, istenirse referans renklerini kilitler, adayları uyum, kontrast ve ayrışmaya göre seçer.
+- **Her temayı ortak bir iskeletten, ama birbirine benzemeden kurar.** Yapı kütüphanesi (`library/`) her bileşenin parçalarını, durumlarını ve ikas aktarım işaretlerini verir, görünüm vermez. Tema 15 eksende (hero tipi, kart anatomisi, menü, ızgara, tipografi, renk stratejisi …) kendi seçimini yapar; bir benzerlik kapısı bu seçimleri bu bilgisayarda daha önce tasarlanan temalarla karşılaştırır.
 - **Planı üretir ve denetler.** Plan veriden üretilir, lint ile kontrol edilir (WCAG kontrastı her şemada ayrı ölçülür).
 - **Canvas'ı kurar ve doğrular.** Her birim okuma amaçlı kontrollerle (CHK) ve ekran görüntüsüyle kapanır.
 - **Aktarım paketini hazırlar.** Port manifest'i, ikas global'leri için runbook (renk şemaları, tipografi, kırılımlar), davranış kabul kriterleri ve test verisi listesi.
@@ -98,9 +99,12 @@ Her faz bir dosya bırakır ve bir kapıdan geçmeden sonraki faz başlamaz. Faz
 skills/ikas-pendev/
 ├── SKILL.md            talimatlar (İngilizce; üretilen dokümanlar Türkçe)
 ├── references/         sözleşme, motion kataloğu, ikas sınırları, pen.dev tuzakları, sayfa kapsamı, kontrol listeleri,
-│                       kalite, aktarım, port davranış kriterleri, renk şemaları (11-color: kaynaklar, renk psikolojisi)
+│                       kalite, aktarım, port davranış kriterleri, renk şemaları (11-color: kaynaklar, renk psikolojisi),
+│                       yapı kütüphanesi ve farklılaşma (12-library)
 ├── templates/          brief, globals, components, verify-report, port-manifest şablonları; plan prose parçaları; plandata şeması
-├── scripts/            gen_plan · lint_plan · extract_targets · pendev_checks.js · analyze_site · build_manifest · huemint
+├── library/            yapı kütüphanesi: inventory.json (parçalar, durumlar), axes.json (15 eksen), ikas-ecommerce.lib.pen (üretilir)
+├── scripts/            gen_plan · lint_plan · extract_targets · pendev_checks.js · analyze_site · build_manifest · huemint ·
+│                       gen_library · copy_library · axes
 ├── examples/ornek/     anonim örnek tema, contract 1 (brief, plandata, globals, components, verify-report)
 ├── evals/evals.json    tetikleme senaryoları
 └── tests/run.sh        regresyon: gen_plan byte-exact, lint, extract, analyze_site fixture, renk şemaları, Huemint (çevrimdışı)

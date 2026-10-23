@@ -1,6 +1,6 @@
 # 12 · E-commerce structure library — design note
 
-Status: **draft, not wired into the phases yet** (branch `ecommerce-library`). Nothing in SKILL.md reads this file until the library and its script exist.
+Status: **experimental** (branch `ecommerce-library`). Wired into SKILL.md: analyze writes `globals.md` §0 and runs `axes.py check`, plan runs `axes.py record`, build starts with `copy_library.py`.
 
 ## Contents
 1. Principle
@@ -105,5 +105,5 @@ Each step is one revertable commit on `ecommerce-library`:
    - It prints a WARN for components the skill already requires but the plan does not name, and an INFO for library-only ones (Price, CartCount …) a plan may build inline.
    - It runs once per theme file, with the file closed in pen.dev.
 4. The axis table and the similarity gate. Done: `library/axes.json` (15 axes, their fields, allowed values and generic defaults), `templates/globals.md` §0, `scripts/axes.py` (check / record / list). The layout-fingerprint and perceptual-hash checks of §7 are not built yet.
-5. Wire the build phase to start from the library.
+5. Wire the phases. Done: SKILL.md analyze (§0 + `axes.py check`), plan (`axes.py record` after approval), build (`copy_library.py` first, the skeleton arrangement replaced unit by unit).
 6. Update 05 §3 with the §2 observation (inherited metadata is readable; instance-level metadata is not stored).
