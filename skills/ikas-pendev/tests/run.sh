@@ -227,5 +227,28 @@ for c in d["components"]:
 print("\n".join(errs)); sys.exit(1 if errs else 0)
 PY
 
+python3 -I "$S/gen_library.py" --check > "$OUT/library.txt" 2>&1 && ok "library .pen is what the inventory gives (gen_library --check)" || bad "library .pen is what the inventory gives (gen_library --check)" "$(cat "$OUT/library.txt")"
+python3 -I - "$SK/library/inventory.json" "$SK/library/ikas-ecommerce.lib.pen" > "$OUT/library-parts.txt" 2>&1 <<'PY' && ok "library: every component is a reusable root, every part a named layer, optional parts disabled" || bad "library: every component is a reusable root, every part a named layer, optional parts disabled" "$(cat "$OUT/library-parts.txt")"
+import json, sys
+inv = json.load(open(sys.argv[1])); pen = json.load(open(sys.argv[2])); errs = []
+roots = {}
+def walk(n):
+    if n.get("reusable"): roots[n["metadata"]["ikas"]] = n
+    for ch in n.get("children", []): walk(ch)
+for ch in pen["children"]: walk(ch)
+for c in inv["components"]:
+    r = roots.get(c["name"])
+    if not r: errs.append(f"{c['name']}: no reusable root"); continue
+    layers = {ch["name"]: ch for ch in r["children"]}
+    for p in c["parts"]:
+        n = layers.get(p["layer"])
+        if not n: errs.append(f"{c['name']}.{p['layer']}: missing")
+        elif bool(p.get("opt")) != (n.get("enabled") is False): errs.append(f"{c['name']}.{p['layer']}: enabled flag")
+import re
+used = {v[1:] for v in re.findall(r'"(\$[a-z0-9-]+)"', json.dumps(pen["children"]))}
+errs += [f"undefined token {t}" for t in sorted(used - set(pen["variables"]))]
+print("\n".join(errs)); sys.exit(1 if errs else 0)
+PY
+
 echo "----"; echo "passed=$pass failed=$fail"
 [ "$fail" = "0" ]
