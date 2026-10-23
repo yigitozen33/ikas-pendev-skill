@@ -313,6 +313,18 @@ export IKAS_PENDEV_FINGERPRINTS="$AX/layout-store.json"
 python3 -I "$S/axes.py" record "$AX/a.md" --slug la --plandata "$AX/pa" >/dev/null && python3 -I "$S/axes.py" check "$AX/c.md" --slug lb --plandata "$AX/pb" > "$AX/lb.txt" 2>&1; [ $? = 1 ] && grep -q "too close to 'la': home page composition distance 0.00 (need 0.5)" "$AX/lb.txt" && ok "axes: same home-page composition fails even when every axis differs" || bad "axes: same home-page composition fails even when every axis differs" "$(cat "$AX/lb.txt")"
 python3 -I "$S/axes.py" check "$AX/c.md" --slug lc --plandata "$AX/pc" > "$AX/lc.txt" 2>&1 && ok "axes: a different home-page composition passes" || bad "axes: a different home-page composition passes" "$(cat "$AX/lc.txt")"
 python3 -I "$S/axes.py" check "$AX/c.md" --slug lx --plandata "$AX/px" > "$AX/lx.txt" 2>&1; [ $? = 1 ] && grep -q 'HeroBanner: archetype `hero:nope` not in the vocabulary' "$AX/lx.txt" && ok "axes: an unknown section archetype fails" || bad "axes: an unknown section archetype fails" "$(cat "$AX/lx.txt")"
+python3 -I "$S/copy_library.py" "$AX/pa" -o "$AX/arch.pen" > "$AX/arch.log" 2>&1 && python3 -I - "$AX/arch.pen" > "$AX/arch.txt" 2>&1 <<'PY' && ok "copy_library: content sections matched by archetype, copied under the theme's key" || bad "copy_library: content sections matched by archetype, copied under the theme's key" "$(cat "$AX/arch.log" "$AX/arch.txt")"
+import json, sys
+t = json.load(open(sys.argv[1])); errs = []
+roots = {n["name"]: n for n in t["children"] if n["type"] == "frame"}
+for name, lib, part in (("K/Section/HeroBanner@desktop", "Hero", "hero-media-mobile"), ("K/Section/ProductGrid@mobile", "ProductShelf", "shelf-products")):
+    r = roots.get(name)
+    if not r: errs.append("missing " + name); continue
+    if r["metadata"].get("libComponent") != lib or r["metadata"].get("ikas") != name.split("/")[2].split("@")[0]: errs.append(f"{name} metadata {r['metadata']}")
+    if part not in {c["name"] for c in r["children"]}: errs.append(f"{name} lacks {part}")
+if roots["K/Section/HeroBanner@mobile"]["width"] != 390: errs.append("mobile width")
+print("\n".join(errs)); sys.exit(1 if errs else 0)
+PY
 unset IKAS_PENDEV_FINGERPRINTS
 
 echo "----"; echo "passed=$pass failed=$fail"

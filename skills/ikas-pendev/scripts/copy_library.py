@@ -9,6 +9,9 @@ What is copied:
   * every library component whose name is in plandata `components` (Subs) or is a
     plandata section / overlay `key`;
   * every block whose host section is in plandata (ProductGallery for ProductDetail …);
+  * for a plandata section with `archetype: "<family>:<variant>"` and no library component of
+    its own name, the content-section skeleton of that family (Hero, ProductShelf, MediaText …),
+    copied under the theme's section key;
   * the optional overlays named with --with (Toast, ConfirmModal …) when plandata does not
     already list them.
 What changes on the way:
@@ -197,19 +200,34 @@ def main():
     if unknown:
         die("--with names not in the library: " + ", ".join(unknown), 2)
 
-    pick = []
+    pick = []  # (library component, target name)
     for c in inv["components"]:
         name = c["name"]
         if name in planned or name in extra or (c["kind"] == "block" and c.get("host") in planned):
-            pick.append(c)
-    unplanned = [c for c in inv["components"] if c not in pick and not c.get("optional") and c["kind"] != "block"]
+            pick.append((c, name))
+    content = [c for c in inv["components"] if c.get("families")]
+    unmatched = []
+    for sec in pd.get("sections", []):
+        if sec.get("kind") != "section" or sec["key"] in by_name or not sec.get("archetype"):
+            continue
+        arch = sec["archetype"]
+        fam = arch.split(":", 1)[0]
+        hit = next((c for c in content if arch in c["families"]), None) or \
+            next((c for c in content if fam in c["families"]), None)
+        if hit:
+            pick.append((hit, sec["key"]))
+        else:
+            unmatched.append(f"{sec['key']} ({arch})")
+    picked = {c["name"] for c, _ in pick}
+    unplanned = [c for c in inv["components"]
+                 if c["name"] not in picked and not c.get("optional") and c["kind"] != "block"]
     gaps = [c["name"] for c in unplanned if "contract" in c["basis"]]
     hints = [c["name"] for c in unplanned if "contract" not in c["basis"]]
 
     cp = Copier(slug, prefix)
     out_nodes, x, y_band, band_h = [], 0, 0, 0
     last_layer = None
-    for c in pick:
+    for c, target in pick:
         if c["layer"] != last_layer and last_layer is not None:
             x, y_band, band_h = 0, y_band + band_h + GAP * 2, 0
         last_layer = c["layer"]
@@ -217,12 +235,14 @@ def main():
         devs = DEVICES if c["kind"] in ("section", "overlay") else (None,)
         for dev in devs:
             suffix = "@" + dev if dev else ""
-            root = cp.retag(lib_root, c["name"] + suffix)
-            root["name"] = lib_root["name"].replace("P/", prefix + "/", 1) + suffix
+            root = cp.retag(lib_root, target + suffix)
+            root["name"] = lib_root["name"].replace("P/", prefix + "/", 1).rsplit("/", 1)[0] + "/" + target + suffix
             if c["kind"] == "block":
                 root.pop("reusable", None)
             meta = root["metadata"]
-            meta.update({"variant": prefix, "contract": 2})
+            meta.update({"variant": prefix, "contract": 2, "ikas": target})
+            if target != c["name"]:
+                meta["libComponent"] = c["name"]
             if dev:
                 meta["device"] = dev
                 if c["kind"] == "section":
@@ -235,7 +255,7 @@ def main():
             if c["kind"] != "block":
                 for ref in states.get(c["name"], []):
                     st = ref["name"].split(" — ", 1)[1]
-                    out_nodes.append({"type": "ref", "id": cp.nid(c["name"] + suffix, "state", st), "ref": root["id"],
+                    out_nodes.append({"type": "ref", "id": cp.nid(target + suffix, "state", st), "ref": root["id"],
                                       "name": f"{root['name']} — {st}", "context": "state " + st, "x": x, "y": y})
                     y += est_h + GAP // 2
             band_h = max(band_h, y - y_band)
@@ -247,6 +267,8 @@ def main():
     print(f"theme {slug} ({prefix}) · {len(pick)} components → {len(out_nodes)} roots · {len(var)} variables")
     if gaps:
         print("WARN plan lacks components the skill requires (02 §9, 06 §3): " + ", ".join(gaps))
+    if unmatched:
+        print("INFO no library skeleton for these archetypes (built from the plan tree alone): " + ", ".join(unmatched))
     if hints:
         print("INFO library components the plan builds inline or skips: " + ", ".join(hints))
     if missing:

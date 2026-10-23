@@ -45,7 +45,8 @@ PLACEHOLDER_FONT = "Space Mono"
 
 BANDS = [("primitive", "sub", "Primitives"), ("element", "sub", "Commerce elements"),
          ("component", "sub", "Commerce components"), ("component", "block", "Blocks (copied into a section)"),
-         ("shell", "section", "Shells"), ("overlay", "overlay", "Overlays")]
+         ("shell", "section", "Shells"), ("page", "section", "Page sections"),
+         ("content", "section", "Content sections (matched by archetype)"), ("overlay", "overlay", "Overlays")]
 ROOT = {"sub": "P/Sub/{}", "block": "P/Block/{}", "section": "P/Section/{}", "overlay": "P/Overlay/{}"}
 WIDTH = {"sub": 280, "block": 360, "section": 720, "overlay": 360}
 
@@ -96,6 +97,10 @@ def component_column(comp):
         meta["host"] = comp["host"]
     if comp.get("optional"):
         meta["optional"] = True
+    if comp.get("families"):
+        meta["families"] = ",".join(comp["families"])
+    if comp.get("page"):
+        meta["page"] = comp["page"]
     root = {"type": "frame", "id": nid(comp["name"]), "name": name, "reusable": True,
             "width": WIDTH[comp["kind"]], "layout": "vertical", "gap": "$space-xs", "padding": "$space-sm",
             "fill": "$color-surface", "stroke": "$color-line", "strokeWidth": 1, "strokeAlignment": "inner",

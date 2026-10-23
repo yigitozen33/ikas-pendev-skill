@@ -10,7 +10,7 @@
   "kinds": {
     "sub": "reusable root P/Sub/<Name>; becomes src/sub-components/<Name>",
     "block": "frame copied into a section (ProductDetail, ProductList …); never a Sub",
-    "section": "shell section P/Section/<Name>@desktop|@mobile",
+    "section": "section root P/Section/<Name>@desktop|@mobile; content sections are copied under the theme's own section key, matched by plandata `archetype` family",
     "overlay": "P/Overlay/<Name>@desktop|@mobile — <state>"
   },
   "states": {
@@ -1818,6 +1818,1088 @@
         "açık"
       ],
       "note": "mobile groups may be accordions"
+    },
+    {
+      "name": "ProductDetail",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract",
+        "platform"
+      ],
+      "page": "PRODUCT_DETAIL",
+      "parts": [
+        {
+          "layer": "pdp-breadcrumbs",
+          "req": true,
+          "note": "Breadcrumbs"
+        },
+        {
+          "layer": "pdp-gallery",
+          "req": true,
+          "note": "ProductGallery block"
+        },
+        {
+          "layer": "pdp-buybox",
+          "req": true,
+          "note": "BuyBox block"
+        },
+        {
+          "layer": "pdp-info",
+          "req": true,
+          "note": "description and specs: tabs or accordions"
+        },
+        {
+          "layer": "pdp-share",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "sepeti güncelle"
+      ]
+    },
+    {
+      "name": "ProductReviews",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract"
+      ],
+      "page": "PRODUCT_DETAIL",
+      "parts": [
+        {
+          "layer": "reviews-summary",
+          "req": true,
+          "note": "score, RatingStars, count, distribution, 'Yorum yaz'"
+        },
+        {
+          "layer": "reviews-list",
+          "req": true,
+          "note": "ReviewCard list"
+        },
+        {
+          "layer": "reviews-empty",
+          "req": true
+        },
+        {
+          "layer": "review-form",
+          "req": true
+        },
+        {
+          "layer": "reviews-pagination",
+          "req": true
+        }
+      ],
+      "states": [
+        "yorumlu",
+        "boş",
+        "yorum formu",
+        "onay bekliyor"
+      ]
+    },
+    {
+      "name": "ProductList",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "page": "CATEGORY",
+      "parts": [
+        {
+          "layer": "list-header",
+          "req": true,
+          "note": "title + Breadcrumbs"
+        },
+        {
+          "layer": "list-subcategories",
+          "opt": true,
+          "ikas": "yes",
+          "note": "tiles on intermediate categories"
+        },
+        {
+          "layer": "list-toolbar",
+          "req": true,
+          "note": "ListToolbar block"
+        },
+        {
+          "layer": "list-filters",
+          "req": true,
+          "note": "FacetFilter block (desktop)"
+        },
+        {
+          "layer": "list-grid",
+          "req": true,
+          "note": "ProductCard grid"
+        },
+        {
+          "layer": "list-pagination",
+          "req": true,
+          "note": "Pagination or load more"
+        },
+        {
+          "layer": "search-field",
+          "req": true,
+          "note": "SearchField block, search mode"
+        },
+        {
+          "layer": "list-empty",
+          "req": true,
+          "note": "NoResults block"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "yükleniyor",
+        "sonuç yok",
+        "filtreli",
+        "arama",
+        "tüm ürünler"
+      ],
+      "must": [
+        {
+          "rule": "intermediate categories lead with their subcategories",
+          "basis": "baymard",
+          "figure": "38%"
+        }
+      ]
+    },
+    {
+      "name": "CartPage",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract",
+        "platform"
+      ],
+      "page": "CART",
+      "parts": [
+        {
+          "layer": "cart-title",
+          "req": true
+        },
+        {
+          "layer": "cart-lines",
+          "req": true,
+          "note": "CartLineItem list"
+        },
+        {
+          "layer": "cart-summary",
+          "req": true,
+          "note": "OrderSummary"
+        },
+        {
+          "layer": "cart-recommendations",
+          "req": true
+        },
+        {
+          "layer": "cart-empty",
+          "req": true,
+          "note": "continue CTA; the rail stays"
+        },
+        {
+          "layer": "cart-skeleton",
+          "req": true
+        }
+      ],
+      "states": [
+        "dolu",
+        "boş",
+        "yükleniyor",
+        "hata"
+      ],
+      "must": [
+        {
+          "rule": "the empty cart offers a way forward and products",
+          "basis": "platform"
+        }
+      ]
+    },
+    {
+      "name": "AuthForms",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "page": "LOGIN",
+      "optional": true,
+      "parts": [
+        {
+          "layer": "auth-login",
+          "req": true
+        },
+        {
+          "layer": "auth-register",
+          "req": true
+        },
+        {
+          "layer": "auth-forgot",
+          "req": true
+        },
+        {
+          "layer": "auth-recover",
+          "req": true
+        },
+        {
+          "layer": "social-login",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "sms-login",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "register-consents",
+          "req": true,
+          "note": "marketing and agreement, two checkboxes"
+        }
+      ],
+      "states": [
+        "giriş",
+        "kayıt",
+        "şifremi unuttum",
+        "şifre yenile",
+        "hata",
+        "gönderiliyor"
+      ],
+      "must": [
+        {
+          "rule": "password rules stated up front, not after a failed submit",
+          "basis": "baymard",
+          "figure": "65%"
+        }
+      ],
+      "note": "only when membership pages are custom (06 §2a)"
+    },
+    {
+      "name": "Account",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract"
+      ],
+      "page": "ACCOUNT",
+      "optional": true,
+      "parts": [
+        {
+          "layer": "account-nav",
+          "req": true
+        },
+        {
+          "layer": "account-info",
+          "req": true
+        },
+        {
+          "layer": "account-orders",
+          "req": true
+        },
+        {
+          "layer": "order-detail",
+          "req": true
+        },
+        {
+          "layer": "account-addresses",
+          "req": true,
+          "note": "address cards with address-card-actions"
+        },
+        {
+          "layer": "address-form",
+          "req": true,
+          "note": "AddressForm block"
+        },
+        {
+          "layer": "account-favorites",
+          "req": true
+        },
+        {
+          "layer": "return-form",
+          "req": true
+        },
+        {
+          "layer": "account-settings",
+          "req": true
+        },
+        {
+          "layer": "orders-error",
+          "req": true
+        },
+        {
+          "layer": "account-skeleton",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "boş",
+        "yükleniyor",
+        "hata"
+      ],
+      "note": "only when account pages are custom (06 §2a)"
+    },
+    {
+      "name": "EmailVerification",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract"
+      ],
+      "page": "CUSTOMER_EMAIL_VERIFICATION",
+      "optional": true,
+      "parts": [
+        {
+          "layer": "ev-status",
+          "req": true
+        },
+        {
+          "layer": "resend-form",
+          "req": true
+        }
+      ],
+      "states": [
+        "doğrulanıyor",
+        "başarılı",
+        "hata",
+        "tekrar gönderildi"
+      ],
+      "note": "follows the membership group (06 §2a)"
+    },
+    {
+      "name": "OrderTracking",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract"
+      ],
+      "page": "CUSTOM",
+      "parts": [
+        {
+          "layer": "ot-form",
+          "req": true
+        },
+        {
+          "layer": "ot-result",
+          "req": true
+        },
+        {
+          "layer": "ot-not-found",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "sonuç",
+        "bulunamadı"
+      ]
+    },
+    {
+      "name": "RichText",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract"
+      ],
+      "page": "CUSTOM",
+      "parts": [
+        {
+          "layer": "rt-title",
+          "req": true
+        },
+        {
+          "layer": "rt-body",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
+    },
+    {
+      "name": "Contact",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract"
+      ],
+      "page": "CUSTOM",
+      "parts": [
+        {
+          "layer": "contact-info",
+          "req": true
+        },
+        {
+          "layer": "contact-form",
+          "req": true,
+          "note": "name, e-mail, phone, message"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "gönderiliyor",
+        "gönderildi",
+        "hata"
+      ]
+    },
+    {
+      "name": "NotFound",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract",
+        "platform"
+      ],
+      "page": "NOT_FOUND",
+      "parts": [
+        {
+          "layer": "nf-title",
+          "req": true
+        },
+        {
+          "layer": "nf-text",
+          "req": true
+        },
+        {
+          "layer": "nf-action",
+          "req": true
+        },
+        {
+          "layer": "nf-products",
+          "req": true,
+          "note": "product rail"
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
+    },
+    {
+      "name": "BlogList",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract"
+      ],
+      "page": "BLOG",
+      "optional": true,
+      "parts": [
+        {
+          "layer": "blog-categories",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "blog-items",
+          "req": true,
+          "note": "BlogCard list"
+        },
+        {
+          "layer": "blog-pagination",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "boş"
+      ]
+    },
+    {
+      "name": "BlogPost",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract"
+      ],
+      "page": "BLOG_POST",
+      "optional": true,
+      "parts": [
+        {
+          "layer": "post-title",
+          "req": true
+        },
+        {
+          "layer": "post-meta",
+          "req": true
+        },
+        {
+          "layer": "post-media",
+          "req": true
+        },
+        {
+          "layer": "post-body",
+          "req": true
+        },
+        {
+          "layer": "post-share",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "post-related",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
+    },
+    {
+      "name": "Hero",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "platform"
+      ],
+      "families": [
+        "hero"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "hero-media",
+          "req": true,
+          "note": "desktop image or video"
+        },
+        {
+          "layer": "hero-media-mobile",
+          "req": true,
+          "note": "its own mobile media slot"
+        },
+        {
+          "layer": "hero-title",
+          "req": true
+        },
+        {
+          "layer": "hero-text",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "hero-actions",
+          "req": true,
+          "note": "one or two Buttons"
+        },
+        {
+          "layer": "hero-overlay",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ],
+      "must": [
+        {
+          "rule": "separate desktop and mobile media",
+          "basis": "platform"
+        }
+      ]
+    },
+    {
+      "name": "Slideshow",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "platform",
+        "w3c",
+        "baymard"
+      ],
+      "families": [
+        "hero:slider"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "slides",
+          "req": true
+        },
+        {
+          "layer": "slide-media",
+          "req": true
+        },
+        {
+          "layer": "slide-title",
+          "req": true
+        },
+        {
+          "layer": "slide-action",
+          "req": true
+        },
+        {
+          "layer": "slide-controls",
+          "req": true,
+          "note": "arrows, dots or counter"
+        },
+        {
+          "layer": "slide-pause",
+          "req": true,
+          "note": "when it moves on its own"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "duraklatıldı"
+      ],
+      "must": [
+        {
+          "rule": "moving slides can be paused and the current slide is announced",
+          "basis": "w3c"
+        },
+        {
+          "rule": "controls work with the keyboard",
+          "basis": "baymard",
+          "figure": "31%"
+        }
+      ]
+    },
+    {
+      "name": "ProductShelf",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "platform"
+      ],
+      "families": [
+        "collection"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "shelf-heading",
+          "req": true,
+          "note": "SectionHeading"
+        },
+        {
+          "layer": "shelf-products",
+          "req": true,
+          "note": "ProductCard list, the one card definition"
+        },
+        {
+          "layer": "shelf-link",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "shelf-controls",
+          "opt": true,
+          "ikas": "yes",
+          "note": "carousel arrows"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "yükleniyor",
+        "boş"
+      ],
+      "must": [
+        {
+          "rule": "an empty shelf is hidden",
+          "basis": "platform"
+        }
+      ]
+    },
+    {
+      "name": "FeaturedProduct",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "platform"
+      ],
+      "families": [
+        "product:featured"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "fp-media",
+          "req": true
+        },
+        {
+          "layer": "fp-title",
+          "req": true
+        },
+        {
+          "layer": "fp-price",
+          "req": true
+        },
+        {
+          "layer": "fp-variants",
+          "req": true
+        },
+        {
+          "layer": "fp-actions",
+          "req": true
+        },
+        {
+          "layer": "fp-link",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "stok yok",
+        "ekleniyor"
+      ]
+    },
+    {
+      "name": "ShoppableImage",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "baymard",
+        "platform"
+      ],
+      "families": [
+        "product:shoppable"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "shop-media",
+          "req": true
+        },
+        {
+          "layer": "shop-hotspots",
+          "req": true,
+          "note": "Hotspot list"
+        },
+        {
+          "layer": "shop-products",
+          "opt": true,
+          "ikas": "yes",
+          "note": "the pictured products as a list"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "açık"
+      ],
+      "must": [
+        {
+          "rule": "every pictured product is one tap away",
+          "basis": "baymard",
+          "figure": "64%"
+        }
+      ]
+    },
+    {
+      "name": "CollectionList",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "platform",
+        "baymard"
+      ],
+      "families": [
+        "category"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "col-heading",
+          "req": true
+        },
+        {
+          "layer": "col-items",
+          "req": true,
+          "note": "image + name per category"
+        },
+        {
+          "layer": "col-link",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "hover"
+      ],
+      "must": [
+        {
+          "rule": "each category tile has a clear image",
+          "basis": "baymard",
+          "figure": "39%"
+        }
+      ]
+    },
+    {
+      "name": "MediaText",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "platform"
+      ],
+      "families": [
+        "story",
+        "banner"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "mt-media",
+          "req": true
+        },
+        {
+          "layer": "mt-title",
+          "req": true
+        },
+        {
+          "layer": "mt-text",
+          "req": true
+        },
+        {
+          "layer": "mt-action",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
+    },
+    {
+      "name": "TextBlock",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "platform"
+      ],
+      "families": [
+        "text"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "tb-title",
+          "req": true
+        },
+        {
+          "layer": "tb-body",
+          "req": true
+        },
+        {
+          "layer": "tb-action",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
+    },
+    {
+      "name": "FAQ",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "platform"
+      ],
+      "families": [
+        "text:faq"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "faq-heading",
+          "req": true
+        },
+        {
+          "layer": "faq-items",
+          "req": true,
+          "note": "AccordionItem list"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "açık"
+      ]
+    },
+    {
+      "name": "USP",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "platform"
+      ],
+      "families": [
+        "usp"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "usp-items",
+          "req": true,
+          "note": "icon + title + text"
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
+    },
+    {
+      "name": "Newsletter",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "platform"
+      ],
+      "families": [
+        "newsletter"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "nl-title",
+          "req": true
+        },
+        {
+          "layer": "nl-text",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "nl-form",
+          "req": true,
+          "note": "NewsletterForm"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "eklendi",
+        "hata"
+      ]
+    },
+    {
+      "name": "LogoStrip",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "platform"
+      ],
+      "families": [
+        "press:logos",
+        "marquee:logos"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "logo-items",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
+    },
+    {
+      "name": "Testimonials",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "platform"
+      ],
+      "families": [
+        "press"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "quote-items",
+          "req": true,
+          "note": "quote + author"
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
+    },
+    {
+      "name": "BlogPosts",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "platform"
+      ],
+      "families": [
+        "blog"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "blog-heading",
+          "req": true
+        },
+        {
+          "layer": "blog-items",
+          "req": true,
+          "note": "BlogCard list"
+        },
+        {
+          "layer": "blog-link",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
+    },
+    {
+      "name": "Marquee",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "w3c"
+      ],
+      "families": [
+        "marquee"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "marquee-items",
+          "req": true
+        },
+        {
+          "layer": "marquee-pause",
+          "req": true,
+          "note": "moving content can be paused"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "duraklatıldı"
+      ]
+    },
+    {
+      "name": "SocialFeed",
+      "layer": "content",
+      "kind": "section",
+      "basis": [
+        "platform"
+      ],
+      "families": [
+        "social"
+      ],
+      "optional": true,
+      "parts": [
+        {
+          "layer": "social-heading",
+          "req": true
+        },
+        {
+          "layer": "social-items",
+          "req": true
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
     },
     {
       "name": "MenuOverlay",
