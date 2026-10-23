@@ -28,9 +28,9 @@ Use both palette sources when they are reachable. Never block the phase on a sou
 | **AI** | your own choice, checked by lint L14 | fallback and gap filler; tag `[ai]` |
 
 **qrco tools used** (unknown arguments are rejected; if a call fails on its schema, read `get_capabilities` once):
-- `search_explore`: curated catalogue first. Pass `query`, `temperature` (warm/cool/neutral/mixed), `lightness`, `chroma` (muted/balanced/vivid), `colorCount`, `minTextContrast: 4.5`.
+- `search_explore`: curated catalogue first. Pass `query`, `temperature` (warm/cool/neutral/mixed), `lightness`, `chroma` (muted/balanced/vivid), `colorCount`, `minTextContrast: 4.5`. Narrow filters often return `no-matches`; then retry with `intentExpansion: "related"` and fewer filters (`"warm earth"` matched 70 where `terracotta` + filters matched none).
 - `generate_palette_set`: up to 5 options per call. Pass `colorsPerPalette`, one of `inspiration` / `style` / `baseColor`, and `lockedColors: [{index, hex}]`.
-- `build_brand_system`: one palette → semantic roles with measured contrast. Pass `colors`, `primaryIndex`, `accentIndex`, `mode` (`light` / `dark`), `textContrast: 4.5`, `uiContrast: 3`.
+- `build_brand_system`: one palette → semantic roles with measured contrast. Pass `colors`, `primaryIndex`, `accentIndex`, `mode` (`light` / `dark`), `textContrast: 4.5`, `uiContrast: 3`. It keeps primary and accent but **re-derives background and surface** (a locked `#E9E7E2` came back as `#F7F7F7`), so take only `onPrimary`, `onAccent`, `border` and `focus` from it, and re-measure `border` against the scheme's real ground.
 - `generate_state_colors`: hover, pressed, disabled and focus colours for the button on its actual surface.
 - `compare_palettes` / `audit_palettes`: ΔE2000 between schemes and the contrast pairs of `02-contract.md` §10.
 - Locks are exact. Carry `lockedColors` into every call and never unlock a colour to meet contrast. If a locked reference pair fails contrast, tell the user instead of changing the colour silently.

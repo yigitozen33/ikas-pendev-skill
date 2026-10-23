@@ -61,7 +61,8 @@ ikas hazır sayfalar (06 §2a):
 |---|---|---|
 | üyelik | giriş, kayıt, şifremi unuttum, şifre yenile, e-posta doğrulama | ikas hazır / özel tasarım |
 | hesap | hesabım, siparişler, sipariş detayı, adresler, favoriler | ikas hazır / özel tasarım |
-| Özel sayfalar | [ ] | … |
+
+Özel sayfalar: …
 
 Zorunlu overlay'ler: CartDrawer · SearchOverlay · MenuOverlay · QuickBuy (hızlı al) · FilterDrawer@mobile.
 Koşullu özellikler (intake'te sorulur, yalnız işaretlenenler çizilir): [ ] bildirim (toast) · [ ] onay penceresi · [ ] adres penceresi · [ ] hesap menüsü · [ ] sadakat programı · [ ] çekiliş · [ ] marka sayfası · [ ] teknik özellik tablosu · [ ] kayıtta ek müşteri alanları · [ ] blog etiket ve yazar · [ ] ürün listesinde sütun seçimi.
