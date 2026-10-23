@@ -898,7 +898,9 @@
         "varsayılan",
         "hover",
         "odak"
-      ]
+      ],
+      "optional": true,
+      "note": "when BLOG in scope (02 §9)"
     },
     {
       "name": "CartLineItem",
@@ -1240,7 +1242,9 @@
       "states": [
         "kapalı",
         "açık"
-      ]
+      ],
+      "optional": true,
+      "note": "when shoppable images (02 §9)"
     },
     {
       "name": "SocialLoginButton",
@@ -1265,7 +1269,9 @@
       ],
       "axes": [
         "provider: Google / Facebook"
-      ]
+      ],
+      "optional": true,
+      "note": "when custom auth pages (02 §9)"
     },
     {
       "name": "ProductGallery",

@@ -3713,9 +3713,10 @@
                         "role": "sub",
                         "ikas": "BlogCard",
                         "layer": "component",
-                        "lib": 1
+                        "lib": 1,
+                        "optional": true
                       },
-                      "context": "states varsayılan, hover, odak",
+                      "context": "states varsayılan, hover, odak · when BLOG in scope (02 §9)",
                       "children": [
                         {
                           "type": "frame",
@@ -5470,9 +5471,10 @@
                         "role": "sub",
                         "ikas": "Hotspot",
                         "layer": "component",
-                        "lib": 1
+                        "lib": 1,
+                        "optional": true
                       },
-                      "context": "states kapalı, açık",
+                      "context": "states kapalı, açık · when shoppable images (02 §9)",
                       "children": [
                         {
                           "type": "frame",
@@ -5568,9 +5570,10 @@
                         "role": "sub",
                         "ikas": "SocialLoginButton",
                         "layer": "component",
-                        "lib": 1
+                        "lib": 1,
+                        "optional": true
                       },
-                      "context": "states varsayılan, hover",
+                      "context": "states varsayılan, hover · when custom auth pages (02 §9)",
                       "children": [
                         {
                           "type": "frame",

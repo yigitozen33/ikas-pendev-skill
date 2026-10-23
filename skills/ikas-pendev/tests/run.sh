@@ -250,5 +250,33 @@ errs += [f"undefined token {t}" for t in sorted(used - set(pen["variables"]))]
 print("\n".join(errs)); sys.exit(1 if errs else 0)
 PY
 
+CL="$OUT/copylib"; rm -rf "$CL"; mkdir -p "$CL"
+python3 -I "$S/copy_library.py" "$FX/mini-plandata" -o "$CL/kaya.pen" --with Toast > "$CL/copy.log" 2>&1 && python3 -I - "$CL/kaya.pen" "$SK/library/ikas-ecommerce.lib.pen" > "$CL/check.txt" 2>&1 <<'PY' && ok "copy_library: planned components copied with theme prefix, ids, metadata and plandata tokens" || bad "copy_library: planned components copied with theme prefix, ids, metadata and plandata tokens" "$(cat "$CL/copy.log" "$CL/check.txt")"
+import json, sys
+t = json.load(open(sys.argv[1])); lib = json.dumps(json.load(open(sys.argv[2]))); errs = []
+roots = {n["name"]: n for n in t["children"] if n["type"] == "frame"}
+want = ["K/Sub/Button", "K/Sub/ArrowLink", "K/Sub/ProductCard", "K/Overlay/FilterDrawer@desktop", "K/Overlay/QuickBuy@mobile", "K/Overlay/Toast@desktop"]
+errs += [f"missing root {w}" for w in want if w not in roots]
+errs += [f"unexpected {n}" for n in roots if "Header" in n or "ConfirmModal" in n]
+ids = {n["id"] for n in t["children"]}
+errs += [f"ref to missing root {n['name']}" for n in t["children"] if n["type"] == "ref" and n["ref"] not in ids]
+if "K/Sub/ProductCard — sepette" not in {n["name"] for n in t["children"]}: errs.append("state ref missing")
+errs += [f"library id reused {i}" for i in ids if f'"{i}"' in lib]
+pc = roots.get("K/Sub/ProductCard", {}).get("metadata", {})
+if pc.get("type") != "kaya" or pc.get("variant") != "K" or pc.get("contract") != 2: errs.append(f"root metadata {pc}")
+if "ikas-lib" in json.dumps(t): errs.append("library tag left in theme")
+if t.get("themes", {}).get("mode") != ["light", "dark"] or t["variables"]["color-bg"]["value"][0]["value"] != "#E9E7E2": errs.append("plandata tokens not written")
+if "#F4F4F4" in json.dumps(t["variables"]): errs.append("library placeholder value survived")
+print("\n".join(errs)); sys.exit(1 if errs else 0)
+PY
+python3 -I "$S/copy_library.py" "$FX/mini-plandata" -o "$CL/kaya.pen" > "$CL/again.log" 2>&1; [ $? = 1 ] && grep -q 'copy runs once per theme' "$CL/again.log" && ok "copy_library refuses a second copy into the same theme" || bad "copy_library refuses a second copy into the same theme" "$(cat "$CL/again.log")"
+python3 -I - "$FX/mini-plandata" "$CL/pd" <<'PY'
+import json, shutil, sys
+shutil.copytree(sys.argv[1], sys.argv[2]); p = sys.argv[2] + "/theme.json"
+t = json.load(open(p)); del t["variables"]["numbers"]["space-xs"]; json.dump(t, open(p, "w"))
+PY
+python3 -I "$S/copy_library.py" "$CL/pd" -o "$CL/broken.pen" > "$CL/missing.log" 2>&1; [ $? = 1 ] && grep -q 'not in plandata variables: space-xs' "$CL/missing.log" && [ ! -e "$CL/broken.pen" ] && ok "copy_library stops when plandata lacks a token the library uses" || bad "copy_library stops when plandata lacks a token the library uses" "$(cat "$CL/missing.log")"
+python3 -I "$S/copy_library.py" "$FX/mini-plandata" -o "$CL/x.pen" --with Nope >/dev/null 2>&1; [ $? = 2 ] && ok "copy_library rejects an unknown --with name" || bad "copy_library rejects an unknown --with name"
+
 echo "----"; echo "passed=$pass failed=$fail"
 [ "$fail" = "0" ]
