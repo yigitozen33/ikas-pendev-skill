@@ -107,5 +107,41 @@ python3 "$S/build_manifest.py" --plandata "$EX/plandata.json" --plan "$OUT/plan-
 grep -q '"name": "Örnek / Gece"\|Gece' "$OUT/port-globals/globals-runbook.md" && grep -q '"breakpoints": \[{"breakpoint_id": "<Kırılım / Laptop id>", "font_size": "80px"}' "$OUT/port-globals/globals-runbook.md" && ok "runbook uses globals.md §1a schemes and §2a breakpoints" || bad "runbook uses globals.md §1a schemes and §2a breakpoints"
 ! grep -q '"text_transform"\|· uppercase' "$OUT/port-globals/globals-runbook.md" && grep -q 'Büyük harf stilleri' "$OUT/port-globals/globals-runbook.md" && ok "runbook: no text_transform on text styles, uppercase note instead (04 §4)" || bad "runbook: no text_transform on text styles, uppercase note instead (04 §4)"
 
+# 8. colour schemes: 2-4 schemes on the `mode` axis, 11-color sources, Huemint offline
+SC="$OUT/schemes"; rm -rf "$SC"; mkdir -p "$SC"; cp -R "$FX/mini-plandata" "$SC/pd"
+python3 - "$SC/pd" <<'PY'
+import glob, json, sys
+d = sys.argv[1]
+t = json.load(open(d + "/theme.json"))
+t["modes"] = ["kagit", "murekkep", "kil"]
+for k, v in t["variables"]["colors"].items():
+    t["variables"]["colors"][k] = [v[0], v[1], {"color-bg": "#E4DCCF", "color-transparent": "#E4DCCF00"}.get(k, v[0])]
+json.dump(t, open(d + "/theme.json", "w"), ensure_ascii=False, indent=1)
+for f in glob.glob(d + "/sections/*.json"):
+    s = json.load(open(f))
+    if s.get("mode") == "dark":
+        s["mode"] = "murekkep"
+        json.dump(s, open(f, "w"), ensure_ascii=False, indent=1)
+PY
+python3 "$S/gen_plan.py" "$SC/pd" --stdout > "$SC/plan.md" 2>"$SC/gen.log" && grep -q '`mode: kagit | murekkep | kil`' "$SC/plan.md" && grep -q '`mode: "murekkep"` · `mode: "kil"`' "$SC/plan.md" && ok "gen_plan renders three colour schemes" || bad "gen_plan renders three colour schemes" "$(cat "$SC/gen.log")"
+cat "$EX/globals.md" "$FX/globals-schemes-tail.md" > "$SC/globals.md"
+python3 "$S/lint_plan.py" "$SC/plan.md" --globals "$SC/globals.md" > "$SC/lint.txt" 2>&1 && grep -q '@kil|L14' "$SC/lint.txt" && ok "lint: three schemes pass, contrast measured per scheme" || bad "lint: three schemes pass, contrast measured per scheme" "$(grep ERROR "$SC/lint.txt" | head -3)"
+sed 's/| Kil |$/| Toprak |/; s/^| ikas slot | pen.dev token | Kağıt (varsayılan) | Mürekkep | Kil |/| ikas slot | pen.dev token | Kağıt (varsayılan) | Mürekkep | Toprak |/' "$SC/globals.md" > "$SC/globals-renamed.md"
+python3 "$S/lint_plan.py" "$SC/plan.md" --globals "$SC/globals-renamed.md" 2>&1 | grep -q 'L22 plan mode values' && ok "lint: plan modes must be the §1a scheme slugs" || bad "lint: plan modes must be the §1a scheme slugs"
+sed '/^### 1b\. Renk kurgusu/,/^### 2a\./{/^### 2a\./!d;}' "$SC/globals.md" > "$SC/globals-no1b.md"
+python3 "$S/lint_plan.py" "$SC/plan.md" --globals "$SC/globals-no1b.md" 2>&1 | grep -q '§1b|L22 no colour rationale' && ok "lint: §1b colour rationale is required" || bad "lint: §1b colour rationale is required"
+sed 's/ \[huemint\] \[tahmini\]/ [tahmini]/g' "$SC/globals.md" > "$SC/globals-untagged.md"
+python3 "$S/lint_plan.py" "$SC/plan.md" --globals "$SC/globals-untagged.md" 2>&1 | grep -q 'WARN|§1a|L22 2 scheme value(s) without a source tag' && ok "lint: scheme values carry a source tag" || bad "lint: scheme values carry a source tag"
+python3 - "$SC/pd/theme.json" "$SC/pd5.json" <<'PY'
+import json, sys
+t = json.load(open(sys.argv[1])); t["modes"] = ["a", "b", "c", "d", "e"]
+json.dump(t, open(sys.argv[2], "w"))
+PY
+mkdir -p "$SC/pd5" && cp -R "$SC/pd/sections" "$SC/pd5/" && mv "$SC/pd5.json" "$SC/pd5/theme.json"
+python3 "$S/gen_plan.py" "$SC/pd5" --stdout >/dev/null 2>"$SC/gen5.log" && bad "gen_plan rejects five schemes" || { grep -q '2-4 distinct colour-scheme slugs' "$SC/gen5.log" && ok "gen_plan rejects five schemes" || bad "gen_plan rejects five schemes" "$(head -3 "$SC/gen5.log")"; }
+python3 "$S/build_manifest.py" --plandata "$EX/plandata.json" --plan "$OUT/plan-C.md" --dump "$FX/ornek-canvas-dump.txt" --globals "$SC/globals.md" -o "$SC/port" > "$SC/manifest.log" 2>&1 && grep -q 'Örnek / Kil' "$SC/port/globals-runbook.md" && grep -q 'İlk şemadan sonraki her şemadaki' "$SC/port/globals-runbook.md" && ok "runbook writes every §1a scheme" || bad "runbook writes every §1a scheme" "$(tail -3 "$SC/manifest.log")"
+python3 -I "$S/huemint.py" --fixture "$FX/huemint-response.json" --lock 'color-bg=#EFEBE2' > "$SC/huemint.md" 2>&1 && [ "$(grep -c '^| [0-9]' "$SC/huemint.md")" = "4" ] && sed -n '/^| 1 /p' "$SC/huemint.md" | grep -q '🔒.*| geçti |$' && ok "huemint: offline candidates parsed, invalid ones dropped, passing first" || bad "huemint: offline candidates parsed, invalid ones dropped, passing first" "$(head -5 "$SC/huemint.md")"
+python3 -I "$S/huemint.py" --fixture "$FX/huemint-response.json" --lock 'color-xx=#EFEBE2' >/dev/null 2>&1; [ $? = 2 ] && ok "huemint rejects an unknown role lock" || bad "huemint rejects an unknown role lock"
+
 echo "----"; echo "passed=$pass failed=$fail"
 [ "$fail" = "0" ]

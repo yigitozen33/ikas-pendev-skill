@@ -81,6 +81,18 @@
       "expected": [
         "Does not load ikas-pendev; this is an ikas app preflight task, not a theme design task"
       ]
+    },
+    {
+      "id": "colour-schemes-from-reference",
+      "prompt": "Referans sitenin renklerini aynen aktar, 3 renk şeması olsun; analyze fazını çalıştır",
+      "expect_trigger": true,
+      "expected": [
+        "Reads references/11-color.md and writes globals.md §1b (rationale per scheme) before generating colours",
+        "Locks the measured reference colours in qrco calls (lockedColors) and in huemint.py (--lock)",
+        "Gathers candidates from the qrco MCP and scripts/huemint.py, or states which source was unreachable",
+        "globals.md §1a has three scheme columns with a [referans]/[huemint]/[qrco]/[ai] tag on every value",
+        "Runs lint_plan.py --globals and reports LINT OK"
+      ]
     }
   ]
 }

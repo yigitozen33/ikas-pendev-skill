@@ -39,7 +39,7 @@ Prompt-only: no script parses images. Work image by image.
 
 | What | How |
 |---|---|
-| **Palette → roles** | List the 6–12 dominant flat colours (backgrounds, text, lines, fills). Merge near-duplicates (ΔE < 3 by eye). Assign each to a role: bg, text, muted, line, surface, inverse-bg/text, accent, accent-text, scrim, danger, success. A role nobody shows stays empty → note "referansta yok". |
+| **Palette → roles** | List the 6–12 dominant flat colours (backgrounds, text, lines, fills). Merge near-duplicates (ΔE < 3 by eye). Assign each to a role: bg, text, muted, line, surface, inverse-bg/text, accent, accent-text, scrim, danger, success. A role nobody shows stays empty → note "referansta yok". The colour schemes are built from these roles afterwards (`11-color.md`). |
 | **Type scale** | Measure cap height of each distinct text size; `font-size ≈ cap_height / 0.70` (condensed grotesks ≈ 0.72, serifs ≈ 0.66). Group into the 11 presets (display … price). Record ratios between steps (e.g. display/h2 = 1.5); keep ratios when snapping to integers. Weight: light/regular/bold/black by stroke. Case: uppercase or not. Letter-spacing: tight/normal/wide. |
 | **Font family** | Classify (condensed grotesk, geometric sans, serif, mono). Propose 1–2 Google Fonts candidates per role that are valid in pen.dev (see `05-pendev-pitfalls.md`). Never claim the exact face. |
 | **Spacing rhythm** | Measure page margin, gutter between cards, card padding, panel padding, gap label↔title, section top spacing. Find the base unit (4 or 5 or 8) and snap to it. |
@@ -115,6 +115,8 @@ Written in Turkish. Header block: source (URL or "ekran görüntüleri: N adet")
 | § | Heading | Required table columns (exact) | Notes |
 |---|---|---|---|
 | 1 | `## 1. Renk` | `Token \| Referans \| pen.dev \| ikas` | one row per core colour role (see `02-contract.md` §3); "Kurallar" bullets: line usage, radius, shadow/depth |
+| 1a | `### 1a. Renk şemaları` | `ikas slot \| pen.dev token \| <şema adı> (varsayılan) \| <şema adı> …` | one column per scheme (2–4); each value `` `#HEX` [kaynak] [tag] ``; section → default scheme bullets (`11-color.md` §4) |
+| 1b | `### 1b. Renk kurgusu` | `Şema \| Psikolojik hedef \| Kaynak \| Bölümler` | rationale bullets + source note (`11-color.md` §3B, §4) |
 | 2 | `## 2. Tipografi` | presets: `Token \| Kullanım \| ≥1200 \| 992–1199 \| 768–991 \| <768 \| Ağırlık \| Satır`; mapping: ` \| pen.dev \| ikas` with rows Boyutlar / Aile / Ara kırılımlar | font paragraph with pen.dev substitute when the real font is invalid there |
 | 3 | `## 3. Boşluk, grid, ölçü` | `Token \| Referans [ölçüldü] \| pen.dev \| ikas` | then "Grid düzenleri" bullets (desktop) and "Mobil (<768)" bullets |
 | 4 | `## 4. Kırılımlar` | `Ad \| Aralık [ölçüldü] \| pen.dev \| ikas` | desktop / laptop / tablet / mobile; only desktop and mobile are designed |

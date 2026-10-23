@@ -63,6 +63,7 @@ FORBIDDEN_IMPL = re.compile(r'\b(gsap|lenis|framer-motion)\b', re.I)
 HEX = re.compile(r'^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$')
 PASCAL = re.compile(r'^[A-Z][A-Za-z0-9]*$')
 KEBAB = re.compile(r'^[a-z0-9]+(-[a-z0-9]+)*$')
+MODE = re.compile(r'^[a-z][a-z0-9-]*$')  # colour-scheme slug on the pen.dev `mode` axis
 
 
 class PlanError(Exception):
@@ -210,8 +211,9 @@ def validate(d, origins, cat):
 
     need(d, 'identity_md', '$')
     modes = d.get('modes')
-    if modes is not None and not (isinstance(modes, list) and len(modes) == 2 and all(isinstance(m, str) for m in modes)):
-        err('$.modes', 'must be null or two mode names, default first (e.g. ["light","dark"])')
+    if modes is not None and not (isinstance(modes, list) and 2 <= len(modes) <= 4 and len(set(modes)) == len(modes)
+                                  and all(isinstance(m, str) and MODE.match(m) for m in modes)):
+        err('$.modes', 'must be null or 2-4 distinct colour-scheme slugs, default first (e.g. ["light","dark"])')
         modes = None
     devs = need(d, 'devices', '$', dict) or {}
     for dv in ('desktop', 'mobile'):
@@ -231,8 +233,8 @@ def validate(d, origins, cat):
     for name, val in colors.items():
         path = '$.variables.colors["%s"]' % name
         vals = val if modes else [val]
-        if modes and not (isinstance(val, list) and len(val) == 2):
-            err(path, 'expected [%s, %s] values (modes are set)' % tuple(modes))
+        if modes and not (isinstance(val, list) and len(val) == len(modes)):
+            err(path, 'expected one value per mode [%s]' % ', '.join(modes))
             continue
         if not modes and not isinstance(val, str):
             err(path, 'expected one hex string (modes is null)')
@@ -551,6 +553,17 @@ class Plan:
         L += ['```', '<!-- anim-targets:end -->']
         return '\n'.join(L)
 
+    def mode_rule(self):
+        """Canvas rule for the `mode` axis: which value a non-default colour scheme's root carries."""
+        modes = self.modes
+        if not modes:
+            return ''
+        if len(modes) == 2:
+            label = {'dark': 'koyu', 'light': 'açık'}.get(modes[1], '`%s`' % modes[1])
+            return '%s bölümlerde ayrıca `mode: "%s"` (varsayılan `mode: "%s"`)' % (label, modes[1], modes[0])
+        alts = ' · '.join('`mode: "%s"`' % m for m in modes[1:])
+        return 'diğer şemalardaki bölümlerde ayrıca kendi şemaları (%s) (varsayılan `mode: "%s"`)' % (alts, modes[0])
+
     def variables_js(self):
         v = self.d['variables']
         L = ['SetVariables({']
@@ -601,8 +614,7 @@ class Plan:
             'currency': th.get('currency', ''), 'reference_url': ref.get('url', ''),
             'canvasImportNote': ref.get('canvasImportNote', ''), 'policy': ref.get('policy', ''),
             'identity_md': text_of(d['identity_md']).strip('\n'),
-            'modes': bool(modes), 'mode_default': modes[0] if modes else '', 'mode_alt': modes[1] if modes else '',
-            'mode_alt_label': ({'dark': 'koyu', 'light': 'açık'}.get(modes[1], '`%s`' % modes[1]) if modes else ''),
+            'modes': bool(modes), 'mode_rule': self.mode_rule(), 'mode_axis': ' | '.join(modes or []),
             'dw': self.devs['desktop']['width'], 'dh': self.devs['desktop']['height'],
             'mw': self.devs['mobile']['width'], 'mh': self.devs['mobile']['height'],
             'vars_intro': d['variables'].get('intro', ''), 'variables_js': self.variables_js(),

@@ -37,7 +37,7 @@ ikas notu: …
 
 ### 1a. Renk şemaları (ikas colorScheme)
 
-| ikas slot | pen.dev token | <Şema 1 (varsayılan)> | <Şema 2> | <Şema 3> |
+| ikas slot | pen.dev token | <Şema 1 adı> (varsayılan) | <Şema 2 adı> | <Şema 3 adı> |
 |---|---|---|---|---|
 | background | `color-bg` | … | … | … |
 | text | `color-text` | … | … | … |
@@ -48,7 +48,20 @@ ikas notu: …
 | button-text | `color-inverse-text` | … | … | … |
 | accent | `color-accent` | … | … | … |
 
+Hücre biçimi: `` `#HEX` [kaynak] [ölçüldü|tahmini] ``; kaynak ∈ `[referans]` `[huemint]` `[qrco]` `[ai]`. Sütun sayısı = brief §7'deki şema sayısı (2–4); plandaki `modes`, şema adlarının ASCII hâlidir (`Kağıt` → `kagit`).
+
 Varsayılan şema eşleşmesi: her şemayı varsayılan olarak kullanan bölümler.
+
+- **<Şema 1 adı>:** …
+
+### 1b. Renk kurgusu
+
+| Şema | Psikolojik hedef | Kaynak | Bölümler |
+|---|---|---|---|
+| … | … | … | … |
+
+- Gerekçe (şema başına 1–2 madde): sektör, ton, alanın rolü, tercih edilen ve kaçınılan ton aileleri (11-color §5–§6).
+- Kaynak notu: hangi araçlar çalıştı; Huemint kullanıldıysa lisans notu.
 
 ## 2. Tipografi
 

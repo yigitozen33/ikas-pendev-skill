@@ -52,7 +52,7 @@ Bu dosya tüm fazların başlangıç noktasıdır. Her oturum önce bunu okur; e
 | `FAVORITES` | [x] | |
 | `BLOG` · `BLOG_POST` | [ ] | |
 | `COLLECTION` | [ ] | |
-| `CUSTOMER_EMAIL_VERIFICATION` | [ ] | |
+| `CUSTOMER_EMAIL_VERIFICATION` | [x] | üyelik grubuna bağlı: özel ise zorunlu, ikas hazır ise çizilmez |
 | İletişim (özel sayfa, `CUSTOM`) | [x] | her zaman özel ve geniş: ContactForm + StoreLocator + FaqList; ikas iletişim formu API'si (`getContactForm`, `submitContactForm`) |
 
 ikas hazır sayfalar (06 §2a):
@@ -74,14 +74,20 @@ Zorunlu mağaza blokları (ikas hazır tasarım vermez, her temada özel çizili
 
 | Alan | Değer |
 |---|---|
-| Dil / locale | … |
-| Para biçimi | … |
-| Büyük harf politikası | … |
+| Dil / locale | tr-TR (sorulmaz; tüm metinler Türkçe) |
+| Para biçimi | `1.850 TL` (sorulmaz; canvas'ta örnek biçim, canlıda mağazanın ikas para birimi ayarından gelir) |
+| Büyük harf politikası | sorulmaz; analyze fazında referansa ve tona göre metin stili başına karar verilir → `globals.md` §2a |
 
-## 7. Palet modları
+## 7. Renk şemaları
 
-- Seçim: tek palet / ters bölümler / tam koyu
-- Koyu (`mode: dark`) bölümler: …
+| Alan | Değer |
+|---|---|
+| Referans renkleri | aynen aktar / ana renkleri koru / yeni palet (referans yok ya da renksizse: yeni palet) |
+| Şema sayısı | … (seçenekler referans renkleri cevabına göre; 11-color §3F) |
+| Kilitli renkler | … (rol → `#HEX`; yeni palette: yok) |
+| Kaynaklar | qrco MCP · Huemint API · AI (Huemint yalnız ticari olmayan kullanıma izin veriyor; kullanıldıysa burada not edilir) |
+
+Şemalar, adları ve gerekçeleri analyze fazında `globals.md` §1a–§1b'ye yazılır.
 
 ## 8. Canvas ve cihazlar
 

@@ -36,7 +36,7 @@ Everything is a **separate root frame**. Root names follow a fixed pattern; the 
 Layout rules:
 - One horizontal band per row; 800 between bands, 200 between frames. A section's desktop and mobile frames sit **side by side**. Place new roots with `FindEmptySpace`.
 - Nothing loose at root level (no text, icon or shape). Explanations are `note` nodes beside the frame.
-- Desktop roots `theme: {device: "desktop"}`, mobile roots `theme: {device: "mobile"}`; inverted sections add `mode: "dark"` (default `mode: "light"`). Sized variables switch automatically; never type a mobile number.
+- Desktop roots `theme: {device: "desktop"}`, mobile roots `theme: {device: "mobile"}`; a section that uses a non-default colour scheme adds `mode: "<scheme slug>"` (the default scheme needs none). Sized variables switch automatically; never type a mobile number.
 - Section frames use `layout: "vertical"` or `"horizontal"` with `clip: true`. `layout: "none"` only for truly stacked layers (slides, image + gradient + text, hotspots).
 - Everything repeated is a `ref` instance of a reusable (ProductCard, Button, ArrowLink…). Pages contain **only** section refs.
 - The root being worked on has `placeholder: true`; remove it when the unit passes its checks.
@@ -63,7 +63,7 @@ Layout rules:
 
 ## 3. Core variables (41)
 
-Types: `color`, `string`, `number`. Axes: `mode: light | dark` (colours, only when the brief chose inverted sections or dark mode; a single-palette theme declares scalar colours) and `device: desktop | mobile` (sizes). Fonts and the scalar sizes marked "—" have no axis. Example values are the ornek plan-C values (light / dark, desktop / mobile); the four contract-2 additions show suggested values.
+Types: `color`, `string`, `number`. Axes: `mode: <scheme slugs>` (colours; 2–4 values, one per ikas colour scheme, the default first, each the ASCII-folded scheme name from `globals.md` §1a, e.g. `kagit | murekkep | kil`; `light | dark` stays valid; a single-scheme theme declares scalar colours; `11-color.md`) and `device: desktop | mobile` (sizes). Fonts and the scalar sizes marked "—" have no axis. Example values are the ornek plan-C values (light / dark, desktop / mobile); the four contract-2 additions show suggested values.
 
 | # | Variable | Role | Type | Axis | Example | ikas destination |
 |---|---|---|---|---|---|---|
@@ -111,7 +111,7 @@ Types: `color`, `string`, `number`. Axes: `mode: light | dark` (colours, only wh
 
 Rules:
 - Every colour has a value for each declared mode, even when equal (accent). Theme-specific extras (e.g. `size-hero`) are allowed but go after the 41 and are listed in plan §3.
-- With the `mode` axis, ikas gets two colour schemes (e.g. `Paper`, `Ink`); the slots above are their slot names.
+- With the `mode` axis, ikas gets one colour scheme per mode value (e.g. `Kağıt`, `Mürekkep`, `Kil`); the slots above are their slot names.
 - Exact typography global names are set in the globals runbook (`09-handoff.md`); the column shows the default.
 
 **Radius roles.** Corner radius is a design-system decision, not a per-layer one: the same kind of surface has the same radius everywhere, on every page and device. Every non-zero `cornerRadius` is a `$radius-*` variable (number, `—` axis or `device`), declared after the 41 and listed in plan §3; `globals-runbook.md` carries them to `global.css` as `--radius-*`.
@@ -350,7 +350,7 @@ Fix the foreground variable, keep hue, step lightness until it passes; never mov
 
 ## 11. Theme name and brand placements
 
-The theme name is asked first in intake (07 §1 precondition) and recorded in `docs/00-brief.md` §2. It is the only brand name on the canvas. Every place below uses it exactly, with Turkish glyphs and the brief's uppercase policy:
+The theme name is asked first in intake (07 §1 precondition) and recorded in `docs/00-brief.md` §2. It is the only brand name on the canvas. Every place below uses it exactly, with Turkish glyphs and the uppercase decision of its text style (`globals.md` §2a):
 
 | Where | Layer / root | Port |
 |---|---|---|

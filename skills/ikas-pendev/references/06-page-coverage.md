@@ -39,7 +39,7 @@ A reference site rarely shows every page an ikas store needs (the reference behi
 | `BLOG` | `blog-home-section` | blog listing (cards or rows, category tabs, pagination) | — | empty category | ○ |
 | `BLOG_POST` | `blog-post-section` | BlogPost (title, date, image, rich text) · related posts | — | — | ○ |
 | `COLLECTION` | `category-list-section` or custom page | CollectionHero `(özel)` · ProductList | as CATEGORY | as CATEGORY | ○ |
-| `CUSTOMER_EMAIL_VERIFICATION` | `email-verification-section` | EmailVerification | — | verifying (loading) · success · error | ○ |
+| `CUSTOMER_EMAIL_VERIFICATION` | `email-verification-section` | EmailVerification | — | verifying (loading) · success · error | ✓ (follows the membership group, §2a) |
 | Contact (custom page, `CUSTOM`) — **always custom, full-width, never a narrow form** | `(özel)` + ikas contact form API: `getContactForm` / `initContactForm`, `setContactFormFirstName` · `LastName` · `Email` · `Phone` · `Message`, `submitContactForm(form) → Promise<boolean>` (model `IkasContactForm`) | Composed of several sections, not one cramped block: **ContactForm** (oversized heading + intro + response-time note; wide form card with topic chips, first/last name, email, optional phone, optional order number, message, consent, submit, result message; beside it a column of channel cards: e-mail, phone, a dark chat/WhatsApp card, social) · **StoreLocator** (featured store image with info card + selectable store list with open status; hover, focus or tap selects a store and swaps the image with a crossfade; a store without a photo shows a placeholder in the theme's style, state `— görselsiz mağaza`, never an empty box) · **FaqList** (title column + accordion) | — | default · sending · success · field error + submit error | ✓ |
 | custom page | `rich-text-section` or `(özel)` sections | About, Contact, Support/policy, landing pages — whatever the reference shows | — | form: default · sending · success · error | ○ |
 
@@ -51,7 +51,7 @@ ikas renders two page groups with its own components when the merchant enables t
 
 | Group | Page types | If "ikas hazır" | If "özel" |
 |---|---|---|---|
-| membership | LOGIN, REGISTER, FORGOT_PASSWORD, RECOVER_PASSWORD, CUSTOMER_EMAIL_VERIFICATION | no AuthForms / EmailVerification section and no page frames for these types; plan §6.3 lists them as `ikas hazır`; the handoff tells the port to enable the group and bind logo + palette (theme globals) + labels via `update_ready_made_page_prop` | design AuthForms (4 variants) + EmailVerification as in §2 |
+| membership | LOGIN, REGISTER, FORGOT_PASSWORD, RECOVER_PASSWORD, CUSTOMER_EMAIL_VERIFICATION | no AuthForms / EmailVerification section and no page frames for these types; plan §6.3 lists them as `ikas hazır`; the handoff tells the port to enable the group and bind logo + palette (theme globals) + labels via `update_ready_made_page_prop` | design every page of the group as in §2: AuthForms (4 variants) + EmailVerification; none of them is optional |
 | account | ACCOUNT, orders, order detail, addresses, FAVORITES | no Account section and no Favorites page frame; same port steps | design Account (tabs) + Favorites (ProductList mode) as in §2 |
 
 The answer is recorded per group in `docs/00-brief.md` §5. A ready-made page still follows the theme's palette and logo, so DS colours and the wordmark must be ready before the port binds them.

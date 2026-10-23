@@ -87,7 +87,7 @@ All getters come from `@ikas/bp-storefront` and work in SSR, hydration and the e
 
 Portability: literal keys/ids in code ship with the asset; mixing literal and computed keys drops the computed ones.
 
-Design → ikas mapping *(project rule, see `02-contract.md` for names)*: `mode: light|dark` colour variables → one `colorScheme` with two palettes; `text-*` (device axis) → one `typography` per preset + intermediate sizes in component CSS; `space-*`, `size-*`, `opacity-*`, motion tokens → `src/global.css` custom properties or `globalVariable TEXT`; colours with alpha (`color-scrim`, `color-transparent`) → `globalVariable COLOR` (rgba) or `global.css`.
+Design → ikas mapping *(project rule, see `02-contract.md` for names)*: `mode` colour variables (2–4 scheme values) → one `colorScheme` palette per scheme; `text-*` (device axis) → one `typography` per preset + intermediate sizes in component CSS; `space-*`, `size-*`, `opacity-*`, motion tokens → `src/global.css` custom properties or `globalVariable TEXT`; colours with alpha (`color-scrim`, `color-transparent`) → `globalVariable COLOR` (rgba) or `global.css`.
 
 ## 4. Fonts
 

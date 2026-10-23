@@ -1294,7 +1294,7 @@ def render_runbook(m):
     out += ['', 'Toplam %d çağrı.' % n]
     notes = ['- Kırılımlar ilk sırada: CSS `@media (max-width: bp(<id>))` bunlara dayanır (`var()` medya sorgusunda çalışmaz).']
     if modes and len(g['colorSchemes']) > 1:
-        notes.append("- `mode` ekseni → palet başına bir renk şeması. İkinci şemadaki `<Slot slotId>` yer tutucuları, "
+        notes.append("- `mode` ekseni → palet başına bir renk şeması. İlk şemadan sonraki her şemadaki `<Slot slotId>` yer tutucuları, "
                      "ilk şemadan sonra yapılan `list_theme_globals` çıktısıyla değiştirilir.")
     if any('laptop' in t['sizes'] for t in g['typography']):
         notes.append('- Tipografi kırılım boyutları (`globals.md` §2a) `breakpoints` dizisiyle aynı çağrıda yazılır; '

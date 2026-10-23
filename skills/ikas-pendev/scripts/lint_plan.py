@@ -124,6 +124,7 @@ DS_C1 = ["Colors", "Typography", "Spacing", "Icons", "Motion"]
 DS_C2 = DS_C1 + ["Imagery"]
 CONTRACT_RE = re.compile(r"<!--\s*ikas-pendev\s+contract:(\d+)\s*-->")
 CAMEL_RE = re.compile(r"^[a-z][A-Za-z0-9]*$")
+MODE_RE = re.compile(r"^[a-z][a-z0-9-]*$")  # colour-scheme slug on the `mode` axis
 DATA_SRC_RE = re.compile(r"^[a-z][A-Za-z0-9]*(\.[A-Za-z0-9]+)+$")
 CODE_NAME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9-]*$")
 NOTATION_RE = re.compile(r"\{([^{}\s:]+):([^{}\s]+)\}")
@@ -1038,6 +1039,15 @@ def lint_variables(plan, rep, contract):
         elif name.startswith("radius-") and name not in RADIUS_ROLES:
             rep.add("§3", "WARN", loc_of(name, lines.get(name)), "L11",
                     "radius variable outside the roles %s (02 §3)" % ", ".join(RADIUS_ROLES))
+    # the colour schemes on the `mode` axis: taken from the first themed colour, 2-4 slugs (02 §3)
+    scheme_set = None
+    for name, var in data.items():
+        if name.startswith("color-") and isinstance(var, dict) and isinstance(var.get("value"), list):
+            scheme_set = {(e.get("theme") or {}).get("mode") for e in var["value"] if isinstance(e, dict)}
+            break
+    plan.scheme_set = scheme_set
+    if scheme_set is not None and not (2 <= len(scheme_set) <= 4 and None not in scheme_set):
+        rep.add("§3", "ERROR", "colours", "L12", "mode axis needs 2-4 colour schemes, got %s" % sorted(map(str, scheme_set)))
     for name, var in data.items():
         ln = lines.get(name)
         if not isinstance(var, dict) or "type" not in var or "value" not in var:
@@ -1055,8 +1065,8 @@ def lint_variables(plan, rep, contract):
                 axes.add(ax)
                 if ax == "device" and axv not in ("desktop", "mobile"):
                     rep.add("§3", "ERROR", loc_of(name, ln), "L12", "device axis value %r" % axv)
-                if ax == "mode" and axv not in ("light", "dark"):
-                    rep.add("§3", "ERROR", loc_of(name, ln), "L12", "mode axis value %r" % axv)
+                if ax == "mode" and not (isinstance(axv, str) and MODE_RE.match(axv)):
+                    rep.add("§3", "ERROR", loc_of(name, ln), "L12", "mode axis value %r (lowercase scheme slug)" % axv)
             v = e.get("value")
             if var["type"] == "color" and isinstance(v, str) and not v.startswith("$"):
                 if not re.match(r"^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$", v):
@@ -1078,8 +1088,9 @@ def lint_variables(plan, rep, contract):
             if "device" in axes:
                 rep.add("§3", "ERROR", loc_of(name, ln), "L12", "colour themed by device; use mode")
             modes = {(e.get("theme") or {}).get("mode") for e in val}
-            if modes != {"light", "dark"}:
-                rep.add("§3", "ERROR", loc_of(name, ln), "L12", "mode axis needs light and dark")
+            if scheme_set and modes != scheme_set:
+                rep.add("§3", "ERROR", loc_of(name, ln), "L12",
+                        "mode values %s differ from the colour schemes %s" % (sorted(map(str, modes)), sorted(scheme_set)))
     themed = [n for n in data if n.startswith("color-") and isinstance(data[n].get("value"), list)]
     flat = [n for n in data if n.startswith("color-") and not isinstance(data[n].get("value"), list)]
     if themed and flat:
@@ -1268,7 +1279,14 @@ def lint_components(path, rep):
         rep.add(S, "WARN", "-", "L20", "§1 page composition not found")
 
 
-def lint_globals_c2(path, rep):
+def scheme_slug(label):
+    """Same fold as build_manifest.ascii_slug: `Kağıt (varsayılan)` -> `kagit`."""
+    label = re.sub(r"\s*\(.*?\)\s*", "", label).strip()
+    tr = str.maketrans("çğıöşüÇĞİÖŞÜâÂ", "cgiosuCGIOSUaA")
+    return re.sub(r"[^a-z0-9]+", "-", label.translate(tr).lower()).strip("-") or "scheme"
+
+
+def lint_globals_c2(path, rep, plan_schemes=None):
     """L22: port-ready theme globals (contract 2)."""
     txt = open(path, encoding="utf-8").read()
     md = MD(txt)
@@ -1277,6 +1295,23 @@ def lint_globals_c2(path, rep):
         return any(any(w in h for w in words) for h in heads)
     if not has("renk şema", "colorscheme", "color scheme"):
         rep.add("globals", "ERROR", "§1a", "L22", "no colour-scheme section (ikas colorScheme: slot → token → value per scheme)")
+    else:
+        rng = md.section("1a")
+        tb = next(iter(md.tables(rng)), None) if rng else None
+        if tb and len(tb["header"]) > 2:
+            labels = tb["header"][2:]
+            untagged = sum(1 for _, c in tb["rows"] for x in c[2:]
+                           if x.strip() and not re.search(r"\[(referans|huemint|qrco|ai)\]", x))
+            if untagged:
+                rep.add("globals", "WARN", "§1a", "L22", "%d scheme value(s) without a source tag "
+                        "[referans]/[huemint]/[qrco]/[ai] (11-color §4)" % untagged)
+            slugs = {scheme_slug(x) for x in labels}
+            if plan_schemes and slugs != set(plan_schemes):
+                rep.add("globals", "ERROR", "§1a", "L22", "plan mode values %s ≠ §1a scheme slugs %s; "
+                        "a scheme's mode is the slug of its name" % (sorted(plan_schemes), sorted(slugs)))
+    if not has("renk kurgu", "colour rationale", "color rationale"):
+        rep.add("globals", "ERROR", "§1b", "L22", "no colour rationale (§1b): psychological goal per scheme, "
+                "sources, section → scheme (11-color §4)")
     if not has("metin stil", "text style"):
         rep.add("globals", "ERROR", "§2a", "L22", "no ikas text-style section")
     elif not re.search(r"^\|.*≥\s?1200.*992.*768.*<\s?768.*\|\s*$", txt, re.M):
@@ -1313,7 +1348,7 @@ def main(argv=None):
         plan = Plan(args.plan, open(args.plan, encoding="utf-8").read())
         contract, P = lint_plan(plan, args, rep, cat)
         if contract >= 2 and args.globals_md:
-            lint_globals_c2(args.globals_md, rep)
+            lint_globals_c2(args.globals_md, rep, getattr(plan, "scheme_set", None))
         n = len(plan.targets)
         meta = dict(contract=contract, prefix=P, catalogue=cat[3])
     e, w = rep.count("ERROR"), rep.count("WARN")

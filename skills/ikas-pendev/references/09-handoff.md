@@ -108,7 +108,7 @@ Follows the geeny `prompts/00-globals.md` pattern: read → table → **user app
    {"kind":"keyframe","name":"Animasyon / Marquee","points":[{"point":"0%","styles":[{"property":"transform","value":"translateX(0)"}]},{"point":"100%","styles":[{"property":"transform","value":"translateX(-50%)"}]}]}
    ```
    - Breakpoints first (laptop/tablet/mobile from `globals.md` §4), so CSS can use `bp(<id>)`.
-   - `mode` axis → one colour scheme per palette; the second palette targets the slots created by the first via `slotId` (re-list in between).
+   - `mode` axis → one colour scheme per palette; every palette after the first targets the slots created by the first via `slotId` (re-list in between).
    - Colour schemes from `globals.md` §1a: slots first (names), then one palette per scheme; record each section's default scheme.
    - Typography tokens carry the desktop size; the laptop / tablet / mobile values of `globals.md` §2a are applied with `update_text_style` + `breakpoint_id`. No `text-transform`.
    - Layout at 992–1199 and 768–991 follows `globals.md` §4a, written in component CSS under `@media (max-width: bp(<id>))`.

@@ -30,7 +30,7 @@ What separates a designed theme from a generated one. Read before writing plan �
 
 - **MASTER** is plan §1 ("Yön ve kimlik"): one concept word, the palette logic, the three type roles, the image language, the signature motion, and an explicit "differences from the reference" list. Every section inherits it.
 - **Overrides** live only in each section's `**Desktop:**` and `**Mobil:**` lines in plan §6.2 (sizes, column split, what is hidden or reordered on mobile). A section never introduces a new colour, font or radius; if it needs one, change the MASTER and the variables.
-- Inverted sections (dark palette) are declared once in MASTER and marked per section with `mode: "dark"`.
+- Colour schemes are declared once (`globals.md` §1a, `11-color.md`); a section in a non-default scheme is marked with `mode: "<scheme slug>"`.
 
 Example (ornek plan C, condensed):
 

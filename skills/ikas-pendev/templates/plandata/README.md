@@ -50,7 +50,7 @@ Any long text field (`identity_md`, `tree`, `desktop`, `mobile`, `props`, `struc
 | `contextScan` | bool | no (default `true`) | contract 1 only: render the `context` scan in §8 step 2 and the union wording in §9. Contract 2 always renders it |
 | `theme` | object | yes | see below |
 | `identity_md` | string \| lines | yes | §1 body, Markdown (Turkish) |
-| `modes` | `null` \| `[default, alt]` | yes | e.g. `["light","dark"]`; `null` = single palette |
+| `modes` | `null` \| `[default, …]` | yes | 2–4 colour-scheme slugs, default first, the ASCII-folded names of `globals.md` §1a (e.g. `["kagit","murekkep","kil"]`; `["light","dark"]` stays valid); `null` = single palette |
 | `devices` | object | yes | `{"desktop":{"width":1440,"height":900},"mobile":{"width":390,"height":844}}` (height = overlay frame height) |
 | `variables` | object | yes | see [Variables](#variables) |
 | `typeStyles` | object | yes | `{"map":[{"styles":["text-display",…],"spec":"`$font-display`, satır 0.9–1.0"}…],"note":"…"}`; rendered as the §3 type mapping sentence |
@@ -87,7 +87,7 @@ Any long text field (`identity_md`, `tree`, `desktop`, `mobile`, `props`, `struc
 
 | Group | Value shape | Core names (fixed, must all exist) |
 |---|---|---|
-| `colors` | `"#RRGGBB[AA]"`, or `[default, alt]` when `modes` is set | `color-bg, color-text, color-muted, color-line, color-surface, color-inverse-bg, color-inverse-text, color-accent, color-accent-text, color-scrim` + c2: `color-transparent` (`#RRGGBB00`), `color-danger`, `color-success` |
+| `colors` | `"#RRGGBB[AA]"`, or one value per mode (same order as `modes`) when `modes` is set | `color-bg, color-text, color-muted, color-line, color-surface, color-inverse-bg, color-inverse-text, color-accent, color-accent-text, color-scrim` + c2: `color-transparent` (`#RRGGBB00`), `color-danger`, `color-success` |
 | `fonts` | family name | `font-display, font-ui, font-body, font-price, font-mono` |
 | `type` | `[desktop, mobile]` | `text-display, text-h2, text-h3, text-h4, text-title, text-ui, text-ui-sm, text-badge, text-label, text-body, text-price` |
 | `numbers` | number or `[desktop, mobile]` (equal pair renders as one value) | `space-page, space-grid, space-card, space-panel, space-xs, space-sm, space-md, space-section, size-header, size-line, opacity-inactive` + c2: `size-logo` (must be `[desktop, mobile]`); radius roles `radius-control`, `radius-card`, optional `radius-media`, `radius-pill` (02 §3) |
@@ -167,7 +167,7 @@ Contract 2 data that lacks the `FilterDrawer` or `QuickBuy` overlay or the Butto
 
 ## Templates
 
-Prose lives in `templates/plan/*.md` (Turkish). Each file is one block of the plan; its last newline is dropped when loaded. Syntax: `{{name}}` value, `{{#name}}…{{/name}}` if truthy, `{{^name}}…{{/name}}` if falsy; a line holding only a section tag disappears with its newline. Context keys include `prefix, slug, name, file, penFile, codeDir, c1, c2, modes, mode_default, mode_alt, dw, dh, mw, mh, contextScan, policy`. An unknown placeholder is an error. Change wording there, not in the script; then rerun `tests/run.sh` (the Örnek plan-C hash must still match for contract 1).
+Prose lives in `templates/plan/*.md` (Turkish). Each file is one block of the plan; its last newline is dropped when loaded. Syntax: `{{name}}` value, `{{#name}}…{{/name}}` if truthy, `{{^name}}…{{/name}}` if falsy; a line holding only a section tag disappears with its newline. Context keys include `prefix, slug, name, file, penFile, codeDir, c1, c2, modes, mode_axis, mode_rule, dw, dh, mw, mh, contextScan, policy`. An unknown placeholder is an error. Change wording there, not in the script; then rerun `tests/run.sh` (the Örnek plan-C hash must still match for contract 1).
 
 ## Minimal example
 

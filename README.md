@@ -12,7 +12,7 @@ npx skills add Bwonk/ikas-pendev-skill -g
 
 Elle kurulum: bu depoyu klonla ve `skills/ikas-pendev` klasörünü `~/.claude/skills/ikas-pendev` olarak bağla.
 
-Gerekenler: Claude Code, pen.dev uygulaması ve pencil MCP sunucusu (`mcp__pencil__*`), Python 3.9+. ikas MCP yalnızca aktarım aşamasında (ayrı iş) gerekir.
+Gerekenler: Claude Code, pen.dev uygulaması ve pencil MCP sunucusu (`mcp__pencil__*`), Python 3.9+. ikas MCP yalnızca aktarım aşamasında (ayrı iş) gerekir. Renk şemaları için önerilen: qrco MCP (`claude mcp add --transport http qrco https://qrco.ca/mcp`, anahtar gerekmez); Huemint API'ye `scripts/huemint.py` bağlanır. İkisi de yoksa skill AI + kontrast lint ile devam eder.
 
 ## Kullanım
 
