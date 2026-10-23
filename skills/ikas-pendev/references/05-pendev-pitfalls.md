@@ -29,7 +29,7 @@ This file only adds what the official pen.dev skill does not say, or says in a p
 
 ## 3. Instances and overrides drop metadata → put IDs in `context` *(observed)*
 - **Symptom:** a `Get(n => n.metadata?.anim …)` scan of a page returns fewer anim ids than the plan; instance layers show no `metadata`.
-- **Cause:** metadata lives on the component's own nodes; `ref` instances and their overrides do not carry it.
+- **Cause:** metadata lives on the component's own nodes. A `ref` has no children of its own, so a scan without `resolveInstances: true` never reaches them. With `resolveInstances: true` every instance layer reports the master's metadata, nested instances and imported components included (*observed*). What is lost is metadata written on an instance or an override: `Update(instance + "/child", {metadata})` returns without error and is not stored.
 - **Fix:** every animated layer inside a reusable root also writes its ids in `context` (`"P-HERO-02 · M-07 · …"`). Verification scans the union of `metadata.anim` and the `context` regex, with `resolveInstances: true` (CHK `anim`). Never re-add metadata per instance.
 - **Official:** `guide/components.md` (instances have no children of their own; overrides via `descendants`).
 - **Props too:** a label on a Sub instance (Button, FormField, SectionHeading) or in a state override cannot carry `metadata.prop`; write `props <name> <TYPE>` into the instance's `context` (02 §5a). CHK `props` counts these marks.
