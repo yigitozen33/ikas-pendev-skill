@@ -327,5 +327,13 @@ print("\n".join(errs)); sys.exit(1 if errs else 0)
 PY
 unset IKAS_PENDEV_FINGERPRINTS
 
+SH="$OUT/shots"; rm -rf "$SH"; mkdir -p "$SH"; export IKAS_PENDEV_FINGERPRINTS="$SH/store.json"
+python3 -I "$FX/mkshots.py" "$SH"
+python3 -I "$S/axes.py" shot "$SH/a.png" --slug sa --record > "$SH/a.txt" 2>&1 && python3 -I "$S/axes.py" shot "$SH/a-dark.png" --slug sd > "$SH/d.txt" 2>&1 && grep -q "WARN|shot|L23 first viewport looks like 'sa' 0.00" "$SH/d.txt" && ok "axes shot: the same layout in dark colours is flagged" || bad "axes shot: the same layout in dark colours is flagged" "$(cat "$SH/a.txt" "$SH/d.txt")"
+python3 -I "$S/axes.py" shot "$SH/b.png" --slug sb > "$SH/b.txt" 2>&1 && grep -q 'SHOT OK' "$SH/b.txt" && ok "axes shot: a different layout passes" || bad "axes shot: a different layout passes" "$(cat "$SH/b.txt")"
+python3 -I "$S/axes.py" record "$AX/a.md" --slug sa >/dev/null && python3 -c "import json,sys; sys.exit(0 if json.load(open('$SH/store.json'))['sa'].get('shot') else 1)" && ok "axes record keeps the stored screenshot fingerprint" || bad "axes record keeps the stored screenshot fingerprint"
+python3 -I "$S/axes.py" shot "$AX/a.md" --slug sx >/dev/null 2>&1; [ $? = 1 ] && ok "axes shot rejects a file that is not a PNG" || bad "axes shot rejects a file that is not a PNG"
+unset IKAS_PENDEV_FINGERPRINTS
+
 echo "----"; echo "passed=$pass failed=$fail"
 [ "$fail" = "0" ]

@@ -20,6 +20,11 @@ the INDEX page, Header and Footer left out:
   ERROR  an archetype is not in the vocabulary (axes.json `archetypes`)
   ERROR  the normalised edit distance to an earlier theme's home page is below 0.5
   WARN   a home-page section has no archetype (it is left out of the comparison)
+`shot` (verify phase) fingerprints the first desktop viewport of the home page from a PNG
+export: grey, blurred, an edge-strength grid, so a light and a dark version of one layout
+look alike while two different layouts do not. It warns when the picture is closer than
+the threshold to an earlier theme's (WARN only: the threshold is not calibrated) and stores
+the fingerprint with --record.
 `record` stores the theme's choices (and, with --plandata, its home-page fingerprint)
 after its plan gate passed, so the next theme is compared with it. An axis differs when
 any of its fields differs.
@@ -31,6 +36,7 @@ IKAS_PENDEV_FINGERPRINTS) and is never committed.
 Usage:
   python3 -I axes.py check  docs/referans/globals.md --slug <theme-slug> [--plandata docs/pendev/plandata] [--store PATH]
   python3 -I axes.py record docs/referans/globals.md --slug <theme-slug> [--plandata docs/pendev/plandata] [--store PATH]
+  python3 -I axes.py shot   docs/pendev/shots/home-desktop.png --slug <theme-slug> [--record] [--store PATH]
   python3 -I axes.py list [--store PATH]
 
 Exit: 0 pass (warnings allowed), 1 errors, 2 bad arguments. Stdlib only, Python 3.9+.
@@ -42,7 +48,9 @@ import glob
 import json
 import os
 import re
+import struct
 import sys
+import zlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 AXES = os.path.join(os.path.dirname(HERE), "library", "axes.json")
@@ -147,6 +155,104 @@ def edit_distance(a, b):
     return prev[-1] / max(len(a), len(b))
 
 
+def read_png(path):
+    """8-bit greyscale/RGB(A) non-interlaced PNG → (width, height, rows of grey values 0–255)."""
+    with open(path, "rb") as f:
+        data = f.read()
+    if data[:8] != b"\x89PNG\r\n\x1a\n":
+        raise ValueError(f"{path}: not a PNG")
+    pos, idat, w = 8, b"", 0
+    while pos < len(data):
+        n, kind = struct.unpack(">I4s", data[pos:pos + 8])
+        body = data[pos + 8:pos + 8 + n]
+        if kind == b"IHDR":
+            w, h, depth, ctype, _, _, inter = struct.unpack(">IIBBBBB", body)
+            if depth != 8 or inter or ctype not in (0, 2, 4, 6):
+                raise ValueError(f"{path}: only 8-bit non-interlaced PNG is supported")
+            bpp = {0: 1, 2: 3, 4: 2, 6: 4}[ctype]
+        elif kind == b"IDAT":
+            idat += body
+        pos += 12 + n
+    raw, stride = zlib.decompress(idat), w * bpp
+    rows, prev, i = [], bytearray(stride), 0
+    for _ in range(h):
+        ft, line = raw[i], bytearray(raw[i + 1:i + 1 + stride])
+        i += 1 + stride
+        for x in range(stride):
+            a = line[x - bpp] if x >= bpp else 0
+            b = prev[x]
+            c = prev[x - bpp] if x >= bpp else 0
+            if ft == 1:
+                line[x] = (line[x] + a) & 255
+            elif ft == 2:
+                line[x] = (line[x] + b) & 255
+            elif ft == 3:
+                line[x] = (line[x] + (a + b) // 2) & 255
+            elif ft == 4:
+                pa, pb, pc = abs(b - c), abs(a - c), abs(a + b - 2 * c)
+                line[x] = (line[x] + (a if pa <= pb and pa <= pc else b if pb <= pc else c)) & 255
+        prev = line
+        if bpp >= 3:
+            rows.append([(line[k] * 299 + line[k + 1] * 587 + line[k + 2] * 114) // 1000 for k in range(0, stride, bpp)])
+        else:
+            rows.append([line[k] for k in range(0, stride, bpp)])
+    return w, h, rows
+
+
+GRID = 24
+
+
+def shot_hash(path):
+    """First viewport (16:10 of the width), area-averaged to GRID×GRID+1, edge strength vs median."""
+    w, h, rows = read_png(path)
+    vh = min(h, w * 10 // 16)
+    cells = [[0.0] * (GRID + 1) for _ in range(GRID)]
+    for gy in range(GRID):
+        y0, y1 = gy * vh // GRID, max(gy * vh // GRID + 1, (gy + 1) * vh // GRID)
+        for gx in range(GRID + 1):
+            x0, x1 = gx * w // (GRID + 1), max(gx * w // (GRID + 1) + 1, (gx + 1) * w // (GRID + 1))
+            tot = sum(sum(rows[y][x0:x1]) for y in range(y0, y1))
+            cells[gy][gx] = tot / ((y1 - y0) * (x1 - x0))
+    edges = [abs(r[x + 1] - r[x]) for r in cells for x in range(GRID)]
+    for gx in range(GRID + 1):
+        edges += [abs(cells[y + 1][gx] - cells[y][gx]) for y in range(GRID - 1)]
+    med = sorted(edges)[len(edges) // 2]
+    bits = "".join("1" if e > med else "0" for e in edges)
+    return "%0*x" % ((len(bits) + 3) // 4, int(bits, 2)), len(bits)
+
+
+def hash_distance(a, b, n=None):
+    """Share of edge cells that differ among the cells either picture has an edge in (Jaccard)."""
+    x, y = int(a, 16), int(b, 16)
+    union = bin(x | y).count("1")
+    return bin(x ^ y).count("1") / union if union else 0.0
+
+
+def cmd_shot(a, ax):
+    try:
+        h, n = shot_hash(a.png)
+    except (OSError, ValueError, zlib.error) as e:
+        print(f"ERROR|shot|{e}")
+        return 1
+    limit = ax["gate"]["shot_min_distance"]
+    close = []
+    for slug, rec in sorted(load_store(a.store).items()):
+        if slug != a.slug and rec.get("shot") and len(rec["shot"]) == len(h):
+            d = hash_distance(h, rec["shot"], n)
+            if d < limit:
+                close.append(f"'{slug}' {d:.2f}")
+    for c in close:
+        print(f"WARN|shot|L23 first viewport looks like {c} (need {limit}); change structure, not colour")
+    if a.record:
+        store = load_store(a.store)
+        store.setdefault(a.slug, {"date": datetime.date.today().isoformat(), "axes": {}})["shot"] = h
+        os.makedirs(os.path.dirname(os.path.abspath(a.store)), exist_ok=True)
+        with open(a.store, "w", encoding="utf-8") as f:
+            json.dump(store, f, ensure_ascii=False, indent=2, sort_keys=True)
+    print("SHOT OK" if not close else f"SHOT WARN ({len(close)})")
+    return 0
+
+
 def load_store(path):
     try:
         with open(path, encoding="utf-8") as f:
@@ -211,7 +317,10 @@ def cmd_record(a, ax):
         print("ERROR|" + errs[0] + " (run check first)")
         return 1
     store = load_store(a.store)
+    old = store.get(a.slug, {})
     store[a.slug] = {"date": datetime.date.today().isoformat(), "axes": choice}
+    if old.get("shot"):
+        store[a.slug]["shot"] = old["shot"]
     if a.plandata:
         layout, lerrs, _ = home_layout(load_plandata(a.plandata), ax)
         if lerrs:
@@ -239,12 +348,16 @@ def main():
         p.add_argument("globals")
         p.add_argument("--slug", required=True)
         p.add_argument("--plandata", help="plandata dir or file: adds the home-page layout fingerprint")
+    p = sub.add_parser("shot")
+    p.add_argument("png")
+    p.add_argument("--slug", required=True)
+    p.add_argument("--record", action="store_true")
     sub.add_parser("list")
     for p in sub.choices.values():
         p.add_argument("--store", default=os.environ.get("IKAS_PENDEV_FINGERPRINTS", DEFAULT_STORE))
     a = ap.parse_args()
     ax = load_axes()
-    return {"check": cmd_check, "record": cmd_record, "list": cmd_list}[a.cmd](a, ax)
+    return {"check": cmd_check, "record": cmd_record, "shot": cmd_shot, "list": cmd_list}[a.cmd](a, ax)
 
 
 if __name__ == "__main__":

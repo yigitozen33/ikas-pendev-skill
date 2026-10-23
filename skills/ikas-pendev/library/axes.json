@@ -9,7 +9,8 @@
       "B12"
     ],
     "generic_warn_at": 3,
-    "layout_min_distance": 0.5
+    "layout_min_distance": 0.5,
+    "shot_min_distance": 0.35
   },
   "forbidden_fonts": [
     "Inter",
