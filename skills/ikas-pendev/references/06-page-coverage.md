@@ -66,7 +66,7 @@ Every theme designs these five, each as its own root frame per state (`P/Overlay
 | `SearchOverlay` | Header | open empty · typing with results · no results |
 | `MenuOverlay` / `MobileMenu` | Header | open (desktop may be a mega menu; mobile is required and keeps the mega menu column titles, §3d) |
 | `FilterDrawer` | ProductList | `@mobile` open (desktop only if filters are a drawer there too) |
-| `QuickBuy` (hızlı al) | Header (global host; opened by every `ProductCard` cart button and any list row cart button) | açık (varyant seçili) · renk karttan · seçim eksik · ekleniyor · kişiselleştirme — `@desktop` and `@mobile` (§3d) |
+| `QuickBuy` (hızlı al) | Header (global host; opened by every `ProductCard` cart button and any list row cart button) | açık (varyant seçili) · renk karttan · seçim eksik · ekleniyor · kişiselleştirme · set ürün — `@desktop` and `@mobile` (§3d) |
 
 Optional, when the reference or brief has them: Megamenu, InfoDrawer / size guide (ProductDetail), ConfirmModal, Toast, cookie bar (Header child), newsletter popup. Overlays port as sub-components rendered by the owner section (`04-ikas-constraints.md` §6).
 
@@ -80,13 +80,16 @@ QuickBuy is designed on every canvas, whether or not the reference has one. It i
 | Name, price, compare price | `qb-head`, `qb-price` | `product.name`, `getProductVariantFormattedFinalPrice` + `getProductVariantFormattedSellPrice` (compare) |
 | One group per variant type: label + values. Colour/image types use `qb-variant-swatches` → `VariantSwatch`; text types (size) use `qb-variant-row` → `VariantChip`. Never colour chips. A sold-out value uses the `stok yok` state | `qb-variant-group` | `getDisplayedProductVariantTypes`, `selectVariantValue`, `hasProductVariantStock` |
 | Validation message when a required option is missing (`$color-danger`) | `qb-variant-error` | TEXT prop (`chooseOptionText`) |
+| **Set içeriği** (bundle only): a title with the part count, then `BundleItem` ×N, the same Sub as the product page's `pdp-bundle` (variant, editable or fixed quantity, added price or "Sete dahil", sold out). Parts are grouped by spacing first (`08-quality.md` §8) | `qb-bundle` | `getBundleProductsOfVariant`, `initBundleProducts`, `isBundleProductQuantityEditable`, `shouldDisplayBundleProductPrice`; TEXT props for the title, count (`{n}`), "Sete dahil" and sold-out labels |
 | `QuantitySelector` + `Button` (Sepete ekle · Ekleniyor… · Tükendi) + `FavoriteButton`, one row of equal controls (see below) | `qb-actions` | `addItemToCart(variant, product, qty)`, `isAddToCartEnabled`, min/max per cart (`add-to-cart` template's `utils/cartLimits.ts`) |
 | "Hızlı Öde" slot, drawn as a neutral 48 px frame because ikas renders the iframe | `qb-pay` | `PayWithIkas` (renders nothing when the merchant has not enabled it); BOOLEAN prop `showPayWithIkas` |
 | Stock note + `ArrowLink` to the product page | `qb-foot` | `variant.stockCount`, `getProductHref` |
 
 Layout:
 - **`@desktop`:** a centred window of about 960 × 600 on `$color-scrim`, `radius-card`, clipped. The image is on the left (half the width). The details column on the right is padded with `$space-panel`, and the actions are pinned to its bottom.
-- **`@mobile`:** a bottom sheet with a grabber and top corners `radius-card`. The thumbnail, name, price and close button share one row, followed by the colour swatches, size chips, actions, pay slot and footer.
+- **`@mobile`:** a bottom sheet with a grabber and top corners `radius-card`. The thumbnail, name, price and close button share one row, followed by the colour swatches, size chips, set contents, actions, pay slot and footer.
+- **The longest state fits.** The window is sized for its longest content, not only for a plain product: the `set ürün` state is drawn with at least three parts at the same window size, and everything down to the footer link is visible with no scrollbar inside the window. When it does not fit, the design chooses how it fits (more compact set rows in QuickBuy, a window that grows with its content up to the viewport, or both) and applies that choice at both devices. The image column follows the window's height and never sets it. Content taller than the viewport scrolls without a visible scrollbar.
+- **Nothing navigates under the window.** A link inside QuickBuy either closes the window and then opens its page, or is not a link (set parts are shown, not linked).
 
 **One row, one control language.** The quantity selector, the add button and the favourite button in `qb-actions` (and in the product page's `pdp-actions`) are one row of controls: the same height, the same stroke and the same `radius-control`. The favourite button fills its box: never a round, bordered button inside a square, bordered frame, and never a size of its own. Its hover fill follows the box's corners. CHK `storefront` fails when the controls of `qb-actions` / `pdp-actions` differ in height.
 
@@ -195,6 +198,7 @@ ProductCard states, each a `P/Sub/ProductCard — <state>` frame:
 
 **QuickBuy additions (§3a):**
 - `renk karttan`: QuickBuy opens with the card's colour selected and no size selected. The size group is **not** in its error style until the shopper presses add.
+- `set ürün`: a bundle with at least three parts, its `qb-bundle` list (§3a) visible before the shopper adds, one part with an editable quantity and one with a fixed one. It is drawn at the window size of the other states and fits it (§3a layout).
 - `kişiselleştirme`: shown only when the product has a **required** personalisation field. A product whose option set is entirely optional, and a bundle (set ürün), add to cart from QuickBuy; QuickBuy shows their option fields or bundle contents in the theme style and loads them itself, so its add button has a loading state while they load. The add button becomes an outline button with an arrow, labelled to go to the product page, with a short note above it explaining why. Its style differs from the solid add button, so a shopper who skims does not mistake it for "add to cart". Both labels are TEXT props.
 
 **MenuOverlay `@mobile`:** when the desktop navigation has a mega menu, the mobile menu keeps every column title (`menu-mega-title`) above its links. The vertical rhythm is one scale: the same gap between a title and its links everywhere, and a larger gap between groups. A mobile menu that drops the column titles and runs all links together is a gap.

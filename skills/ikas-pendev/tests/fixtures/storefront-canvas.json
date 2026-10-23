@@ -160,6 +160,46 @@
    "height": 900
   },
   {
+   "id": "q-setdesktop",
+   "name": "K/Overlay/QuickBuy@desktop — set ürün",
+   "type": "frame",
+   "x": 0,
+   "y": 1000,
+   "width": 1440,
+   "height": 900,
+   "children": [
+    {
+     "id": "q-setdesktop-b",
+     "name": "qb-bundle",
+     "type": "frame",
+     "x": 0,
+     "y": 0,
+     "width": 320,
+     "height": 240
+    }
+   ]
+  },
+  {
+   "id": "q-setmobile",
+   "name": "K/Overlay/QuickBuy@mobile — set ürün",
+   "type": "frame",
+   "x": 0,
+   "y": 1000,
+   "width": 390,
+   "height": 900,
+   "children": [
+    {
+     "id": "q-setmobile-b",
+     "name": "qb-bundle",
+     "type": "frame",
+     "x": 0,
+     "y": 0,
+     "width": 320,
+     "height": 240
+    }
+   ]
+  },
+  {
    "id": "h1",
    "name": "K/Section/HeroBanner@desktop",
    "type": "frame",

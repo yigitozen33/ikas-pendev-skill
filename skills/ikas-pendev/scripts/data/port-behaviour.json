@@ -307,6 +307,16 @@
    ],
    "rule": "Ürün medyasındaki video (img.isVideo) galeride, küçük resminde ve lightbox'ta sessiz, döngülü ve satır içi (muted, loop, playsinline, autoplay) oynar; üstünde play düğmesi yoktur. Dokunmak ya da tıklamak durdurur ve play işaretini gösterir, tekrar dokunmak devam ettirir. prefers-reduced-motion açıkken video durmuş başlar ve play işareti görünür. Ekran dışındaki video duraklar.",
    "test": "Seed S-14'te masaüstü küçük resim şeridinde videonun küçük resmi oynuyor, play işareti yok. Mobilde lightbox'ı aç: video sessiz oynar; dokun, durur ve play çıkar; tekrar dokun, devam eder. Azaltılmış hareket açıkken video durmuş gelir."
+  },
+  {
+   "id": "PB-29",
+   "title": "QuickBuy set içeriğini gösterir ve taşmaz",
+   "keys": [
+    "QuickBuy"
+   ],
+   "pageTypes": [],
+   "rule": "Set üründe QuickBuy, sepete eklemeden önce set içeriğini (qb-bundle) ürün sayfasındaki BundleItem satırlarıyla gösterir: parça adı, varyantı, adedi düzenlenebilirse adet seçici, değilse sabit adet, ek fiyat ya da \"Sete dahil\", tükenen parça. Pencere bu en uzun içerikte de alttaki ürün sayfası bağlantısına kadar görünür scroll bar olmadan sığar; sığması için tasarımın seçtiği yol (sıkı satırlar, içerikle büyüyen pencere) iki cihazda da uygulanır, görsel pencerenin yüksekliğini belirlemez, ekranı aşan içerik scroll bar göstermeden kayar. Pencerenin içindeki bir bağlantı pencere açıkken alttaki sayfayı değiştirmez: ya pencereyi kapatıp gider ya bağlantı değildir.",
+   "test": "Seed S-09'u karttan QuickBuy'da aç: set içeriği parça sayısıyla görünür, adedi düzenlenebilen parçanın adedi değişir ve fiyat güncellenir. Masaüstünde (1440×900 ve 1280×720) ve 390 genişlikte pencerede scroll bar yok, ürün detayı bağlantısı görünür. Bir parçaya tıklamak sayfayı değiştirmez. Sepete ekle: sepette aynı parçalar ve adetler görünür."
   }
  ],
  "seed": [
@@ -425,9 +435,10 @@
    ],
    "pageTypes": [],
    "for": [
-    "PB-15"
+    "PB-15",
+    "PB-29"
    ],
-   "what": "En az iki ürünü içeren bir set (bundle) ürün; bir parçanın varyantı seçilebilir."
+   "what": "En az üç ürünü içeren bir set (bundle) ürün; bir parçanın adedi düzenlenebilir, birininki sabit, bir parçanın varyantı seçilebilir."
   },
   {
    "id": "S-10",

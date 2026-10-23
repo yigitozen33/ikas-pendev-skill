@@ -323,7 +323,7 @@ Each sub is a reusable root; each state is its own root `P/Sub/<Name> — <state
 
 Theme-specific subs (ornek: `Sticker`, `ScrambleText`) are added by the plan.
 
-Required overlays (`P/Overlay/…`): mobile menu — açık; `CartDrawer` — boş · dolu · yükleniyor; `SearchOverlay` — boş · yazarken · sonuçsuz; **`FilterDrawer@mobile` — açık**; **`QuickBuy` — açık · seçim eksik · ekleniyor** (`@desktop` centred window, `@mobile` bottom sheet; content in `06-page-coverage.md` §3a); plus any panel the plan defines (size guide, info drawer).
+Required overlays (`P/Overlay/…`): mobile menu — açık; `CartDrawer` — boş · dolu · yükleniyor; `SearchOverlay` — boş · yazarken · sonuçsuz; **`FilterDrawer@mobile` — açık**; **`QuickBuy` — açık · seçim eksik · ekleniyor · set ürün** (`@desktop` centred window, `@mobile` bottom sheet; content in `06-page-coverage.md` §3a); plus any panel the plan defines (size guide, info drawer).
 
 Required merchant blocks (`06-page-coverage.md` §3b, lint L21): ProductDetail layers `pdp-rating`, `pdp-campaign`, `pdp-offers`, `pdp-pay`, `pdp-bundle`, `pdp-tiers`, `pdp-options` (with every option type: `option-text`, `option-textarea`, `option-select`, `option-box`, `option-swatch`, `option-image`, `option-checkbox`, `option-color`, `option-date`, `option-file`, `option-child`, `option-limit`), `pdp-group`, `pdp-back-in-stock` (hidden ones get their own `— <state>` frames); a `ProductReviews` section; CartPage layers `cart-adjustments`, `coupon-applied`, `cart-recommendations`; CartDrawer layers `drawer-adjustments`, `coupon-toggle`, `drawer-recommend`.
 

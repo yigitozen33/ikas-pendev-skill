@@ -46,13 +46,14 @@ Add a criterion when a review finds a behaviour defect that the canvas could not
 | PB-26 | Footer, LocaleSwitcher | On a single-language store the footer's Türkçe looked like a dropdown but did nothing when clicked. |
 | PB-27 | CartPage, CartDrawer; CART | A real code that did not apply to the cart showed as applied (the cart stored it) while the discount never came; a gift card entered in the same field showed an error. |
 | PB-28 | ProductDetail, ImagePreview; PRODUCT_DETAIL | Video thumbnails and the mobile lightbox showed a play button over a still frame; the video should already be playing, and pause on a tap. |
+| PB-29 | QuickBuy | QuickBuy loaded a bundle's parts so it could add them, but never showed them, so shoppers added a set without seeing what was in it. Once shown, three parts pushed the fixed-height window past its footer link and a scrollbar appeared inside it. |
 
-The design-side counterpart of PB-03 to PB-11, PB-13 and PB-15 is `06-page-coverage.md` §3d; of PB-14, `08-quality.md` §8; of PB-08, `SKILL.md` rule 14; of PB-16, PB-17, PB-19, PB-20, PB-27 and PB-28, the merchant blocks and states of `06-page-coverage.md` §3b–§3c; of PB-18, PB-22, PB-24 to PB-26, the §3c table; of PB-21, `08-quality.md` §9; of PB-23, the Contact row of §2.
+The design-side counterpart of PB-03 to PB-11, PB-13 and PB-15 is `06-page-coverage.md` §3d; of PB-14, `08-quality.md` §8; of PB-08, `SKILL.md` rule 14; of PB-16, PB-17, PB-19, PB-20, PB-27 and PB-28, the merchant blocks and states of `06-page-coverage.md` §3b–§3c; of PB-18, PB-22, PB-24 to PB-26, the §3c table; of PB-21, `08-quality.md` §9; of PB-29, the `qb-bundle` part, the layout rules of §3a and the `set ürün` state of §3d; of PB-23, the Contact row of §2.
 
 ## 3. Seed data
 
 The criteria cannot be tested on an empty store. `seed-checklist.md` lists the products, blog posts, menu and links the port creates before testing: a split multi-variant product with a sold-out value (S-01), a product with a required personalisation field (S-02), a product with no variants (S-03), a multi-colour product shown normally (S-04), two blog categories with three posts (S-05), a mega menu with three column titles (S-06) and four popular searches that point at the search page (S-07).
-- Added for QuickBuy: a product whose option set is entirely optional (S-08) and a bundle (S-09).
+- Added for QuickBuy: a product whose option set is entirely optional (S-08) and a bundle of at least three parts, one with an editable and one with a fixed quantity (S-09).
 - Added for personalisation uploads: a product with a file-upload option (S-10).
 - Added for reviews: the review approval setting, tested on and off (S-11).
 - Added for the contact page: three stores, one without a photo (S-12).

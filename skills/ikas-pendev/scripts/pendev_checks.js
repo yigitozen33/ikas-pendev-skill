@@ -14,7 +14,7 @@
 // storefront (06 §3d): P/Sub/ProductCard has card-media, card-fav, card-swatches, card-cart, card-customize and the
 // states "renk seçili", "ayrık varyant", "kişiselleştirme"; every card-fav (Sub roots plus the unit's Section
 // components and Overlay roots, instances resolved) sits in the same corner of its card-media, whatever corner;
-// QuickBuy has "renk karttan" and "kişiselleştirme" at both devices; the controls of every qb-actions / pdp-actions
+// QuickBuy has "renk karttan", "kişiselleştirme" and "set ürün" at both devices, each "set ürün" root with qb-bundle; the controls of every qb-actions / pdp-actions
 // row (QuickBuy and ProductDetail roots; a vertical one is checked per horizontal child row) share one height; a mobile MenuOverlay has menu-mega-title
 // when a desktop Header/MenuOverlay/Megamenu layer is named *mega*; ProductList has "— arama" at both devices
 // and a search-field (popular searches and the all-products state are optional). Each part runs only when its
@@ -325,7 +325,11 @@ if (MODE === "manifest") {
     }
     if (allKeys.indexOf("QuickBuy") >= 0 && want("QuickBuy")) {
       parts++;
-      ["renk karttan", "kişiselleştirme"].forEach(st => ["desktop", "mobile"].forEach(d => { if (!roots.some(r => keyOf(r) === "QuickBuy" && r.name.indexOf("@" + d + " — " + st) > 0)) miss.push("QuickBuy@" + d + " — " + st); }));
+      ["renk karttan", "kişiselleştirme", "set ürün"].forEach(st => ["desktop", "mobile"].forEach(d => {
+        const sr = roots.filter(r => keyOf(r) === "QuickBuy" && r.name.indexOf("@" + d + " — " + st) > 0);
+        if (!sr.length) miss.push("QuickBuy@" + d + " — " + st);
+        else if (st === "set ürün" && !has(sr, "qb-bundle")) miss.push("QuickBuy@" + d + " — set ürün>qb-bundle");
+      }));
     }
     if ((allKeys.indexOf("QuickBuy") >= 0 && want("QuickBuy")) || (allKeys.indexOf("ProductDetail") >= 0 && want("ProductDetail"))) {
       const nodes = {};
