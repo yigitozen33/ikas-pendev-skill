@@ -42,7 +42,7 @@ Use both palette sources when they are reachable. Never block the phase on a sou
 
 The script measures every candidate against the contrast pairs and lists the passing ones first.
 
-**Huemint licence:** Huemint allows its public API for non-commercial applications only. Hex values themselves are not protected, but an ikas theme is commercial work. Note in brief §7 that Huemint was used. If the user wants to avoid the risk, skip Huemint and use qrco + AI.
+**Huemint licence:** Huemint allows its public API for non-commercial applications. This skill is a free, non-commercial design tool, so it calls Huemint by default. Huemint only proposes colour values; the theme's final colours are the skill's own selection (§3E).
 
 **Fallbacks:**
 - qrco not connected: Huemint + AI.
@@ -104,7 +104,7 @@ Complete the winner to all colour roles of `02-contract.md` §3 with `build_bran
 **`globals.md` §1b "Renk kurgusu":**
 - a table `Şema | Psikolojik hedef | Kaynak | Bölümler`
 - one or two bullets of reasoning per scheme
-- a source note (which tools ran, Huemint licence acknowledged or skipped)
+- a source note (which tools ran, which were unreachable)
 
 The section → default scheme bullets stay under §1a, because `build_manifest.py` reads them there.
 

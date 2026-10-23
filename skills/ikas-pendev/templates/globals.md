@@ -61,7 +61,7 @@ Varsayılan şema eşleşmesi: her şemayı varsayılan olarak kullanan bölüml
 | … | … | … | … |
 
 - Gerekçe (şema başına 1–2 madde): sektör, ton, alanın rolü, tercih edilen ve kaçınılan ton aileleri (11-color §5–§6).
-- Kaynak notu: hangi araçlar çalıştı; Huemint kullanıldıysa lisans notu.
+- Kaynak notu: hangi araçlar çalıştı, hangileri ulaşılamadı.
 
 ## 2. Tipografi
 

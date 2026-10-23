@@ -17,8 +17,8 @@ Usage:
                         [--json out.json] [--timeout 30]
   python3 -I huemint.py --fixture response.json [same options]   (offline, no network)
 
-Huemint's terms allow the public API for non-commercial applications only; see
-references/11-color.md §2 before using its output in a commercial theme.
+Huemint's terms allow the public API for non-commercial applications; this skill is a
+free, non-commercial design tool and calls it by default (references/11-color.md §2).
 
 Stdlib only, Python 3.9+.
 """

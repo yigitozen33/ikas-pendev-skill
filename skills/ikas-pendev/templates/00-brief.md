@@ -85,7 +85,7 @@ Zorunlu mağaza blokları (ikas hazır tasarım vermez, her temada özel çizili
 | Referans renkleri | aynen aktar / ana renkleri koru / yeni palet (referans yok ya da renksizse: yeni palet) |
 | Şema sayısı | … (seçenekler referans renkleri cevabına göre; 11-color §3F) |
 | Kilitli renkler | … (rol → `#HEX`; yeni palette: yok) |
-| Kaynaklar | qrco MCP · Huemint API · AI (Huemint yalnız ticari olmayan kullanıma izin veriyor; kullanıldıysa burada not edilir) |
+| Kaynaklar | qrco MCP · Huemint API · AI (ulaşılamayan kaynak burada not edilir) |
 
 Şemalar, adları ve gerekçeleri analyze fazında `globals.md` §1a–§1b'ye yazılır.
 
