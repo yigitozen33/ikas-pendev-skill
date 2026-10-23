@@ -138,6 +138,7 @@ Component targets get ids `<P>-CMP-NN` (numbered across all components) and sect
 | `devices` | no | overlays: which `@desktop`/`@mobile` frames exist (default both); used by the contract 2 §6.4 list |
 | `tree` | yes | lines; notation `{name:TYPE}` (TYPE ∈ 30 ikas prop types), c2 also `{data:source}` (`product.name`) and `{code:name}` |
 | `checks` | no | rendered as `Kontrol: a · b` |
+| `archetype` | no (expected on home-page sections) | `"<family>:<variant>"` from `library/axes.json` `archetypes` (`hero:split`, `collection:slider`, `custom:<name>` …); `axes.py --plandata` compares the INDEX page's sequence with earlier themes (12-library §7). Not rendered |
 | `desktopOnly` | no | kebab-case layer names drawn only in `@desktop` by design (nav, filter sidebar, hover labels, desktop gallery arrows); rendered as `- **Yalnız masaüstü katmanlar:**` and exempted by CHK `parity` (with their subtree) |
 | `desktopOnlyStates` | no | state names that exist only as `@desktop — <state>` (states containing `hover` are exempt anyway); rendered as `- **Yalnız masaüstü durumlar:**` |
 | `anims` | no | objects `{layer, recipe, trigger, what}` + optional overrides `frm, to, timing, impl, mobile, rm, via`; the compact array form `[layer, recipe, trigger, what, {overrides}]` is also accepted. `layer` must appear in `tree` (word boundary). `via` override `""` disables via |

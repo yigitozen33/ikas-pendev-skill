@@ -300,5 +300,20 @@ python3 -I "$S/axes.py" check "$AX/a.md" --slug a > "$AX/self.txt" 2>&1 && ok "a
 IKAS_PENDEV_FINGERPRINTS="$AX/empty.json" python3 -I "$S/axes.py" check "$AX/generic.md" --slug g > "$AX/g.txt" 2>&1 && grep -q 'WARN|§0|L23 15 axes on the generic default' "$AX/g.txt" && grep -q 'WARN|§2|L23 generic font family in globals: Inter' "$AX/g.txt" && ok "axes: generic defaults and generic fonts warn" || bad "axes: generic defaults and generic fonts warn" "$(cat "$AX/g.txt")"
 unset IKAS_PENDEV_FINGERPRINTS
 
+python3 -I - "$FX/mini-plandata" "$AX" <<'PY'
+import json, shutil, sys
+src, out = sys.argv[1], sys.argv[2]
+for name, arch in (("pa", ["hero:split", "collection:grid"]), ("pb", ["hero:split", "collection:grid"]),
+                   ("pc", ["hero:collage", "collection:lookbook"]), ("px", ["hero:nope", "collection:grid"])):
+    shutil.copytree(src, f"{out}/{name}")
+    for f, a in zip(("01-HeroBanner", "02-ProductGrid"), arch):
+        p = f"{out}/{name}/sections/{f}.json"; d = json.load(open(p)); d["archetype"] = a; json.dump(d, open(p, "w"))
+PY
+export IKAS_PENDEV_FINGERPRINTS="$AX/layout-store.json"
+python3 -I "$S/axes.py" record "$AX/a.md" --slug la --plandata "$AX/pa" >/dev/null && python3 -I "$S/axes.py" check "$AX/c.md" --slug lb --plandata "$AX/pb" > "$AX/lb.txt" 2>&1; [ $? = 1 ] && grep -q "too close to 'la': home page composition distance 0.00 (need 0.5)" "$AX/lb.txt" && ok "axes: same home-page composition fails even when every axis differs" || bad "axes: same home-page composition fails even when every axis differs" "$(cat "$AX/lb.txt")"
+python3 -I "$S/axes.py" check "$AX/c.md" --slug lc --plandata "$AX/pc" > "$AX/lc.txt" 2>&1 && ok "axes: a different home-page composition passes" || bad "axes: a different home-page composition passes" "$(cat "$AX/lc.txt")"
+python3 -I "$S/axes.py" check "$AX/c.md" --slug lx --plandata "$AX/px" > "$AX/lx.txt" 2>&1; [ $? = 1 ] && grep -q 'HeroBanner: archetype `hero:nope` not in the vocabulary' "$AX/lx.txt" && ok "axes: an unknown section archetype fails" || bad "axes: an unknown section archetype fails" "$(cat "$AX/lx.txt")"
+unset IKAS_PENDEV_FINGERPRINTS
+
 echo "----"; echo "passed=$pass failed=$fail"
 [ "$fail" = "0" ]
