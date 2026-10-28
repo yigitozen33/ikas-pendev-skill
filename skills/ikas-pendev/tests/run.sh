@@ -383,6 +383,8 @@ for name, lib, part in (("K/Section/HeroBanner@desktop", "Hero", "hero-media-mob
     if part not in {c["name"] for c in r["children"]}: errs.append(f"{name} lacks {part}")
 if roots["K/Section/HeroBanner@mobile"]["width"] != 390: errs.append("mobile width")
 secs = [n for n in roots.values() if n["name"].startswith("K/Section/") and " — " not in n["name"]]
+if roots["K/Section/HeroBanner@desktop"].get("padding") != ["$space-page", "$space-page", 0, "$space-page"]: errs.append(f"hero padding {roots['K/Section/HeroBanner@desktop'].get('padding')}")
+if roots["K/Section/ProductGrid@desktop"].get("padding") != ["$space-section", "$space-page", 0, "$space-page"]: errs.append("section padding not the 02 §3b rule")
 errs += [f"section root lacks backgroundColor prop {n['name']}" for n in secs
          if n["metadata"].get("prop") != "backgroundColor" or n["metadata"].get("propType") != "COLOR"]
 print("\n".join(errs)); sys.exit(1 if errs else 0)

@@ -84,6 +84,26 @@ def part_node(comp, p):
     return node
 
 
+SPACING_NOTE = {0: "top 0 (Header)", "$space-page": "top $space-page (first under the Header)",
+                "$space-section": "top $space-section, bottom 0 (02 §3b)"}
+
+
+def section_padding(comp):
+    """02-contract §3b baked into the skeleton: sides $space-page; Header top 0; Hero families top
+    $space-page (always first under the Header); the Footer's top $space-section is the gap to the last
+    section; every other section carries $space-section on top and 0 below."""
+    if comp["kind"] != "section":
+        return "$space-sm"
+    if comp["name"] == "Header":
+        top = 0
+    elif any(f.split(":")[0] == "hero" for f in comp.get("families", [])):
+        top = "$space-page"
+    else:
+        top = "$space-section"
+    bottom = "$space-page" if comp["name"] == "Footer" else 0
+    return [top, "$space-page", bottom, "$space-page"]
+
+
 def root_context(comp):
     seg = ["states " + ", ".join(comp["states"])]
     seg += ["must " + m["rule"] + (f" ({m['figure']})" if m.get("figure") else "") for m in comp.get("must", [])]
@@ -103,10 +123,13 @@ def component_column(comp):
         meta["families"] = ",".join(comp["families"])
     if comp.get("page"):
         meta["page"] = comp["page"]
+    pad, ctx = section_padding(comp), root_context(comp)
+    if comp["kind"] == "section":
+        ctx += " · spacing " + SPACING_NOTE[pad[0]]
     root = {"type": "frame", "id": nid(comp["name"]), "name": name, "reusable": True,
-            "width": WIDTH[comp["kind"]], "layout": "vertical", "gap": "$space-xs", "padding": "$space-sm",
+            "width": WIDTH[comp["kind"]], "layout": "vertical", "gap": "$space-xs", "padding": pad,
             "fill": "$color-surface", "stroke": "$color-line", "strokeWidth": 1, "strokeAlignment": "inner",
-            "metadata": meta, "context": root_context(comp),
+            "metadata": meta, "context": ctx,
             "children": [part_node(comp, p) for p in comp["parts"]]}
     states = [{"type": "ref", "id": nid(comp["name"], "state", s), "ref": root["id"], "name": f"{name} — {s}",
                "context": "state " + s} for s in comp["states"][1:]]

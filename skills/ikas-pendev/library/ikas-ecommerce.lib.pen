@@ -7688,7 +7688,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        0,
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -7700,7 +7705,7 @@
                         "layer": "shell",
                         "lib": 1
                       },
-                      "context": "states varsayılan, mevcut, yapışkan, şeffaf, duyurular, duraklatıldı · must the current scope is highlighted in the navigation (96%) · must moving announcements can be paused",
+                      "context": "states varsayılan, mevcut, yapışkan, şeffaf, duyurular, duraklatıldı · must the current scope is highlighted in the navigation (96%) · must moving announcements can be paused · spacing top 0 (Header)",
                       "children": [
                         {
                           "type": "frame",
@@ -8025,7 +8030,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        "$space-page",
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -8037,7 +8047,7 @@
                         "layer": "shell",
                         "lib": 1
                       },
-                      "context": "states varsayılan, açık · mobile groups may be accordions",
+                      "context": "states varsayılan, açık · mobile groups may be accordions · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -8308,7 +8318,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -8321,7 +8336,7 @@
                         "lib": 1,
                         "page": "PRODUCT_DETAIL"
                       },
-                      "context": "states varsayılan, sepeti güncelle",
+                      "context": "states varsayılan, sepeti güncelle · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -8500,7 +8515,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -8513,7 +8533,7 @@
                         "lib": 1,
                         "page": "PRODUCT_DETAIL"
                       },
-                      "context": "states yorumlu, boş, yorum formu, onay bekliyor",
+                      "context": "states yorumlu, boş, yorum formu, onay bekliyor · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -8702,7 +8722,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -8715,7 +8740,7 @@
                         "lib": 1,
                         "page": "CATEGORY"
                       },
-                      "context": "states varsayılan, yükleniyor, sonuç yok, filtreli, arama, tüm ürünler · must intermediate categories lead with their subcategories (38%)",
+                      "context": "states varsayılan, yükleniyor, sonuç yok, filtreli, arama, tüm ürünler · must intermediate categories lead with their subcategories (38%) · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -9013,7 +9038,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -9027,7 +9057,7 @@
                         "optional": true,
                         "page": "CATEGORY"
                       },
-                      "context": "states varsayılan",
+                      "context": "states varsayılan · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -9142,7 +9172,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -9156,7 +9191,7 @@
                         "optional": true,
                         "page": "BRAND"
                       },
-                      "context": "states varsayılan",
+                      "context": "states varsayılan · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -9303,7 +9338,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -9316,7 +9356,7 @@
                         "lib": 1,
                         "page": "CART"
                       },
-                      "context": "states dolu, boş, yükleniyor, hata · must the empty cart offers a way forward and products",
+                      "context": "states dolu, boş, yükleniyor, hata · must the empty cart offers a way forward and products · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -9535,7 +9575,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -9549,7 +9594,7 @@
                         "optional": true,
                         "page": "LOGIN"
                       },
-                      "context": "states giriş, kayıt, şifremi unuttum, şifre yenile, hata, gönderiliyor · must password rules stated up front, not after a failed submit (65%) · only when membership pages are custom (06 §2a)",
+                      "context": "states giriş, kayıt, şifremi unuttum, şifre yenile, hata, gönderiliyor · must password rules stated up front, not after a failed submit (65%) · only when membership pages are custom (06 §2a) · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -9813,7 +9858,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -9827,7 +9877,7 @@
                         "optional": true,
                         "page": "ACCOUNT"
                       },
-                      "context": "states varsayılan, boş, yükleniyor, hata · only when account pages are custom (06 §2a)",
+                      "context": "states varsayılan, boş, yükleniyor, hata · only when account pages are custom (06 §2a) · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -10190,7 +10240,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -10204,7 +10259,7 @@
                         "optional": true,
                         "page": "CUSTOMER_EMAIL_VERIFICATION"
                       },
-                      "context": "states doğrulanıyor, başarılı, hata, tekrar gönderildi · follows the membership group (06 §2a)",
+                      "context": "states doğrulanıyor, başarılı, hata, tekrar gönderildi · follows the membership group (06 §2a) · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -10304,7 +10359,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -10317,7 +10377,7 @@
                         "lib": 1,
                         "page": "CUSTOM"
                       },
-                      "context": "states varsayılan, sonuç, bulunamadı",
+                      "context": "states varsayılan, sonuç, bulunamadı · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -10439,7 +10499,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -10452,7 +10517,7 @@
                         "lib": 1,
                         "page": "CUSTOM"
                       },
-                      "context": "states varsayılan",
+                      "context": "states varsayılan · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -10531,7 +10596,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -10544,7 +10614,7 @@
                         "lib": 1,
                         "page": "CUSTOM"
                       },
-                      "context": "states varsayılan, gönderiliyor, gönderildi, hata",
+                      "context": "states varsayılan, gönderiliyor, gönderildi, hata · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -10645,7 +10715,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -10659,7 +10734,7 @@
                         "optional": true,
                         "page": "CUSTOM"
                       },
-                      "context": "states varsayılan, görselsiz mağaza",
+                      "context": "states varsayılan, görselsiz mağaza · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -10806,7 +10881,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -10820,7 +10900,7 @@
                         "optional": true,
                         "page": "CUSTOM"
                       },
-                      "context": "states varsayılan, açık",
+                      "context": "states varsayılan, açık · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -10908,7 +10988,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -10921,7 +11006,7 @@
                         "lib": 1,
                         "page": "NOT_FOUND"
                       },
-                      "context": "states varsayılan",
+                      "context": "states varsayılan · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -11059,7 +11144,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -11073,7 +11163,7 @@
                         "optional": true,
                         "page": "BLOG"
                       },
-                      "context": "states varsayılan, boş",
+                      "context": "states varsayılan, boş · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -11191,7 +11281,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -11205,7 +11300,7 @@
                         "optional": true,
                         "page": "BLOG_POST"
                       },
-                      "context": "states varsayılan",
+                      "context": "states varsayılan · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -11434,7 +11529,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-page",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -11448,7 +11548,7 @@
                         "optional": true,
                         "families": "hero"
                       },
-                      "context": "states varsayılan · must separate desktop and mobile media",
+                      "context": "states varsayılan · must separate desktop and mobile media · spacing top $space-page (first under the Header)",
                       "children": [
                         {
                           "type": "frame",
@@ -11650,7 +11750,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-page",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -11664,7 +11769,7 @@
                         "optional": true,
                         "families": "hero:slider"
                       },
-                      "context": "states varsayılan, duraklatıldı · must moving slides can be paused and the current slide is announced · must controls work with the keyboard (31%)",
+                      "context": "states varsayılan, duraklatıldı · must moving slides can be paused and the current slide is announced · must controls work with the keyboard (31%) · spacing top $space-page (first under the Header)",
                       "children": [
                         {
                           "type": "frame",
@@ -11868,7 +11973,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -11882,7 +11992,7 @@
                         "optional": true,
                         "families": "collection"
                       },
-                      "context": "states varsayılan, yükleniyor, boş · must an empty shelf is hidden",
+                      "context": "states varsayılan, yükleniyor, boş · must an empty shelf is hidden · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -12040,7 +12150,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -12054,7 +12169,7 @@
                         "optional": true,
                         "families": "product:featured"
                       },
-                      "context": "states varsayılan, stok yok, ekleniyor",
+                      "context": "states varsayılan, stok yok, ekleniyor · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -12263,7 +12378,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -12277,7 +12397,7 @@
                         "optional": true,
                         "families": "product:shoppable"
                       },
-                      "context": "states varsayılan, açık · must every pictured product is one tap away (64%)",
+                      "context": "states varsayılan, açık · must every pictured product is one tap away (64%) · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -12396,7 +12516,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -12410,7 +12535,7 @@
                         "optional": true,
                         "families": "category"
                       },
-                      "context": "states varsayılan, hover · must each category tile has a clear image (39%)",
+                      "context": "states varsayılan, hover · must each category tile has a clear image (39%) · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -12528,7 +12653,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -12542,7 +12672,7 @@
                         "optional": true,
                         "families": "story,banner"
                       },
-                      "context": "states varsayılan",
+                      "context": "states varsayılan · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -12681,7 +12811,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -12695,7 +12830,7 @@
                         "optional": true,
                         "families": "text"
                       },
-                      "context": "states varsayılan",
+                      "context": "states varsayılan · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -12805,7 +12940,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -12819,7 +12959,7 @@
                         "optional": true,
                         "families": "text:faq"
                       },
-                      "context": "states varsayılan, açık",
+                      "context": "states varsayılan, açık · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -12906,7 +13046,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -12920,7 +13065,7 @@
                         "optional": true,
                         "families": "usp"
                       },
-                      "context": "states varsayılan",
+                      "context": "states varsayılan · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -12971,7 +13116,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -12985,7 +13135,7 @@
                         "optional": true,
                         "families": "newsletter"
                       },
-                      "context": "states varsayılan, eklendi, hata",
+                      "context": "states varsayılan, eklendi, hata · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -13110,7 +13260,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -13124,7 +13279,7 @@
                         "optional": true,
                         "families": "press:logos,marquee:logos"
                       },
-                      "context": "states varsayılan",
+                      "context": "states varsayılan · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -13174,7 +13329,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -13188,7 +13348,7 @@
                         "optional": true,
                         "families": "press"
                       },
-                      "context": "states varsayılan",
+                      "context": "states varsayılan · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -13239,7 +13399,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -13253,7 +13418,7 @@
                         "optional": true,
                         "families": "blog"
                       },
-                      "context": "states varsayılan",
+                      "context": "states varsayılan · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -13364,7 +13529,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -13378,7 +13548,7 @@
                         "optional": true,
                         "families": "marquee"
                       },
-                      "context": "states varsayılan, duraklatıldı",
+                      "context": "states varsayılan, duraklatıldı · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
@@ -13465,7 +13635,12 @@
                       "width": 720,
                       "layout": "vertical",
                       "gap": "$space-xs",
-                      "padding": "$space-sm",
+                      "padding": [
+                        "$space-section",
+                        "$space-page",
+                        0,
+                        "$space-page"
+                      ],
                       "fill": "$color-surface",
                       "stroke": "$color-line",
                       "strokeWidth": 1,
@@ -13479,7 +13654,7 @@
                         "optional": true,
                         "families": "social"
                       },
-                      "context": "states varsayılan",
+                      "context": "states varsayılan · spacing top $space-section, bottom 0 (02 §3b)",
                       "children": [
                         {
                           "type": "frame",
