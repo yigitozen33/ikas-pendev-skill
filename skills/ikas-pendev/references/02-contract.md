@@ -36,6 +36,7 @@ Everything is a **separate root frame**. Root names follow a fixed pattern; the 
 Layout rules:
 - One horizontal band per row; 800 between bands, 200 between frames. A section's desktop and mobile frames sit **side by side**. Place new roots with `FindEmptySpace`.
 - Nothing loose at root level (no text, icon or shape). Explanations are `note` nodes beside the frame.
+- No other root kinds. A piece used inside one section (gallery, buy box, list toolbar, facet filter) is a layer of that section's root, never a root of its own; `role: "block"` does not exist. A piece used by several sections or overlays is a Sub: `SearchField` (ProductList, SearchOverlay), `NewsletterForm` (Footer, Newsletter), `AddressForm` (Account, AddressModal), placed as an instance in each host.
 - Desktop roots `theme: {device: "desktop"}`, mobile roots `theme: {device: "mobile"}`; a section that uses a non-default colour scheme adds `mode: "<scheme slug>"` (the default scheme needs none). Sized variables switch automatically; never type a mobile number.
 - Section frames use `layout: "vertical"` or `"horizontal"` with `clip: true`. `layout: "none"` only for truly stacked layers (slides, image + gradient + text, hotspots).
 - Everything repeated is a `ref` instance of a reusable (ProductCard, Button, ArrowLink…). Pages contain **only** section refs.
