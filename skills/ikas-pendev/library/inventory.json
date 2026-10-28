@@ -718,15 +718,18 @@
       "parts": [
         {
           "layer": "range-track",
-          "req": true
+          "req": true,
+          "note": "rail and active span sized from the instance: fill_container rows, never a fixed width"
         },
         {
           "layer": "range-handle-min",
-          "req": true
+          "req": true,
+          "note": "placed by layout (spacer · handle · active · handle · spacer in a horizontal row), never by absolute x"
         },
         {
           "layer": "range-handle-max",
-          "req": true
+          "req": true,
+          "note": "placed by layout, like range-handle-min"
         },
         {
           "layer": "range-fields",
@@ -737,7 +740,8 @@
         "varsayılan",
         "dolu",
         "güncelleniyor"
-      ]
+      ],
+      "note": "one PriceRange serves the filter column, the drawer and QuickBuy at different widths; nothing inside may have a fixed width (02 §1)"
     },
     {
       "name": "ProductCard",

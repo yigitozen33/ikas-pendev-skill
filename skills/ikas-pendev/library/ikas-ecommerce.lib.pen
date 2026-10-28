@@ -2890,7 +2890,7 @@
                         "layer": "element",
                         "lib": 1
                       },
-                      "context": "states varsayılan, dolu, güncelleniyor",
+                      "context": "states varsayılan, dolu, güncelleniyor · one PriceRange serves the filter column, the drawer and QuickBuy at different widths; nothing inside may have a fixed width (02 §1)",
                       "children": [
                         {
                           "type": "frame",
@@ -2919,7 +2919,8 @@
                           "metadata": {
                             "type": "ikas-lib",
                             "lib": "req"
-                          }
+                          },
+                          "context": "rail and active span sized from the instance: fill_container rows, never a fixed width"
                         },
                         {
                           "type": "frame",
@@ -2948,7 +2949,8 @@
                           "metadata": {
                             "type": "ikas-lib",
                             "lib": "req"
-                          }
+                          },
+                          "context": "placed by layout (spacer · handle · active · handle · spacer in a horizontal row), never by absolute x"
                         },
                         {
                           "type": "frame",
@@ -2977,7 +2979,8 @@
                           "metadata": {
                             "type": "ikas-lib",
                             "lib": "req"
-                          }
+                          },
+                          "context": "placed by layout, like range-handle-min"
                         },
                         {
                           "type": "frame",
