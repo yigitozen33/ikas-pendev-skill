@@ -9002,6 +9002,296 @@
                 },
                 {
                   "type": "frame",
+                  "id": "Lbc56667e04",
+                  "name": "CollectionHero",
+                  "layout": "vertical",
+                  "gap": "$space-md",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Ldff54f0915",
+                      "name": "P/Section/CollectionHero",
+                      "reusable": true,
+                      "width": 720,
+                      "layout": "vertical",
+                      "gap": "$space-xs",
+                      "padding": "$space-sm",
+                      "fill": "$color-surface",
+                      "stroke": "$color-line",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "metadata": {
+                        "type": "ikas-lib",
+                        "role": "section",
+                        "ikas": "CollectionHero",
+                        "layer": "page",
+                        "lib": 1,
+                        "optional": true,
+                        "page": "CATEGORY"
+                      },
+                      "context": "states varsayılan",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "L3670bcafeb",
+                          "name": "ch-title",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L60fd8f1bf3",
+                              "name": "lib-label",
+                              "content": "ch-title",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          },
+                          "context": "title prop, or category.name"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Lef70b178c4",
+                          "name": "ch-text",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L76df513510",
+                              "name": "lib-label",
+                              "content": "ch-text · opt",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "opt",
+                            "ikas": "yes"
+                          },
+                          "enabled": false,
+                          "context": "category.description or a text prop"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "L3a7dbb7a84",
+                          "name": "ch-media",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L9508adb795",
+                              "name": "lib-label",
+                              "content": "ch-media · opt",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "opt",
+                            "ikas": "yes"
+                          },
+                          "enabled": false,
+                          "context": "category image; a tile colour when there is none"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "L075b99eb87",
+                  "name": "BrandHero",
+                  "layout": "vertical",
+                  "gap": "$space-md",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "L19e8bee9ce",
+                      "name": "P/Section/BrandHero",
+                      "reusable": true,
+                      "width": 720,
+                      "layout": "vertical",
+                      "gap": "$space-xs",
+                      "padding": "$space-sm",
+                      "fill": "$color-surface",
+                      "stroke": "$color-line",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "metadata": {
+                        "type": "ikas-lib",
+                        "role": "section",
+                        "ikas": "BrandHero",
+                        "layer": "page",
+                        "lib": 1,
+                        "optional": true,
+                        "page": "BRAND"
+                      },
+                      "context": "states varsayılan",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "L29f6757285",
+                          "name": "bh-media",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L1a2e2a6385",
+                              "name": "lib-label",
+                              "content": "bh-media · opt",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "opt",
+                            "ikas": "yes"
+                          },
+                          "enabled": false,
+                          "context": "brand.image"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Lfdeac474b3",
+                          "name": "bh-title",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Lde32db9f20",
+                              "name": "lib-label",
+                              "content": "bh-title",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          },
+                          "context": "brand.name"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "L6ebd446d90",
+                          "name": "bh-text",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L966f17cf69",
+                              "name": "lib-label",
+                              "content": "bh-text · opt",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "opt",
+                            "ikas": "yes"
+                          },
+                          "enabled": false,
+                          "context": "brand.description"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "L2239fefac7",
+                          "name": "bh-count",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "La04dadb03a",
+                              "name": "lib-label",
+                              "content": "bh-count · opt",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "opt",
+                            "ikas": "yes"
+                          },
+                          "enabled": false,
+                          "context": "product count (code) + suffix text prop"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
                   "id": "L79481cd022",
                   "name": "CartPage",
                   "layout": "vertical",
@@ -10339,6 +10629,269 @@
                       "ref": "Lb37456c453",
                       "name": "P/Section/Contact — hata",
                       "context": "state hata"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "L4ea3ca2a08",
+                  "name": "StoreLocator",
+                  "layout": "vertical",
+                  "gap": "$space-md",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "La9d1af06c0",
+                      "name": "P/Section/StoreLocator",
+                      "reusable": true,
+                      "width": 720,
+                      "layout": "vertical",
+                      "gap": "$space-xs",
+                      "padding": "$space-sm",
+                      "fill": "$color-surface",
+                      "stroke": "$color-line",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "metadata": {
+                        "type": "ikas-lib",
+                        "role": "section",
+                        "ikas": "StoreLocator",
+                        "layer": "page",
+                        "lib": 1,
+                        "optional": true,
+                        "page": "CUSTOM"
+                      },
+                      "context": "states varsayılan, görselsiz mağaza",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Lb98e0f1be9",
+                          "name": "store-title",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Lf0ad4318db",
+                              "name": "lib-label",
+                              "content": "store-title",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Lf1f92592e3",
+                          "name": "store-media",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Le79b19bb74",
+                              "name": "lib-label",
+                              "content": "store-media",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          },
+                          "context": "selected store image; a placeholder in the theme's style when the store has none"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "L2a0a13543c",
+                          "name": "store-info",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L83b944fee4",
+                              "name": "lib-label",
+                              "content": "store-info",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          },
+                          "context": "name, address, open/closed Badge, directions link"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "L412be282cc",
+                          "name": "store-list",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L0481f44880",
+                              "name": "lib-label",
+                              "content": "store-list",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          },
+                          "context": "StoreItem COMPONENT_LIST; selecting a row swaps the media"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Ldadb8bcac1",
+                      "ref": "La9d1af06c0",
+                      "name": "P/Section/StoreLocator — görselsiz mağaza",
+                      "context": "state görselsiz mağaza"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "L72635ccff9",
+                  "name": "FaqList",
+                  "layout": "vertical",
+                  "gap": "$space-md",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "L967e0b7fa7",
+                      "name": "P/Section/FaqList",
+                      "reusable": true,
+                      "width": 720,
+                      "layout": "vertical",
+                      "gap": "$space-xs",
+                      "padding": "$space-sm",
+                      "fill": "$color-surface",
+                      "stroke": "$color-line",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "metadata": {
+                        "type": "ikas-lib",
+                        "role": "section",
+                        "ikas": "FaqList",
+                        "layer": "page",
+                        "lib": 1,
+                        "optional": true,
+                        "page": "CUSTOM"
+                      },
+                      "context": "states varsayılan, açık",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "L298b40b04e",
+                          "name": "faql-head",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L9507f7e726",
+                              "name": "lib-label",
+                              "content": "faql-head",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          },
+                          "context": "title + intro"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "L0b3103756f",
+                          "name": "faq-items",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L2017fb8608",
+                              "name": "lib-label",
+                              "content": "faq-items",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          },
+                          "context": "AccordionItem list (question TEXT, answer RICH_TEXT)"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "L6c6b7bc8ed",
+                      "ref": "L967e0b7fa7",
+                      "name": "P/Section/FaqList — açık",
+                      "context": "state açık"
                     }
                   ]
                 },

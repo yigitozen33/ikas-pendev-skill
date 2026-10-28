@@ -28,6 +28,8 @@ What changes on the way:
   * variables are written from plandata (`colors` per mode, `type` and paired `numbers`
     per device). A token the copied nodes use but plandata lacks is an error.
 
+Plandata sections and overlays that get no skeleton (no library component of that name, no
+archetype match) are a WARN: they are built from the plan tree alone.
 Library components that plandata does not name are reported: a WARN for those the skill
 already requires (02 §9, 06 §3), an INFO for those the library adds (Price, CartCount …),
 which a plan may build inline instead.
@@ -238,7 +240,10 @@ def main():
     content = [c for c in inv["components"] if c.get("families")]
     unmatched = []
     for sec in pd.get("sections", []):
-        if sec.get("kind") != "section" or sec["key"] in by_name or not sec.get("archetype"):
+        if sec["key"] in by_name:
+            continue
+        if sec.get("kind") != "section" or not sec.get("archetype"):
+            unmatched.append(f"{sec['key']} (no archetype)" if sec.get("kind") == "section" else sec["key"])
             continue
         arch = sec["archetype"]
         fam = arch.split(":", 1)[0]
@@ -297,7 +302,8 @@ def main():
     if gaps:
         print("WARN plan lacks components the skill requires (02 §9, 06 §3): " + ", ".join(gaps))
     if unmatched:
-        print("INFO no library skeleton for these archetypes (built from the plan tree alone): " + ", ".join(unmatched))
+        print("WARN no library skeleton, built from the plan tree alone (check its parts and states by hand): "
+              + ", ".join(unmatched))
     if hints:
         print("INFO library components the plan builds inline or skips: " + ", ".join(hints))
     if missing:

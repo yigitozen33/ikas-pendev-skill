@@ -1968,6 +1968,76 @@
       ]
     },
     {
+      "name": "CollectionHero",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "platform"
+      ],
+      "page": "CATEGORY",
+      "optional": true,
+      "parts": [
+        {
+          "layer": "ch-title",
+          "req": true,
+          "note": "title prop, or category.name"
+        },
+        {
+          "layer": "ch-text",
+          "opt": true,
+          "ikas": "yes",
+          "note": "category.description or a text prop"
+        },
+        {
+          "layer": "ch-media",
+          "opt": true,
+          "ikas": "yes",
+          "note": "category image; a tile colour when there is none"
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
+    },
+    {
+      "name": "BrandHero",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "platform"
+      ],
+      "page": "BRAND",
+      "optional": true,
+      "parts": [
+        {
+          "layer": "bh-media",
+          "opt": true,
+          "ikas": "yes",
+          "note": "brand.image"
+        },
+        {
+          "layer": "bh-title",
+          "req": true,
+          "note": "brand.name"
+        },
+        {
+          "layer": "bh-text",
+          "opt": true,
+          "ikas": "yes",
+          "note": "brand.description"
+        },
+        {
+          "layer": "bh-count",
+          "opt": true,
+          "ikas": "yes",
+          "note": "product count (code) + suffix text prop"
+        }
+      ],
+      "states": [
+        "varsayılan"
+      ]
+    },
+    {
       "name": "CartPage",
       "layer": "page",
       "kind": "section",
@@ -2244,6 +2314,67 @@
         "gönderiliyor",
         "gönderildi",
         "hata"
+      ]
+    },
+    {
+      "name": "StoreLocator",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract"
+      ],
+      "page": "CUSTOM",
+      "optional": true,
+      "parts": [
+        {
+          "layer": "store-title",
+          "req": true
+        },
+        {
+          "layer": "store-media",
+          "req": true,
+          "note": "selected store image; a placeholder in the theme's style when the store has none"
+        },
+        {
+          "layer": "store-info",
+          "req": true,
+          "note": "name, address, open/closed Badge, directions link"
+        },
+        {
+          "layer": "store-list",
+          "req": true,
+          "note": "StoreItem COMPONENT_LIST; selecting a row swaps the media"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "görselsiz mağaza"
+      ]
+    },
+    {
+      "name": "FaqList",
+      "layer": "page",
+      "kind": "section",
+      "basis": [
+        "contract"
+      ],
+      "page": "CUSTOM",
+      "optional": true,
+      "parts": [
+        {
+          "layer": "faql-head",
+          "req": true,
+          "note": "title + intro"
+        },
+        {
+          "layer": "faq-items",
+          "req": true,
+          "note": "AccordionItem list (question TEXT, answer RICH_TEXT)"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "açık"
       ]
     },
     {

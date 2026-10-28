@@ -300,6 +300,12 @@ shutil.copytree(sys.argv[1], sys.argv[2]); p = sys.argv[2] + "/theme.json"
 t = json.load(open(p)); del t["variables"]["numbers"]["space-xs"]; json.dump(t, open(p, "w"))
 PY
 python3 -I "$S/copy_library.py" "$CL/pd" -o "$CL/broken.pen" > "$CL/missing.log" 2>&1; [ $? = 1 ] && grep -q 'not in plandata variables: space-xs' "$CL/missing.log" && [ ! -e "$CL/broken.pen" ] && ok "copy_library stops when plandata lacks a token the library uses" || bad "copy_library stops when plandata lacks a token the library uses" "$(cat "$CL/missing.log")"
+grep -q '^WARN no library skeleton.*: HeroBanner (no archetype), ProductGrid (no archetype)$' "$CL/copy.log" && ok "copy_library warns on sections with no skeleton" || bad "copy_library warns on sections with no skeleton" "$(grep 'no library skeleton' "$CL/copy.log")"
+python3 -I - "$SK/library/inventory.json" <<'PY' && ok "library has the Contact, collection and brand page sections" || bad "library has the Contact, collection and brand page sections"
+import json, sys
+n = {c["name"]: c for c in json.load(open(sys.argv[1]))["components"]}
+sys.exit(0 if all(k in n and n[k]["kind"] == "section" for k in ("CollectionHero", "BrandHero", "StoreLocator", "FaqList")) else 1)
+PY
 python3 -I "$S/copy_library.py" "$FX/mini-plandata" -o "$CL/x.pen" --with Nope >/dev/null 2>&1; [ $? = 2 ] && ok "copy_library rejects an unknown --with name" || bad "copy_library rejects an unknown --with name"
 
 # 10 · structural identity and similarity gate (12-library.md §6–§7)
