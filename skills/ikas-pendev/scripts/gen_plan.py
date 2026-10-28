@@ -30,6 +30,7 @@ import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
 SKILL = os.path.dirname(HERE)
 TPL_DIR = os.path.join(SKILL, 'templates', 'plan')
 CATALOGUE = os.path.join(HERE, 'data', 'motion-catalogue.json')
@@ -451,6 +452,9 @@ def validate(d, origins, cat):
         for j, e in enumerate(p.get('expand') or []):
             if not (isinstance(e, dict) and isinstance(e.get('name'), str) and e.get('pageType') in PAGE_TYPES):
                 err('%s.expand[%d]' % (path, j), 'needs name and a valid pageType')
+    if d.get('sampleCatalog') is not None:
+        import sample_catalog
+        errs.extend(sample_catalog.validate(d['sampleCatalog']))
     if errs:
         raise PlanError('\n'.join(errs))
     return contract
@@ -710,6 +714,17 @@ class Plan:
                     seen.add(rec)
                     out.append('| %s | %s (`%s`) | %s |' % (rec, t['section'], t['layer'], hints[rec]))
         out.append('')
+
+        if self.c2 and d.get('sampleCatalog'):
+            import sample_catalog as SC
+            cat = d['sampleCatalog']
+            out.append('### 6.6 Örnek katalog\n')
+            out.append('Canvas\'taki her ürün verisi (ad, marka, görsel, fiyat, kademe, seçenek sınırı) ve örnek sepet bu tablodan gelir; '
+                       'bir ürün kartta, PDP\'de, QuickBuy\'da, sepette ve hesapta aynıdır. Ürünü gösteren her kap (kart, satır, PDP ve QuickBuy kökü) '
+                       '`context`\'ine `seed <anahtar>` yazar; CHK `seed` bu blokla karşılaştırır (`02-contract.md` §5c).\n')
+            out.append(SC.markdown(cat))
+            out.append('<!-- sample-catalog:start -->\n```json\n' + json.dumps(SC.expectations(cat), ensure_ascii=False, sort_keys=True)
+                       + '\n```\n<!-- sample-catalog:end -->\n')
 
         # 7
         out.append(fill('07-ozet.md', c))

@@ -1,0 +1,72 @@
+{
+ "currency": "TL",
+ "products": [
+  {
+   "key": "vitc",
+   "name": "C Vitamini 1000 mg",
+   "brand": "Kaya",
+   "images": [
+    "product-vitamin-c-glass.png"
+   ],
+   "variants": [
+    {
+     "name": "30 tablet",
+     "price": 249.9,
+     "compare": 299.9
+    }
+   ],
+   "tiers": [
+    {
+     "qty": 3,
+     "price": 219.9
+    }
+   ],
+   "options": [
+    {
+     "name": "Hediye notu",
+     "type": "textarea",
+     "limit": 120
+    }
+   ]
+  },
+  {
+   "key": "box",
+   "name": "İsme Özel Hediye Kutusu",
+   "brand": "Kaya",
+   "images": [
+    "product-baby-care-set.png"
+   ],
+   "variants": [
+    {
+     "name": "Standart",
+     "price": 189.9
+    }
+   ]
+  }
+ ],
+ "cart": {
+  "lines": [
+   {
+    "product": "vitc",
+    "variant": "30 tablet",
+    "qty": 3
+   },
+   {
+    "product": "box",
+    "variant": "Standart",
+    "qty": 1
+   }
+  ],
+  "campaigns": [
+   {
+    "label": "Hoş geldin",
+    "amount": 50
+   }
+  ],
+  "coupon": {
+   "code": "KAYA10",
+   "amount": 40
+  },
+  "shipping": 0
+ }
+}

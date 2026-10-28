@@ -214,6 +214,8 @@ context: "P-HERO-02 · M-07 · başlık slaytla birlikte değişir"
 
 ### 5c. Data and code marks in `context`
 
+- **Sample product:** a container that shows one catalogue product (a ProductCard instance, a cart line, a PDP or QuickBuy root or state, an order line) carries `seed <key>` in its `context`, the key from plan §6.6. Everything inside it shows that product's name, brand, image, prices and option limits; CHK `seed` compares them with the catalogue, and cart totals anywhere with the computed cart.
+
 Every `{data:<source>}` and `{code:<name>}` of a plan tree must be findable on the canvas. Any one of these counts:
 
 1. **On the text node itself:** `textClass:"data"` + `source`, or `textClass:"code"` (+ `code:"<name>"`). A code text also matches by its layer name.

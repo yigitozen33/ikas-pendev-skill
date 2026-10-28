@@ -945,8 +945,21 @@ def render_seed_md(m):
            'admin API ile. Ajan mağaza şifresi yazmaz. İçerik temanın Türkçe metin kurallarına uyar; görseller temanın '
            'görsel yönünden gelir. Testler tek sekmede, sayfa sayfa yapılır; önbellek için adrese `?cb=<n>` eklenir '
            '(`references/10-port-behaviour.md` §3–§4).', '']
+    cat = m.get('sampleCatalog')
+    if cat:
+        import sample_catalog as SC
+        out += ['## Örnek katalog (canvas ile aynı)', '',
+                'Canvas\'taki ürünler ve örnek sepet (plan §6.6). Dev mağazada aynı ad, marka, görsel, fiyat, kademe ve '
+                'seçenek sınırıyla oluşturulur; sepet aynı satırlar ve adetlerle kurulunca toplam tablodakiyle aynı çıkar.', '',
+                SC.markdown(cat).rstrip('\n'), '',
+                '- [ ] Ürünler, varyant fiyatları, kademeler ve seçenek sınırları tablodaki gibi oluşturuldu.']
+        if cat.get('cart'):
+            out.append('- [ ] Örnek sepet kuruldu; ara toplam, kampanya, kupon ve toplam tablodakiyle aynı.')
+        out.append('')
     if not m.get('seed'):
-        return '\n'.join(out + ['Bu plan için test verisi gerekmiyor.']) + '\n'
+        return '\n'.join(out + ['Bu plan için başka test verisi gerekmiyor.' if cat else 'Bu plan için test verisi gerekmiyor.']) + '\n'
+    if cat:
+        out += ['## Davranış testleri için', '']
     for e in m['seed']:
         out.append('- [ ] **%s · %s** — %s Kriterler: %s.' % (e['id'], e['title'], e['what'], ', '.join(e['for'])))
     return '\n'.join(out) + '\n'
@@ -1422,6 +1435,8 @@ def main(argv=None):
         print('WARN|globals|%s has no §1a / §2a tables; plandata values are used' % a.globals, file=sys.stderr)
     b = Builder(data, contract, cat, plan, a.plan, roots, gmd)
     m = apply_behaviour(b.build(), load_behaviour())
+    if data.get('sampleCatalog'):
+        m['sampleCatalog'] = data['sampleCatalog']
     os.makedirs(a.outdir, exist_ok=True)
     files = []
     for fn, text in (('port-manifest.json', json.dumps(m, ensure_ascii=False, indent=1) + '\n'),

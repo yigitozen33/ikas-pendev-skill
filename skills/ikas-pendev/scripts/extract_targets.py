@@ -41,7 +41,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import lint_plan as L  # noqa: E402
 
-CHK_IDS = ("vars", "ds", "sections", "overlays", "pages", "spacing", "subfit", "temp", "anim", "hardcoded", "textclass", "clip",
+CHK_IDS = ("vars", "ds", "sections", "overlays", "pages", "spacing", "subfit", "temp", "seed", "anim", "hardcoded", "textclass", "clip",
            "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers", "radius")
 
 
@@ -59,7 +59,7 @@ def plan_data(plan):
     return out
 CHECK_EXP = {"vars": ("vars",), "ds": ("ds",), "overlays": ("overlayDevices",), "pages": ("pages", "pageExpand"),
              "anim": ("ids", "idOwner"), "parity": ("parity", "overlayDevices"), "props": ("props",),
-             "data": ("data",), "refassets": ("referenceHost",)}
+             "data": ("data",), "refassets": ("referenceHost",), "seed": ("seed",)}
 LAYER_TYPES = ("TEXT", "RICH_TEXT", "IMAGE", "IMAGE_LIST", "VIDEO", "SVG", "SVG_LIST")
 
 
@@ -126,6 +126,7 @@ def build_exp(plan, mode, mode_only):
                data=plan_data(plan) if contract >= 2 else {},
                idOwner={t["id"]: t.get("section") for t in plan.targets if isinstance(t.get("id"), str)
                         and t.get("section") and not str(t.get("section")).startswith("Sub/")})
+    exp["seed"] = sample_catalog(plan)
     if mode.startswith("section:"):
         key = mode.split(":", 1)[1]
         band = BANDS.get(key)
@@ -143,7 +144,7 @@ def build_exp(plan, mode, mode_only):
         exp["unit"] = dict(key=band or key, ids=uids)
         if mode_only:
             keep = dict(prefix=P, slug=slug, contract=contract, referenceHost=exp["referenceHost"], unit=exp["unit"],
-                        idOwner=exp["idOwner"])
+                        idOwner=exp["idOwner"], seed=exp["seed"])
             if band == "DS":
                 keep.update(vars=variables, ds=exp["ds"])
             elif band == "Page":
@@ -162,6 +163,12 @@ def build_exp(plan, mode, mode_only):
     elif mode == "manifest" and mode_only:
         exp = dict(prefix=P, slug=slug, contract=contract)
     return exp, P, slug, contract
+
+
+def sample_catalog(plan):
+    """The plan §6.6 sample-catalogue block (gen_plan renders it from plandata `sampleCatalog`), or None."""
+    m = re.search(r"<!-- sample-catalog:start -->\s*```json\n(.*?)\n```\s*<!-- sample-catalog:end -->", plan.md.text, re.S)
+    return json.loads(m.group(1)) if m else None
 
 
 def overlay_devices(plan, P, overlays):

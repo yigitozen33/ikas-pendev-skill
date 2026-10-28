@@ -1,0 +1,263 @@
+{
+ "children": [
+  {
+   "id": "g",
+   "name": "K/Section/ProductGrid@desktop",
+   "type": "frame",
+   "x": 0,
+   "y": 0,
+   "width": 1440,
+   "height": 600,
+   "metadata": {
+    "type": "kaya",
+    "role": "section"
+   },
+   "children": [
+    {
+     "id": "cd",
+     "name": "card",
+     "type": "frame",
+     "context": "seed vitc",
+     "x": 0,
+     "y": 0,
+     "width": 300,
+     "height": 400,
+     "children": [
+      {
+       "id": "cm",
+       "name": "card-media",
+       "type": "frame",
+       "fill": {
+        "type": "image",
+        "url": "images/product-vitamin-c-glass.png"
+       },
+       "x": 0,
+       "y": 0,
+       "width": 300,
+       "height": 300
+      },
+      {
+       "id": "ct",
+       "name": "card-title",
+       "type": "text",
+       "content": "C Vitamini 1000 mg",
+       "x": 0,
+       "y": 0,
+       "width": 200,
+       "height": 20,
+       "metadata": {
+        "type": "kaya",
+        "textClass": "data",
+        "source": "product.name"
+       }
+      },
+      {
+       "id": "cp",
+       "name": "card-price",
+       "type": "text",
+       "content": "249,90 TL",
+       "x": 0,
+       "y": 0,
+       "width": 200,
+       "height": 20,
+       "metadata": {
+        "type": "kaya",
+        "textClass": "data",
+        "source": "product.finalPrice"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "d",
+   "name": "K/Overlay/QuickBuy@desktop — varsayılan",
+   "type": "frame",
+   "x": 0,
+   "y": 1000,
+   "width": 480,
+   "height": 900,
+   "metadata": {
+    "type": "kaya",
+    "role": "overlay"
+   },
+   "children": [
+    {
+     "id": "l1",
+     "name": "cart-line",
+     "type": "frame",
+     "context": "seed vitc",
+     "x": 0,
+     "y": 0,
+     "width": 400,
+     "height": 100,
+     "children": [
+      {
+       "id": "l1t",
+       "name": "cline-title",
+       "type": "text",
+       "content": "C Vitamini 1000 mg",
+       "x": 0,
+       "y": 0,
+       "width": 200,
+       "height": 20,
+       "metadata": {
+        "type": "kaya",
+        "textClass": "data",
+        "source": "cart.line.title"
+       }
+      },
+      {
+       "id": "l1p",
+       "name": "cline-total",
+       "type": "text",
+       "content": "659,70 TL",
+       "x": 0,
+       "y": 0,
+       "width": 200,
+       "height": 20,
+       "metadata": {
+        "type": "kaya",
+        "textClass": "data",
+        "source": "cart.line.price"
+       }
+      },
+      {
+       "id": "l1q",
+       "name": "cline-qty",
+       "type": "text",
+       "content": "3",
+       "x": 0,
+       "y": 0,
+       "width": 200,
+       "height": 20,
+       "metadata": {
+        "type": "kaya",
+        "textClass": "data",
+        "source": "cart.line.quantity"
+       }
+      },
+      {
+       "id": "l1c",
+       "name": "note-counter",
+       "type": "text",
+       "content": "0 / 120",
+       "x": 0,
+       "y": 0,
+       "width": 200,
+       "height": 20,
+       "metadata": {
+        "type": "kaya",
+        "textClass": "code",
+        "code": "note-counter"
+       }
+      }
+     ]
+    },
+    {
+     "id": "l2",
+     "name": "cart-line",
+     "type": "frame",
+     "context": "seed box",
+     "x": 0,
+     "y": 0,
+     "width": 400,
+     "height": 100,
+     "children": [
+      {
+       "id": "l2t",
+       "name": "cline-title",
+       "type": "text",
+       "content": "İsme Özel Hediye Kutusu",
+       "x": 0,
+       "y": 0,
+       "width": 200,
+       "height": 20,
+       "metadata": {
+        "type": "kaya",
+        "textClass": "data",
+        "source": "cart.line.title"
+       }
+      },
+      {
+       "id": "l2p",
+       "name": "cline-total",
+       "type": "text",
+       "content": "189,90 TL",
+       "x": 0,
+       "y": 0,
+       "width": 200,
+       "height": 20,
+       "metadata": {
+        "type": "kaya",
+        "textClass": "data",
+        "source": "cart.line.price"
+       }
+      },
+      {
+       "id": "l2q",
+       "name": "cline-qty",
+       "type": "text",
+       "content": "1",
+       "x": 0,
+       "y": 0,
+       "width": 200,
+       "height": 20,
+       "metadata": {
+        "type": "kaya",
+        "textClass": "data",
+        "source": "cart.line.quantity"
+       }
+      }
+     ]
+    },
+    {
+     "id": "tot",
+     "name": "drawer-total",
+     "type": "text",
+     "content": "799,60 TL",
+     "x": 0,
+     "y": 0,
+     "width": 200,
+     "height": 20,
+     "metadata": {
+      "type": "kaya",
+      "textClass": "data",
+      "source": "cart.totalFinalPrice"
+     }
+    }
+   ]
+  },
+  {
+   "id": "d2",
+   "name": "K/Overlay/QuickBuy@desktop — kupon uygulandı",
+   "type": "frame",
+   "x": 600,
+   "y": 1000,
+   "width": 480,
+   "height": 900,
+   "metadata": {
+    "type": "kaya",
+    "role": "overlay"
+   },
+   "children": [
+    {
+     "id": "tot2",
+     "name": "drawer-total",
+     "type": "text",
+     "content": "759,60 TL",
+     "x": 0,
+     "y": 0,
+     "width": 200,
+     "height": 20,
+     "metadata": {
+      "type": "kaya",
+      "textClass": "data",
+      "source": "cart.totalFinalPrice"
+     }
+    }
+   ]
+  }
+ ]
+}

@@ -64,6 +64,7 @@ Any long text field (`identity_md`, `tree`, `desktop`, `mobile`, `props`, `struc
 | `components` | array | yes | §6.1 |
 | `sections` | array | yes | §6.2 (inline form only) |
 | `pages` | array | yes | §6.3 |
+| `sampleCatalog` | object | contract 2 | the one sample catalogue the canvas shows: `currency`, `products[]` (`key`, `name`, `brand`, `images[]`, `variants[]` {`name`, `price`, `compare`?}, `tiers[]` {`qty`, `price`}?, `options[]` {`name`, `type`, `limit`?}?) and `cart` {`lines[]` {`product`, `variant`, `qty`}, `campaigns[]` {`label`, `amount`}?, `coupon` {`code`, `amount`}?, `shipping`?}. Validated by `scripts/sample_catalog.py`; gen_plan computes the cart totals and renders §6.6 with the block CHK `seed` reads; `seed-checklist.md` lists the same data |
 
 ## theme
 

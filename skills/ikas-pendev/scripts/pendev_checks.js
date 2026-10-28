@@ -11,6 +11,11 @@
 // Output: CHK|<id>|PASS|FAIL|WARN|<n>|<detail<=200>  ...  SUMMARY|pass=..|fail=..|warn=..|mode=..
 // CHK ids: vars ds sections overlays pages spacing anim hardcoded textclass clip rootmeta bgprop
 //          parity props data placeholder refassets storefront dividers radius
+// seed (plan §6.6): a node whose context has "seed <key>" shows that catalogue product; inside it (instances
+// resolved, disabled layers skipped) data texts for the name, brand, prices, option names and line quantity, any
+// "N / M" or "En fazla N" limit, and image-fill urls must match the product. Cart total and subtotal texts
+// anywhere must equal the computed cart; a state root named with "kupon"/"coupon" expects the total with the
+// coupon. No catalogue in the plan: WARN skip (contract 1: PASS).
 // temp (07 §7): every "(geçici)" top-level frame other than the one "Öneriler (geçici)" container fails; the
 // container must sit below every <P>/ root (WARN). Runs in full mode only.
 // subfit (02 §1): a non-text child with a fixed width of half the Sub or more, directly inside a layout:none frame
@@ -123,7 +128,7 @@ if (MODE === "manifest") {
   };
   const U = roots.filter(inUnit);
   if (unit && !isBand && (EXP.sections || []).indexOf(unit) < 0 && (EXP.overlays || []).indexOf(unit) < 0) chk("sections", "FAIL", 0, "unknown unit key " + unit + " (not a plan Section/Overlay)");
-  const run = id => { if (EXP.only && EXP.only.indexOf(id) < 0) return false; if (!unit) return true; if (unit === "DS") return ["vars", "ds", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Page") return ["pages", "spacing", "rootmeta", "placeholder"].indexOf(id) >= 0; if (unit === "Motion") return ["hardcoded", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Sub") return ["subfit", "anim", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; if (unit === "Overlays") return ["overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "parity", "props", "data", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; return ["sections", "overlays", "spacing", "subfit", "temp", "anim", "hardcoded", "textclass", "clip", "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers", "radius"].indexOf(id) >= 0; };
+  const run = id => { if (EXP.only && EXP.only.indexOf(id) < 0) return false; if (!unit) return true; if (unit === "DS") return ["vars", "ds", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Page") return ["pages", "spacing", "rootmeta", "placeholder"].indexOf(id) >= 0; if (unit === "Motion") return ["hardcoded", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Sub") return ["subfit", "anim", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; if (unit === "Overlays") return ["overlays", "seed", "anim", "hardcoded", "textclass", "clip", "rootmeta", "parity", "props", "data", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; return ["sections", "overlays", "spacing", "subfit", "temp", "seed", "anim", "hardcoded", "textclass", "clip", "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers", "radius"].indexOf(id) >= 0; };
   const find = nm => roots.find(r => r.name === nm);
   const findPre = pre => roots.filter(r => r.name === pre || r.name.indexOf(pre + " ") === 0);
 
@@ -224,6 +229,49 @@ if (MODE === "manifest") {
     const badSeams = new Set(bad.map(b => b.replace(/-[a-z-]+=.*$/, ""))).size;
     chk("spacing", bad.length ? (CONTRACT < 2 ? "WARN" : "FAIL") : (warnL.length ? "WARN" : "PASS"), seams - badSeams,
       (seams - badSeams) + "/" + seams + " page seams" + (bad.length ? " bad:" + bad.join(",") : "") + (warnL.length ? " check:" + warnL.join(",") : ""));
+  }
+  if (run("seed")) {
+    const SD = EXP.seed;
+    if (!SD) chk("seed", CONTRACT < 2 ? "PASS" : "WARN", 0, "skip: the plan has no sample catalogue (plandata sampleCatalog, plan \u00a76.6)");
+    else {
+      const PR = SD.products || {}, C = SD.cart || null, bad = [], unknown = new Set(); let marked = 0, cmp = 0;
+      const seedRe = /(?:^|\u00b7)\s*seed\s+([A-Za-z0-9-]+)/, NAME = /^(product\.name|product\.title|cart\.line\.title|order\.line\.title)$/;
+      const PRICE = /^(product|variant|cart\.line|order\.line)\.(finalPrice|sellPrice|price|discountPrice|buyPrice|unitPrice|total|finalPriceWithQuantity)$/;
+      const TOTAL = /^(cart|order)\.(totalFinalPrice|totalPrice|total)$/, SUB = /^(cart|order)\.(subtotal|totalPrice\.sub|itemsPrice)$/;
+      const urls = f => { const a = Array.isArray(f) ? f : (f ? [f] : []); return a.filter(x => x && typeof x === "object" && typeof x.url === "string").map(x => x.url); };
+      const scope = U.filter(r => ["Section", "Overlay", "Sub"].indexOf(band(r)) >= 0);
+      scope.forEach(r => {
+        const st = (r.name.split(" \u2014 ")[1] || "").toLowerCase(), withCoupon = /kupon|coupon/.test(st), lab = keyOf(r);
+        const keyAt = {};
+        walk(r, (n, c) => {
+          if (n.enabled === false) { c.skipChildren(); return; }
+          const par = c.parentCtx && c.parentCtx.node, own = seedRe.exec(n.context || "");
+          const k = own ? own[1] : (par ? keyAt[par.id] : undefined);
+          if (k) keyAt[n.id] = k;
+          if (own) { marked++; if (!PR[k]) unknown.add(k); }
+          const p = k ? PR[k] : null, m = n.metadata || {}, src = m.textClass === "data" ? (m.source || "") : "", txt = typeof n.content === "string" ? n.content.trim() : "";
+          const miss = (what, got) => bad.push(lab + ">" + (n.name || n.id) + ":" + what + "=" + got);
+          if (p && n.type === "text" && txt) {
+            if (NAME.test(src)) { cmp++; if (txt !== p.name) miss(k + ".name", txt); }
+            else if (src === "product.brand.name") { cmp++; if (txt !== p.brand) miss(k + ".brand", txt); }
+            else if (PRICE.test(src)) { cmp++; if (p.prices.indexOf(txt) < 0) miss(k + ".price", txt); }
+            else if (/^option\.(name|label)$/.test(src) && p.options.length) { cmp++; if (p.options.indexOf(txt) < 0) miss(k + ".option", txt); }
+            else if (/^(cart|order)\.line\.quantity$/.test(src) && C && C.qty && C.qty[k] !== undefined) { cmp++; if (txt.replace(/\D/g, "") !== String(C.qty[k])) miss(k + ".qty", txt); }
+            if (p.limits.length) { const lm = /(\d+)\s*\/\s*(\d+)/.exec(txt) || /en fazla\s+(\d+)/i.exec(txt); const lim = lm ? +(lm[2] || lm[1]) : null; if (lim !== null) { cmp++; if (p.limits.indexOf(lim) < 0) miss(k + ".limit", lim); } }
+          }
+          if (p && n.type !== "text") urls(n.fill).forEach(u => { cmp++; if (!p.images.some(b => u.indexOf(b) >= 0)) miss(k + ".image", u.split("/").pop()); });
+          if (C && n.type === "text" && txt && (TOTAL.test(src) || SUB.test(src))) {
+            cmp++;
+            const want = SUB.test(src) ? C.subtotal : (withCoupon ? C.totalWithCoupon : C.total);
+            if (txt !== want) miss(SUB.test(src) ? "cart.subtotal" : (withCoupon ? "cart.totalWithCoupon" : "cart.total"), txt + "\u2260" + want);
+          }
+        }, { resolveInstances: true });
+      });
+      unknown.forEach(k => bad.unshift("unknown seed " + k));
+      const list = bad.slice(0, 6).join(",") + (bad.length > 6 ? ",+" + (bad.length - 6) : "");
+      chk("seed", bad.length ? (CONTRACT < 2 ? "WARN" : "FAIL") : (marked ? "PASS" : "WARN"), cmp - bad.length,
+        bad.length ? "\u2260 catalogue: " + list : (marked ? cmp + " values match the sample catalogue (" + marked + " seed marks)" : "no `seed <key>` marks on the canvas (02 \u00a75c)"));
+    }
   }
   if (run("temp")) {
     const BOX = "\u00d6neriler (ge\u00e7ici)", tmp = /\(ge\u00e7ici\)\s*$/;
