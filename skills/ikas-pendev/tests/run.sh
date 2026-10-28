@@ -114,6 +114,17 @@ if command -v node >/dev/null; then
   node "$HERE/tools/mock_pen.js" "$SPD/checks.js" "$SPD/band.json" > "$SPD/theme.txt" 2>&1
   node "$HERE/tools/mock_pen.js" "$OUT/checks-spacing.js" "$SPD/band.json" > "$SPD/default.txt" 2>&1
   grep -q '^CHK|spacing|PASS|4|' "$SPD/theme.txt" && grep -q '^CHK|spacing|WARN|4|.*Hero-first-top=\$space-band.*Header@desktop:side=\$space-band' "$SPD/default.txt" && ok "spacing: a 20/8 band edge passes when the theme names it, warns against the default roles" || bad "spacing: a 20/8 band edge passes when the theme names it, warns against the default roles" "$(cat "$SPD/theme.txt" "$SPD/default.txt" | grep spacing)"
+  python3 -c 'import json,sys,glob
+for f, a in (("01-HeroBanner", "hero:split"), ("02-ProductGrid", "collection:grid")):
+    p = sys.argv[1] + "/sections/" + f + ".json"; d = json.load(open(p)); d["archetype"] = a; json.dump(d, open(p, "w"), ensure_ascii=False)' "$SPD/pd"
+  python3 -I "$S/copy_library.py" "$SPD/pd" -o "$SPD/k.pen" > "$SPD/copy.log" 2>&1; python3 -I - "$SPD/k.pen" <<'PY' && ok "copy_library writes the theme's spacing roles into section skeletons" || bad "copy_library writes the theme's spacing roles into section skeletons" "$(cat "$SPD/copy.log")"
+import json, sys
+t = json.load(open(sys.argv[1])); secs = [n for n in t["children"] if n["name"].startswith("K/Section/") and " — " not in n["name"]]
+hero = [n for n in secs if "HeroBanner" in n["name"]]; grid = [n for n in secs if "ProductGrid" in n["name"]]
+ok = secs and all(n["padding"][1] == "$space-band" and n["padding"][3] == "$space-band" for n in secs)
+ok = ok and all(n["padding"][0] == "$space-band" for n in hero) and all(n["padding"][0] == "$space-section" for n in grid)
+sys.exit(0 if ok else 1)
+PY
   python3 -c 'import json,sys; t=json.load(open(sys.argv[1])); t["spacing"]={"pageEdge":"space-nope","gutter":"space-grid"}; json.dump(t,open(sys.argv[1],"w"),ensure_ascii=False)' "$SPD/pd/theme.json"
   python3 -I "$S/gen_plan.py" "$SPD/pd" --validate-only > "$SPD/invalid.log" 2>&1; [ $? = 1 ] && grep -q 'spacing.pageEdge: "space-nope" is not in' "$SPD/invalid.log" && grep -q 'unknown role "gutter"' "$SPD/invalid.log" && ok "gen_plan rejects an unknown spacing role or token" || bad "gen_plan rejects an unknown spacing role or token" "$(cat "$SPD/invalid.log")"
   python3 "$S/extract_targets.py" "$OUT/plan-mini.md" --js all --checks temp > "$OUT/checks-temp.js"

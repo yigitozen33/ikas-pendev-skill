@@ -8,7 +8,7 @@ set pageEdge to its own `space-band` while content keeps `space-page`. A role th
 falls back to the default below.
 
 gen_plan.py validates and renders the system in plan §3b with a machine-readable block; CHK `spacing`
-checks the canvas against it.
+checks the canvas against it; copy_library.py writes it into the copied section skeletons.
 Stdlib only, Python 3.9+.
 """
 

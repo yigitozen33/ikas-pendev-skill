@@ -57,6 +57,8 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import spacing as SP  # noqa: E402
 LIB = os.path.join(os.path.dirname(HERE), "library", "ikas-ecommerce.lib.pen")
 INV = os.path.join(os.path.dirname(HERE), "library", "inventory.json")
 TAG = "ikas-lib"
@@ -185,6 +187,18 @@ def fill_slots(cp, root, comp, roots, sub_ids, scope):
                                  "name": p["sub"][0].lower() + p["sub"][1:], "width": "fill_container"}]
 
 
+def apply_spacing(root, name, roles):
+    """Library section padding → the theme's spacing roles (02 §3b): sides pageEdge, a `$space-page` top
+    (Hero families) headerGap, a `$space-section` top sectionGap (Footer: footerGap), Footer bottom pageEdge."""
+    pad = root.get("padding")
+    if not (isinstance(pad, list) and len(pad) == 4):
+        return
+    v = lambda r: "$" + roles[r]
+    top = {"$space-page": v("headerGap"), "$space-section": v("footerGap") if name == "Footer" else v("sectionGap")}.get(pad[0], pad[0])
+    bottom = v("pageEdge") if pad[2] == "$space-page" else pad[2]
+    root["padding"] = [top, v("pageEdge"), bottom, v("pageEdge")]
+
+
 def footprint(kind, dev, root, sizes):
     """(horizontal pitch, band height) a root reserves. The build grows every skeleton to its real
     size, so the slot is sized for the grown root, not the skeleton: sections and overlays get the
@@ -290,6 +304,7 @@ def main():
     hints = [c["name"] for c in unplanned if "contract" not in c["basis"]]
 
     cp = Copier(slug, prefix)
+    roles = SP.resolve(pd.get("spacing"))
     out_nodes, x, y_band, band_h = [], 0, 0, 0
     last_layer = None
     for c, target in pick:
@@ -309,6 +324,7 @@ def main():
                 meta["libComponent"] = c["name"]
             if c["kind"] == "section":
                 meta.update({"prop": "backgroundColor", "propType": "COLOR"})
+                apply_spacing(root, c["name"], roles)
             if dev:
                 meta["device"] = dev
                 root["theme"] = {"device": dev}

@@ -161,7 +161,7 @@ Every theme has its own spacing structure: a floating-band theme keeps its bands
 - Gaps are carried on one side (top), so two sections never add their paddings.
 - A section that needs a different top gap (a tighter strip under the Hero) uses another variable, and the plan's `**Desktop:**` / `**Mobil:**` line says why. On pages a section instance may override its top (first on one page, second on another); the master keeps `sectionGap`.
 
-CHK `spacing` reads the plan §3b block: every Page in order (first section top, section → section, bottom 0, Footer top) and the side insets, column splits and grid gaps of Section components. Confirm the seams on a full-resolution export of each page (05 §23a).
+CHK `spacing` reads the plan §3b block: every Page in order (first section top, section → section, bottom 0, Footer top) and the side insets, column splits and grid gaps of Section components. `copy_library.py` writes the roles into the copied section skeletons. Confirm the seams on a full-resolution export of each page (05 §23a).
 
 ## 3c. Section overlap
 
