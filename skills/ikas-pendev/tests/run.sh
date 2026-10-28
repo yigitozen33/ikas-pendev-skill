@@ -272,6 +272,9 @@ ids |= {k["id"] for n in t["children"] for k in n.get("children", []) if k["type
 errs += [f"library id reused {i}" for i in ids if f'"{i}"' in lib]
 pc = roots.get("K/Sub/ProductCard", {}).get("metadata", {})
 if pc.get("type") != "kaya" or pc.get("variant") != "K" or pc.get("contract") != 2: errs.append(f"root metadata {pc}")
+errs += [f"device root lacks theme.device {n['name']}" for n in roots.values()
+         if "@" in n["name"] and " — " not in n["name"] and n.get("theme", {}).get("device") != n["name"].split("@")[1]]
+if "prop" in pc: errs.append("a Sub root got the section backgroundColor prop")
 if "ikas-lib" in json.dumps(t): errs.append("library tag left in theme")
 if t.get("themes", {}).get("mode") != ["light", "dark"] or t["variables"]["color-bg"]["value"][0]["value"] != "#E9E7E2": errs.append("plandata tokens not written")
 if "#F4F4F4" in json.dumps(t["variables"]): errs.append("library placeholder value survived")
@@ -321,7 +324,7 @@ export IKAS_PENDEV_FINGERPRINTS="$AX/layout-store.json"
 python3 -I "$S/axes.py" record "$AX/a.md" --slug la --plandata "$AX/pa" >/dev/null && python3 -I "$S/axes.py" check "$AX/c.md" --slug lb --plandata "$AX/pb" > "$AX/lb.txt" 2>&1; [ $? = 1 ] && grep -q "too close to 'la': home page composition distance 0.00 (need 0.5)" "$AX/lb.txt" && ok "axes: same home-page composition fails even when every axis differs" || bad "axes: same home-page composition fails even when every axis differs" "$(cat "$AX/lb.txt")"
 python3 -I "$S/axes.py" check "$AX/c.md" --slug lc --plandata "$AX/pc" > "$AX/lc.txt" 2>&1 && ok "axes: a different home-page composition passes" || bad "axes: a different home-page composition passes" "$(cat "$AX/lc.txt")"
 python3 -I "$S/axes.py" check "$AX/c.md" --slug lx --plandata "$AX/px" > "$AX/lx.txt" 2>&1; [ $? = 1 ] && grep -q 'HeroBanner: archetype `hero:nope` not in the vocabulary' "$AX/lx.txt" && ok "axes: an unknown section archetype fails" || bad "axes: an unknown section archetype fails" "$(cat "$AX/lx.txt")"
-python3 -I "$S/copy_library.py" "$AX/pa" -o "$AX/arch.pen" > "$AX/arch.log" 2>&1 && python3 -I - "$AX/arch.pen" > "$AX/arch.txt" 2>&1 <<'PY' && ok "copy_library: content sections matched by archetype, copied under the theme's key" || bad "copy_library: content sections matched by archetype, copied under the theme's key" "$(cat "$AX/arch.log" "$AX/arch.txt")"
+python3 -I "$S/copy_library.py" "$AX/pa" -o "$AX/arch.pen" > "$AX/arch.log" 2>&1 && python3 -I - "$AX/arch.pen" > "$AX/arch.txt" 2>&1 <<'PY' && ok "copy_library: content sections matched by archetype, copied under the theme's key, with backgroundColor" || bad "copy_library: content sections matched by archetype, copied under the theme's key, with backgroundColor" "$(cat "$AX/arch.log" "$AX/arch.txt")"
 import json, sys
 t = json.load(open(sys.argv[1])); errs = []
 roots = {n["name"]: n for n in t["children"] if n["type"] == "frame"}
@@ -331,6 +334,9 @@ for name, lib, part in (("K/Section/HeroBanner@desktop", "Hero", "hero-media-mob
     if r["metadata"].get("libComponent") != lib or r["metadata"].get("ikas") != name.split("/")[2].split("@")[0]: errs.append(f"{name} metadata {r['metadata']}")
     if part not in {c["name"] for c in r["children"]}: errs.append(f"{name} lacks {part}")
 if roots["K/Section/HeroBanner@mobile"]["width"] != 390: errs.append("mobile width")
+secs = [n for n in roots.values() if n["name"].startswith("K/Section/") and " — " not in n["name"]]
+errs += [f"section root lacks backgroundColor prop {n['name']}" for n in secs
+         if n["metadata"].get("prop") != "backgroundColor" or n["metadata"].get("propType") != "COLOR"]
 print("\n".join(errs)); sys.exit(1 if errs else 0)
 PY
 unset IKAS_PENDEV_FINGERPRINTS

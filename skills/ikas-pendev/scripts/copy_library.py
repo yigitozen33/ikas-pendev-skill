@@ -19,7 +19,8 @@ What changes on the way:
     get one root per device (@desktop / @mobile); every extra state is a frame named
     "<root> — <state>" with metadata {type, role, state, ikas[, device]} around a ref of the root;
   * metadata.type becomes the theme slug, and roots carry variant / contract / device
-    (02-contract.md §5);
+    (02-contract.md §5); section roots carry prop:"backgroundColor", propType:"COLOR"
+    (CHK bgprop), and device roots get theme {device} (CHK rootmeta);
   * node ids are re-derived from the theme slug, so two themes never share an id;
   * variables are written from plandata (`colors` per mode, `type` and paired `numbers`
     per device). A token the copied nodes use but plandata lacks is an error.
@@ -254,8 +255,11 @@ def main():
             meta.update({"variant": prefix, "contract": 2, "ikas": target})
             if target != c["name"]:
                 meta["libComponent"] = c["name"]
+            if c["kind"] == "section":
+                meta.update({"prop": "backgroundColor", "propType": "COLOR"})
             if dev:
                 meta["device"] = dev
+                root["theme"] = {"device": dev}
                 if c["kind"] == "section":
                     root["width"] = sizes[dev]["width"]
             est_h = 48 + 44 * sum(1 for p in root["children"] if p.get("enabled", True))
