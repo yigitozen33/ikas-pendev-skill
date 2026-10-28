@@ -259,8 +259,16 @@ want = ["K/Sub/Button", "K/Sub/ArrowLink", "K/Sub/ProductCard", "K/Overlay/Filte
 errs += [f"missing root {w}" for w in want if w not in roots]
 errs += [f"unexpected {n}" for n in roots if "Header" in n or "ConfirmModal" in n]
 ids = {n["id"] for n in t["children"]}
-errs += [f"ref to missing root {n['name']}" for n in t["children"] if n["type"] == "ref" and n["ref"] not in ids]
-if "K/Sub/ProductCard — sepette" not in {n["name"] for n in t["children"]}: errs.append("state ref missing")
+errs += [f"ref to missing root {n['name']}" for n in t["children"] for k in [n] + n.get("children", []) if k["type"] == "ref" and k["ref"] not in ids]
+st = next((n for n in t["children"] if n["name"] == "K/Sub/ProductCard — sepette"), None)
+if not st: errs.append("state root missing")
+elif st["type"] != "frame" or st.get("metadata", {}).get("state") != "sepette" or st["metadata"].get("role") != "sub" \
+        or st["metadata"].get("type") != "kaya" or [k["type"] for k in st["children"]] != ["ref"] \
+        or st["children"][0]["ref"] != roots["K/Sub/ProductCard"]["id"]:
+    errs.append(f"state root is not a metadata wrapper around a ref: {st}")
+mst = next((n for n in t["children"] if n["name"].startswith("K/Overlay/QuickBuy@mobile — ")), None)
+if mst and mst["metadata"].get("device") != "mobile": errs.append("device state wrapper lacks device")
+ids |= {k["id"] for n in t["children"] for k in n.get("children", []) if k["type"] == "ref"}
 errs += [f"library id reused {i}" for i in ids if f'"{i}"' in lib]
 pc = roots.get("K/Sub/ProductCard", {}).get("metadata", {})
 if pc.get("type") != "kaya" or pc.get("variant") != "K" or pc.get("contract") != 2: errs.append(f"root metadata {pc}")

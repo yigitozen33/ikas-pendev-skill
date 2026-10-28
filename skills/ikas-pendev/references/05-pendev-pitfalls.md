@@ -163,7 +163,7 @@ This file only adds what the official pen.dev skill does not say, or says in a p
 ## 25. State alternatives need wrapper frames *(observed)*
 - **Symptom:** a state copied as a `ref` (`— sepette`, `— tükendi`) loses `{type, role, state}`; CHK `rootmeta` fails on it and the manifest misses the state.
 - **Cause:** a `ref` cannot hold its own metadata (§3), so a bare ref root has none.
-- **Fix:** every state alternative is a plain frame that carries `{type, role, state}` and holds the state `ref` as its only child. Build the wrapper in the same `Insert` as the state.
+- **Fix:** every state alternative is a plain frame that carries `{type, role, state}` and holds the state `ref` as its only child. `scripts/copy_library.py` writes these wrappers; when you add a state by hand, build the wrapper in the same `Insert`.
 
 ## 26. `letterSpacing` is in px *(observed)*
 - **Symptom:** a heading looks crushed or spread far apart after you copy tracking from the reference CSS.

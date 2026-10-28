@@ -16,8 +16,8 @@ What is copied:
     already list them.
 What changes on the way:
   * root names take the theme prefix (P/Sub/Button → K/Sub/Button); sections and overlays
-    get one root per device (@desktop / @mobile); every extra state stays a ref named
-    "<root> — <state>";
+    get one root per device (@desktop / @mobile); every extra state is a frame named
+    "<root> — <state>" with metadata {type, role, state, ikas[, device]} around a ref of the root;
   * metadata.type becomes the theme slug, and roots carry variant / contract / device
     (02-contract.md §5);
   * node ids are re-derived from the theme slug, so two themes never share an id;
@@ -149,6 +149,17 @@ class Copier:
         return n
 
 
+def state_wrapper(cp, root, kind, target, suffix, dev, state, x, y):
+    """A state root: a plain frame that carries {type, role, state} and holds the state ref.
+    A bare ref cannot keep metadata (05 §3, §25), so CHK rootmeta and the manifest need the frame."""
+    meta = {"type": cp.slug, "role": kind, "state": state, "ikas": target}
+    if dev:
+        meta["device"] = dev
+    ref = {"type": "ref", "id": cp.nid(target + suffix, "state", state), "ref": root["id"], "name": "state-ref"}
+    return {"type": "frame", "id": cp.nid(target + suffix, "state", state, "wrap"), "name": f"{root['name']} — {state}",
+            "layout": "vertical", "x": x, "y": y, "metadata": meta, "context": "state " + state, "children": [ref]}
+
+
 def tokens_used(nodes):
     used = set()
 
@@ -255,8 +266,7 @@ def main():
             if c["kind"] != "block":
                 for ref in states.get(c["name"], []):
                     st = ref["name"].split(" — ", 1)[1]
-                    out_nodes.append({"type": "ref", "id": cp.nid(target + suffix, "state", st), "ref": root["id"],
-                                      "name": f"{root['name']} — {st}", "context": "state " + st, "x": x, "y": y})
+                    out_nodes.append(state_wrapper(cp, root, c["kind"], target, suffix, dev, st, x, y))
                     y += est_h + GAP // 2
             band_h = max(band_h, y - y_band)
             w = root["width"] if isinstance(root.get("width"), (int, float)) else 360
