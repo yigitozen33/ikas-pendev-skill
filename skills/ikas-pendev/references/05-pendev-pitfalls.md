@@ -3,7 +3,7 @@
 This file only adds what the official pen.dev skill does not say, or says in a place that is easy to miss. It never restates the API: read the official files first (`mcp__pencil__read_skill()` → `SKILL.md`, `pen-schema.md`, `execute.md`; `generate.md` before any `Generate`; `guide/components.md` before building Subs). "Official" lines point to the file and section to open. Items marked *observed* were found on real canvases and are not in the official docs.
 
 ## Contents
-1. Metadata is only kept at creation · 2. `Replace` on a normal layer · 3. Instances drop metadata · 4. Invalid fonts · 5. Translucent colours · 6. `Generate` is async · 7. No wrap · 8. Invisible text · 9. One scope per call · 10. Placement · 11. Failed `execute` · 12. Multiplayer · 13. `fit_content` / `fill_container` loop · 14. Screenshot discipline · 15. Variable opacity · 16. Hidden layers count as clipped · 17. Copied state frames lose frame props · 18. Transparent and dark-scoped overrides · 19. Opacity-0 empty states · 20. Insert index · 21. Copied anim ids, backdrop instances · 22. Strikethrough not stored · 23. Moving layers in a master drops overrides (23a. size changes not reaching instances) · 24. Stale bounds, false clip · 25. State alternatives need wrapper frames · 26. `letterSpacing` is px · 27. False sizing warnings inside instances · 28. Copies into `layout: "none"` stages
+1. Metadata is only kept at creation · 2. `Replace` on a normal layer · 3. Instances drop metadata · 4. Invalid fonts · 5. Translucent colours · 6. `Generate` is async · 7. No wrap · 8. Invisible text · 9. One scope per call · 10. Placement · 11. Failed `execute` · 12. Multiplayer · 13. `fit_content` / `fill_container` loop · 14. Screenshot discipline · 15. Variable opacity and size · 16. Hidden layers count as clipped · 17. Copied state frames lose frame props · 18. Transparent and dark-scoped overrides · 19. Opacity-0 empty states · 20. `Insert` has no index · 21. Copied anim ids, backdrop instances · 22. Strikethrough not stored · 23. Moving layers in a master drops overrides (23a. size changes not reaching instances) · 24. Stale bounds, false clip · 25. State alternatives need wrapper frames · 26. `letterSpacing` is px · 27. False sizing warnings inside instances · 28. Copies into `layout: "none"` stages
 
 ## 1. Metadata is only kept at creation *(observed)*
 - **Symptom:** `Update(id, {metadata:{…}})` returns without error, but a later `Get` shows the old or no metadata; CHK `rootmeta`, `anim` or `textclass` fails on a layer you "fixed".
@@ -95,11 +95,13 @@ This file only adds what the official pen.dev skill does not say, or says in a p
 - **Symptom:** a disabled button, sold-out chip or loading cart line is missing from the screenshot; CHK passes.
 - **Cause:** pen.dev accepts a number variable on `opacity` but renders the node as fully transparent.
 - **Fix:** write the variable's number (e.g. `0.4`) and append `opacity: $opacity-inactive` to the node's `context`; `02-contract.md` §3 allows this raw value. Find old cases with `Get(n => n.opacity === "$opacity-inactive" …)`, including `descendants` overrides on refs.
+- **Same for sizes:** `height: "$size-hero"` on a frame does not resolve; the frame collapses to fit its content. Write the number (`height: 640`) and append `height: $size-hero` to `context`. Size variables stay in the DS for the port.
 
 ## 16. Hidden layers and hidden refs count as clipped *(observed)*
 - **Symptom:** CHK `clip` warns on many children of blocks that are `enabled:false` (state-only blocks such as a bundle list or a back-in-stock form).
 - **Cause:** a hidden frame with `width: "fill_container"` gets width 0; a hidden `ref` reports the master's absolute position; a hidden child taller than its fit-content parent overflows it.
 - **Fix:** give hidden frames a fallback, `width: "fill_container(<column width>)"`; never hide a `ref` directly, wrap it in a hidden frame and toggle the frame in state overrides; prefer making the taller variant the default and hiding the smaller one; name intentional crops `…-mask` (e.g. a half star).
+- **State refs:** a state `ref` shows a hidden layer only through an `enabled: true` override on that layer (`descendants[id] = {enabled: true}`), and hides a shown one with `enabled: false`. Set both in the state's own call. CHK `clip` WARNs on layers that are disabled in a state are expected; do not "fix" them by resizing.
 
 ## 17. Copying a state frame to the other device drops frame-level properties *(observed)*
 - **Symptom:** a new `@mobile — <state>` frame shows its children side by side, or loses the background image of the desktop state (e.g. a transparent header over a hero photo).
@@ -116,8 +118,9 @@ This file only adds what the official pen.dev skill does not say, or says in a p
 - **Cause:** the empty block sits in the component at `opacity: 0`, absolutely positioned, and the state override only changed a counter or hid the summary.
 - **Fix:** in the state frame hide the filled list (`enabled: false`) and set the empty block to `{opacity: 1, layoutPosition: "auto"}` so it takes the list's place in the flow. Screenshot every `— boş` state at both devices.
 
-## 20. `Insert(parent, node, index)` may append instead of inserting *(observed)*
-- **Symptom:** a new wrapper (e.g. `order-meta`) lands at the end of the row although index 0 was passed.
+## 20. `Insert` has no index argument *(observed)*
+- **Symptom:** a new wrapper (e.g. `order-meta`) lands at the end of the row although index 0 was passed as a third argument.
+- **Cause:** `Insert(parent, node)` always appends; a third argument is ignored.
 - **Fix:** follow the `Insert` with `Move(id, parent, index)` and check the order with `Get(parent).children` in the **next** call (same-call reads can be stale).
 
 ## 21. Copied layers bring their anim ids; backdrop instances leak ids *(observed)*
