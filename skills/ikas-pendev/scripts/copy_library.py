@@ -8,7 +8,10 @@ after the copy the theme owns the nodes, and no library value survives.
 What is copied:
   * every library component whose name is in plandata `components` (Subs) or is a
     plandata section / overlay `key`;
-  * every block whose host section is in plandata (ProductGallery for ProductDetail …);
+  * no block root: a block's parts are folded into each host part that names it
+    (ProductGallery into ProductDetail `pdp-gallery` …); shared pieces (SearchField,
+    NewsletterForm, AddressForm) are Subs, copied when a host is planned and placed as an
+    instance in each host slot;
   * for a plandata section with `archetype: "<family>:<variant>"` and no library component of
     its own name, the content-section skeleton of that family (Hero, ProductShelf, MediaText …),
     copied under the theme's section key;
@@ -158,6 +161,30 @@ class Copier:
         return n
 
 
+def cp_ids(slug, prefix, roots, name):
+    """Theme id of a copied Sub root (the same derivation Copier.retag uses)."""
+    return Copier(slug, prefix).nid(name, roots[name]["id"])
+
+
+def fill_slots(cp, root, comp, roots, sub_ids, scope):
+    """Fold blocks and place shared Subs. A host part with `block: X` takes X's parts as its children
+    (a block is never a root of its own: the contract has no role for it); a part with `sub: X` gets an
+    instance of the copied Sub X. Both keep the part frame and its name, so the port sees one layer."""
+    slots = {p["layer"]: p for p in comp["parts"] if p.get("block") or p.get("sub")}
+    for part in root["children"]:
+        p = slots.get(part.get("name"))
+        if not p:
+            continue
+        if p.get("block"):
+            blk = cp.retag(roots[p["block"]], scope + "/" + p["block"])
+            part["children"] = blk["children"]
+            part["layout"] = "vertical"
+            part["gap"] = blk.get("gap", "$space-xs")
+        elif p["sub"] in sub_ids:
+            part["children"] = [{"type": "ref", "id": cp.nid(scope, part["id"], "sub"), "ref": sub_ids[p["sub"]],
+                                 "name": p["sub"][0].lower() + p["sub"][1:], "width": "fill_container"}]
+
+
 def footprint(kind, dev, root, sizes):
     """(horizontal pitch, band height) a root reserves. The build grows every skeleton to its real
     size, so the slot is sized for the grown root, not the skeleton: sections and overlays get the
@@ -232,10 +259,12 @@ def main():
     if unknown:
         die("--with names not in the library: " + ", ".join(unknown), 2)
 
-    pick = []  # (library component, target name)
+    pick = []  # (library component, target name); blocks are folded into their hosts, never picked
     for c in inv["components"]:
         name = c["name"]
-        if name in planned or name in extra or (c["kind"] == "block" and c.get("host") in planned):
+        if c["kind"] == "block":
+            continue
+        if name in planned or name in extra or planned & set(c.get("hosts", [])):
             pick.append((c, name))
     content = [c for c in inv["components"] if c.get("families")]
     unmatched = []
@@ -256,6 +285,7 @@ def main():
     picked = {c["name"] for c, _ in pick}
     unplanned = [c for c in inv["components"]
                  if c["name"] not in picked and not c.get("optional") and c["kind"] != "block"]
+    sub_ids = {c["name"]: cp_ids(slug, prefix, roots, c["name"]) for c, _ in pick if c["kind"] == "sub"}
     gaps = [c["name"] for c in unplanned if "contract" in c["basis"]]
     hints = [c["name"] for c in unplanned if "contract" not in c["basis"]]
 
@@ -272,8 +302,7 @@ def main():
             suffix = "@" + dev if dev else ""
             root = cp.retag(lib_root, target + suffix)
             root["name"] = lib_root["name"].replace("P/", prefix + "/", 1).rsplit("/", 1)[0] + "/" + target + suffix
-            if c["kind"] == "block":
-                root.pop("reusable", None)
+            fill_slots(cp, root, by_name[c["name"]], roots, sub_ids, target + suffix)
             meta = root["metadata"]
             meta.update({"variant": prefix, "contract": 2, "ikas": target})
             if target != c["name"]:

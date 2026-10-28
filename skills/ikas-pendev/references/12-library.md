@@ -99,7 +99,7 @@ Each step is one revertable commit on `ecommerce-library`:
 1. Pick the inventory with the user. Done: `library/inventory.json`. Scope: primitives, commerce elements and components, shells (Header, Footer) and overlays; sections and pages come later. Optional parts are present but `enabled:false`, and only parts the ikas storefront API supports are listed (`not_in_ikas` names the rest).
 2. Build `ikas-ecommerce.lib.pen` as skeletons (§5). Done: `scripts/gen_library.py` writes it from the inventory with name-derived node ids, so the file is byte-stable and `--check` catches a stale copy. Never edit the `.pen` by hand or save it from pen.dev; change the inventory and regenerate.
 3. The copy script plus its tests. Done: `scripts/copy_library.py <plandata> -o <theme>.pen [--with Toast,…]`.
-   - It copies what the plan names (Subs, sections, overlays), plus the blocks of planned host sections.
+   - It copies what the plan names (Subs, sections, overlays). A block is folded into each host part that names it (`block` in the inventory); a shared Sub (`hosts`) is copied when one host is planned and placed as an instance in each host part that names it (`sub`). No root ever has `role: "block"` (02 §1).
    - Roots take the theme prefix. Sections and overlays get `@desktop` / `@mobile` roots, and extra states stay refs.
    - Ids and `metadata.type` are re-derived from the theme slug.
    - Every token is written from plandata. A token the plan lacks stops the copy before anything is written.

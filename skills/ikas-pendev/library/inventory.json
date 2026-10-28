@@ -8,8 +8,8 @@
     "w3c": "accessibility requirement"
   },
   "kinds": {
-    "sub": "reusable root P/Sub/<Name>; becomes src/sub-components/<Name>",
-    "block": "frame copied into a section (ProductDetail, ProductList …); never a Sub",
+    "sub": "reusable root P/Sub/<Name>; becomes src/sub-components/<Name>; a host part that names it (`sub`) holds an instance",
+    "block": "parts folded into every host part that names it (`block`); never a root of its own on a theme canvas",
     "section": "section root P/Section/<Name>@desktop|@mobile; content sections are copied under the theme's own section key, matched by plandata `archetype` family",
     "overlay": "P/Overlay/<Name>@desktop|@mobile — <state>"
   },
@@ -1274,6 +1274,133 @@
       "note": "when custom auth pages (02 §9)"
     },
     {
+      "name": "SearchField",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "search-icon",
+          "req": true
+        },
+        {
+          "layer": "search-input",
+          "req": true
+        },
+        {
+          "layer": "search-clear",
+          "req": true
+        },
+        {
+          "layer": "search-submit",
+          "req": true
+        },
+        {
+          "layer": "search-count",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "boş",
+        "dolu",
+        "odak"
+      ],
+      "must": [
+        {
+          "rule": "a submit button on mobile",
+          "basis": "baymard",
+          "figure": "21–27%"
+        }
+      ],
+      "hosts": [
+        "ProductList",
+        "SearchOverlay"
+      ],
+      "note": "shared by ProductList, SearchOverlay: a Sub, placed as an instance in each host slot"
+    },
+    {
+      "name": "NewsletterForm",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "platform"
+      ],
+      "parts": [
+        {
+          "layer": "newsletter-input",
+          "req": true
+        },
+        {
+          "layer": "newsletter-submit",
+          "req": true
+        },
+        {
+          "layer": "newsletter-consent",
+          "opt": true,
+          "ikas": "yes"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "eklendi",
+        "hata",
+        "bülten onay hatası"
+      ],
+      "hosts": [
+        "Footer",
+        "Newsletter"
+      ],
+      "note": "shared by Footer, Newsletter: a Sub, placed as an instance in each host slot"
+    },
+    {
+      "name": "AddressForm",
+      "layer": "component",
+      "kind": "sub",
+      "basis": [
+        "contract",
+        "baymard"
+      ],
+      "parts": [
+        {
+          "layer": "address-fields",
+          "req": true,
+          "note": "name, phone, country → city → district, address"
+        },
+        {
+          "layer": "address-corporate",
+          "opt": true,
+          "ikas": "yes"
+        },
+        {
+          "layer": "address-phone-note",
+          "req": true,
+          "note": "why the phone is asked"
+        }
+      ],
+      "states": [
+        "varsayılan",
+        "hata",
+        "yükleniyor"
+      ],
+      "must": [
+        {
+          "rule": "explain why the phone number is needed",
+          "basis": "baymard",
+          "figure": "49%"
+        }
+      ],
+      "hosts": [
+        "Account",
+        "AddressModal"
+      ],
+      "note": "shared by Account, AddressModal: a Sub, placed as an instance in each host slot"
+    },
+    {
       "name": "ProductGallery",
       "layer": "component",
       "kind": "block",
@@ -1545,51 +1672,6 @@
       ]
     },
     {
-      "name": "SearchField",
-      "layer": "component",
-      "kind": "block",
-      "host": "ProductList",
-      "basis": [
-        "contract",
-        "baymard"
-      ],
-      "parts": [
-        {
-          "layer": "search-icon",
-          "req": true
-        },
-        {
-          "layer": "search-input",
-          "req": true
-        },
-        {
-          "layer": "search-clear",
-          "req": true
-        },
-        {
-          "layer": "search-submit",
-          "req": true
-        },
-        {
-          "layer": "search-count",
-          "opt": true,
-          "ikas": "yes"
-        }
-      ],
-      "states": [
-        "boş",
-        "dolu",
-        "odak"
-      ],
-      "must": [
-        {
-          "rule": "a submit button on mobile",
-          "basis": "baymard",
-          "figure": "21–27%"
-        }
-      ]
-    },
-    {
       "name": "NoResults",
       "layer": "component",
       "kind": "block",
@@ -1627,76 +1709,6 @@
           "rule": "more than a search tip: related categories and products",
           "basis": "baymard",
           "figure": "~50%"
-        }
-      ]
-    },
-    {
-      "name": "NewsletterForm",
-      "layer": "component",
-      "kind": "block",
-      "host": "Footer",
-      "basis": [
-        "contract",
-        "platform"
-      ],
-      "parts": [
-        {
-          "layer": "newsletter-input",
-          "req": true
-        },
-        {
-          "layer": "newsletter-submit",
-          "req": true
-        },
-        {
-          "layer": "newsletter-consent",
-          "opt": true,
-          "ikas": "yes"
-        }
-      ],
-      "states": [
-        "varsayılan",
-        "eklendi",
-        "hata",
-        "bülten onay hatası"
-      ]
-    },
-    {
-      "name": "AddressForm",
-      "layer": "component",
-      "kind": "block",
-      "host": "Account",
-      "basis": [
-        "contract",
-        "baymard"
-      ],
-      "parts": [
-        {
-          "layer": "address-fields",
-          "req": true,
-          "note": "name, phone, country → city → district, address"
-        },
-        {
-          "layer": "address-corporate",
-          "opt": true,
-          "ikas": "yes"
-        },
-        {
-          "layer": "address-phone-note",
-          "req": true,
-          "note": "why the phone is asked"
-        }
-      ],
-      "states": [
-        "varsayılan",
-        "hata",
-        "yükleniyor"
-      ],
-      "must": [
-        {
-          "rule": "explain why the phone number is needed",
-          "basis": "baymard",
-          "figure": "49%"
         }
       ]
     },
@@ -1800,7 +1812,8 @@
         {
           "layer": "footer-newsletter",
           "opt": true,
-          "ikas": "yes"
+          "ikas": "yes",
+          "sub": "NewsletterForm"
         },
         {
           "layer": "footer-social",
@@ -1837,12 +1850,14 @@
         {
           "layer": "pdp-gallery",
           "req": true,
-          "note": "ProductGallery block"
+          "note": "ProductGallery block",
+          "block": "ProductGallery"
         },
         {
           "layer": "pdp-buybox",
           "req": true,
-          "note": "BuyBox block"
+          "note": "BuyBox block",
+          "block": "BuyBox"
         },
         {
           "layer": "pdp-info",
@@ -1923,12 +1938,14 @@
         {
           "layer": "list-toolbar",
           "req": true,
-          "note": "ListToolbar block"
+          "note": "ListToolbar block",
+          "block": "ListToolbar"
         },
         {
           "layer": "list-filters",
           "req": true,
-          "note": "FacetFilter block (desktop)"
+          "note": "FacetFilter block (desktop)",
+          "block": "FacetFilter"
         },
         {
           "layer": "list-grid",
@@ -1943,12 +1960,14 @@
         {
           "layer": "search-field",
           "req": true,
-          "note": "SearchField block, search mode"
+          "note": "SearchField block, search mode",
+          "sub": "SearchField"
         },
         {
           "layer": "list-empty",
           "req": true,
-          "note": "NoResults block"
+          "note": "NoResults block",
+          "block": "NoResults"
         }
       ],
       "states": [
@@ -2182,7 +2201,8 @@
         {
           "layer": "address-form",
           "req": true,
-          "note": "AddressForm block"
+          "note": "AddressForm block",
+          "sub": "AddressForm"
         },
         {
           "layer": "account-favorites",
@@ -2896,7 +2916,8 @@
         {
           "layer": "nl-form",
           "req": true,
-          "note": "NewsletterForm"
+          "note": "NewsletterForm",
+          "sub": "NewsletterForm"
         }
       ],
       "states": [
@@ -3176,7 +3197,8 @@
       "parts": [
         {
           "layer": "search-field",
-          "req": true
+          "req": true,
+          "sub": "SearchField"
         },
         {
           "layer": "search-suggestions",
@@ -3212,7 +3234,8 @@
         {
           "layer": "filter-body",
           "req": true,
-          "note": "FacetFilter"
+          "note": "FacetFilter",
+          "block": "FacetFilter"
         },
         {
           "layer": "filter-show-results",
@@ -3404,7 +3427,8 @@
         {
           "layer": "address-form",
           "req": true,
-          "note": "AddressForm"
+          "note": "AddressForm",
+          "sub": "AddressForm"
         }
       ],
       "states": [

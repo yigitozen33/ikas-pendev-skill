@@ -306,6 +306,35 @@ import json, sys
 n = {c["name"]: c for c in json.load(open(sys.argv[1]))["components"]}
 sys.exit(0 if all(k in n and n[k]["kind"] == "section" for k in ("CollectionHero", "BrandHero", "StoreLocator", "FaqList")) else 1)
 PY
+python3 -I - "$FX/mini-plandata" "$CL/pdh" <<'PY'
+import json, shutil, sys
+shutil.copytree(sys.argv[1], sys.argv[2])
+for i, (k, kind) in enumerate((("ProductList", "section"), ("ProductDetail", "section"), ("Footer", "section"), ("SearchOverlay", "overlay"))):
+    json.dump({"key": k, "kind": kind}, open(f"{sys.argv[2]}/sections/9{i}-{k}.json", "w"))
+PY
+python3 -I "$S/copy_library.py" "$CL/pdh" -o "$CL/hosts.pen" > "$CL/hosts.log" 2>&1 && python3 -I - "$CL/hosts.pen" > "$CL/hosts.txt" 2>&1 <<'PY' && ok "copy_library folds blocks into host parts and places shared Subs as instances" || bad "copy_library folds blocks into host parts and places shared Subs as instances" "$(cat "$CL/hosts.log" "$CL/hosts.txt")"
+import json, sys
+t = json.load(open(sys.argv[1])); errs = []
+top = {n["name"]: n for n in t["children"]}
+errs += [f"block root {n}" for n in top if "/Block/" in n or top[n].get("metadata", {}).get("role") == "block"]
+for sub in ("SearchField", "NewsletterForm"):
+    if f"K/Sub/{sub}" not in top: errs.append(f"shared Sub {sub} not copied")
+if "K/Sub/AddressForm" in top: errs.append("AddressForm copied without a planned host")
+def part(root, layer): return next((p for p in top[root]["children"] if p["name"] == layer), None)
+g = part("K/Section/ProductDetail@desktop", "pdp-gallery")
+if not g or "pdp-media" not in [c["name"] for c in g["children"]]: errs.append(f"ProductGallery not folded into pdp-gallery: {g and [c['name'] for c in g['children']]}")
+for root, layer, sub in (("K/Section/ProductList@mobile", "search-field", "SearchField"), ("K/Overlay/SearchOverlay@desktop", "search-field", "SearchField"),
+                         ("K/Section/Footer@desktop", "footer-newsletter", "NewsletterForm")):
+    p = part(root, layer); kids = p["children"] if p else []
+    if not (len(kids) == 1 and kids[0]["type"] == "ref" and kids[0]["ref"] == top[f"K/Sub/{sub}"]["id"]): errs.append(f"{root} {layer} lacks a {sub} instance")
+ids = [n["id"] for n in t["children"]]
+def walk(n):
+    yield n["id"]
+    for c in n.get("children", []): yield from walk(c)
+allids = [i for n in t["children"] for i in walk(n)]
+if len(allids) != len(set(allids)): errs.append("duplicate node ids after folding")
+print("\n".join(errs)); sys.exit(1 if errs else 0)
+PY
 python3 -I "$S/copy_library.py" "$FX/mini-plandata" -o "$CL/x.pen" --with Nope >/dev/null 2>&1; [ $? = 2 ] && ok "copy_library rejects an unknown --with name" || bad "copy_library rejects an unknown --with name"
 
 # 10 · structural identity and similarity gate (12-library.md §6–§7)

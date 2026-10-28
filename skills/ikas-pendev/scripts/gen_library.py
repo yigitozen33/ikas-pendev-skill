@@ -44,7 +44,7 @@ SIZES = {"text-display": 40, "text-h2": 32, "text-h3": 24, "text-h4": 20, "text-
 PLACEHOLDER_FONT = "Space Mono"
 
 BANDS = [("primitive", "sub", "Primitives"), ("element", "sub", "Commerce elements"),
-         ("component", "sub", "Commerce components"), ("component", "block", "Blocks (copied into a section)"),
+         ("component", "sub", "Commerce components"), ("component", "block", "Blocks (folded into their host part)"),
          ("shell", "section", "Shells"), ("page", "section", "Page sections"),
          ("content", "section", "Content sections (matched by archetype)"), ("overlay", "overlay", "Overlays")]
 ROOT = {"sub": "P/Sub/{}", "block": "P/Block/{}", "section": "P/Section/{}", "overlay": "P/Overlay/{}"}
@@ -77,8 +77,10 @@ def part_node(comp, p):
     if opt:
         node["enabled"] = False
         node["metadata"]["ikas"] = p.get("ikas", "")
-    if p.get("note"):
-        node["context"] = p["note"]
+    ctx = [p["note"]] if p.get("note") else []
+    ctx += [f"{k} {p[k]}" for k in ("block", "sub") if p.get(k)]
+    if ctx:
+        node["context"] = " · ".join(ctx)
     return node
 
 

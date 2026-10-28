@@ -5643,6 +5643,481 @@
                       "context": "state hover"
                     }
                   ]
+                },
+                {
+                  "type": "frame",
+                  "id": "L42fbfbcbb4",
+                  "name": "SearchField",
+                  "layout": "vertical",
+                  "gap": "$space-md",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "L277c74dfcc",
+                      "name": "P/Sub/SearchField",
+                      "reusable": true,
+                      "width": 280,
+                      "layout": "vertical",
+                      "gap": "$space-xs",
+                      "padding": "$space-sm",
+                      "fill": "$color-surface",
+                      "stroke": "$color-line",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "metadata": {
+                        "type": "ikas-lib",
+                        "role": "sub",
+                        "ikas": "SearchField",
+                        "layer": "component",
+                        "lib": 1
+                      },
+                      "context": "states boş, dolu, odak · must a submit button on mobile (21–27%) · shared by ProductList, SearchOverlay: a Sub, placed as an instance in each host slot",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "L0d6c9943ee",
+                          "name": "search-icon",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Ldb3e9783b1",
+                              "name": "lib-label",
+                              "content": "search-icon",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "L85d65c7e8c",
+                          "name": "search-input",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L062f415d16",
+                              "name": "lib-label",
+                              "content": "search-input",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Lc81b8b7d3b",
+                          "name": "search-clear",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Lcdc0a14c8b",
+                              "name": "lib-label",
+                              "content": "search-clear",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "L3ed11d0a14",
+                          "name": "search-submit",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "La731a569d8",
+                              "name": "lib-label",
+                              "content": "search-submit",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "L8c80a6b1ad",
+                          "name": "search-count",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Ld62a76884a",
+                              "name": "lib-label",
+                              "content": "search-count · opt",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "opt",
+                            "ikas": "yes"
+                          },
+                          "enabled": false
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "L06b3bd165d",
+                      "ref": "L277c74dfcc",
+                      "name": "P/Sub/SearchField — dolu",
+                      "context": "state dolu"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "L30aa1a636f",
+                      "ref": "L277c74dfcc",
+                      "name": "P/Sub/SearchField — odak",
+                      "context": "state odak"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "L2f67803e6e",
+                  "name": "NewsletterForm",
+                  "layout": "vertical",
+                  "gap": "$space-md",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "L1b04213838",
+                      "name": "P/Sub/NewsletterForm",
+                      "reusable": true,
+                      "width": 280,
+                      "layout": "vertical",
+                      "gap": "$space-xs",
+                      "padding": "$space-sm",
+                      "fill": "$color-surface",
+                      "stroke": "$color-line",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "metadata": {
+                        "type": "ikas-lib",
+                        "role": "sub",
+                        "ikas": "NewsletterForm",
+                        "layer": "component",
+                        "lib": 1
+                      },
+                      "context": "states varsayılan, eklendi, hata, bülten onay hatası · shared by Footer, Newsletter: a Sub, placed as an instance in each host slot",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "L7529bc7dc1",
+                          "name": "newsletter-input",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L2d2455b281",
+                              "name": "lib-label",
+                              "content": "newsletter-input",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "L88d754ef92",
+                          "name": "newsletter-submit",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L1b9aea994d",
+                              "name": "lib-label",
+                              "content": "newsletter-submit",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "L1341c07987",
+                          "name": "newsletter-consent",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L41bb5ade46",
+                              "name": "lib-label",
+                              "content": "newsletter-consent · opt",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "opt",
+                            "ikas": "yes"
+                          },
+                          "enabled": false
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "L7bc59fdb4a",
+                      "ref": "L1b04213838",
+                      "name": "P/Sub/NewsletterForm — eklendi",
+                      "context": "state eklendi"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "Lfdbc2a2e73",
+                      "ref": "L1b04213838",
+                      "name": "P/Sub/NewsletterForm — hata",
+                      "context": "state hata"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "L337f07a570",
+                      "ref": "L1b04213838",
+                      "name": "P/Sub/NewsletterForm — bülten onay hatası",
+                      "context": "state bülten onay hatası"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "L3b26c4dba1",
+                  "name": "AddressForm",
+                  "layout": "vertical",
+                  "gap": "$space-md",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Lc03479cc5f",
+                      "name": "P/Sub/AddressForm",
+                      "reusable": true,
+                      "width": 280,
+                      "layout": "vertical",
+                      "gap": "$space-xs",
+                      "padding": "$space-sm",
+                      "fill": "$color-surface",
+                      "stroke": "$color-line",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "metadata": {
+                        "type": "ikas-lib",
+                        "role": "sub",
+                        "ikas": "AddressForm",
+                        "layer": "component",
+                        "lib": 1
+                      },
+                      "context": "states varsayılan, hata, yükleniyor · must explain why the phone number is needed (49%) · shared by Account, AddressModal: a Sub, placed as an instance in each host slot",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "L91dd29b054",
+                          "name": "address-fields",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L7aeec976c6",
+                              "name": "lib-label",
+                              "content": "address-fields",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          },
+                          "context": "name, phone, country → city → district, address"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "La480ab549f",
+                          "name": "address-corporate",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Ld8cc9dcd08",
+                              "name": "lib-label",
+                              "content": "address-corporate · opt",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "opt",
+                            "ikas": "yes"
+                          },
+                          "enabled": false
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Lf1a4c67479",
+                          "name": "address-phone-note",
+                          "width": "fill_container",
+                          "layout": "horizontal",
+                          "padding": "$space-xs",
+                          "fill": "$color-bg",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L710c828822",
+                              "name": "lib-label",
+                              "content": "address-phone-note",
+                              "fontFamily": "$font-mono",
+                              "fontSize": "$text-label",
+                              "fill": "$color-muted",
+                              "metadata": {
+                                "type": "ikas-lib",
+                                "textClass": "code",
+                                "code": "lib"
+                              }
+                            }
+                          ],
+                          "metadata": {
+                            "type": "ikas-lib",
+                            "lib": "req"
+                          },
+                          "context": "why the phone is asked"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ref",
+                      "id": "La2af6bdfe5",
+                      "ref": "Lc03479cc5f",
+                      "name": "P/Sub/AddressForm — hata",
+                      "context": "state hata"
+                    },
+                    {
+                      "type": "ref",
+                      "id": "L2413c7a7d6",
+                      "ref": "Lc03479cc5f",
+                      "name": "P/Sub/AddressForm — yükleniyor",
+                      "context": "state yükleniyor"
+                    }
+                  ]
                 }
               ]
             }
@@ -5650,16 +6125,16 @@
         },
         {
           "type": "frame",
-          "id": "La4d13dc10b",
-          "name": "Band/Blocks (copied into a section)",
+          "id": "L82e9732c72",
+          "name": "Band/Blocks (folded into their host part)",
           "layout": "vertical",
           "gap": "$space-panel",
           "children": [
             {
               "type": "text",
-              "id": "Ld4ffe68b70",
+              "id": "L8ac61b51fb",
               "name": "band-title",
-              "content": "Blocks (copied into a section)",
+              "content": "Blocks (folded into their host part)",
               "fontFamily": "$font-mono",
               "fontSize": "$text-h3",
               "fill": "$color-text",
@@ -5671,7 +6146,7 @@
             },
             {
               "type": "frame",
-              "id": "Ld8a1af97b6",
+              "id": "L40d0844dab",
               "name": "row",
               "layout": "horizontal",
               "gap": "$space-section",
@@ -7014,201 +7489,6 @@
                 },
                 {
                   "type": "frame",
-                  "id": "L42fbfbcbb4",
-                  "name": "SearchField",
-                  "layout": "vertical",
-                  "gap": "$space-md",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "L277c74dfcc",
-                      "name": "P/Block/SearchField",
-                      "reusable": true,
-                      "width": 360,
-                      "layout": "vertical",
-                      "gap": "$space-xs",
-                      "padding": "$space-sm",
-                      "fill": "$color-surface",
-                      "stroke": "$color-line",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "metadata": {
-                        "type": "ikas-lib",
-                        "role": "block",
-                        "ikas": "SearchField",
-                        "layer": "component",
-                        "lib": 1,
-                        "host": "ProductList"
-                      },
-                      "context": "states boş, dolu, odak · must a submit button on mobile (21–27%)",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "L0d6c9943ee",
-                          "name": "search-icon",
-                          "width": "fill_container",
-                          "layout": "horizontal",
-                          "padding": "$space-xs",
-                          "fill": "$color-bg",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "Ldb3e9783b1",
-                              "name": "lib-label",
-                              "content": "search-icon",
-                              "fontFamily": "$font-mono",
-                              "fontSize": "$text-label",
-                              "fill": "$color-muted",
-                              "metadata": {
-                                "type": "ikas-lib",
-                                "textClass": "code",
-                                "code": "lib"
-                              }
-                            }
-                          ],
-                          "metadata": {
-                            "type": "ikas-lib",
-                            "lib": "req"
-                          }
-                        },
-                        {
-                          "type": "frame",
-                          "id": "L85d65c7e8c",
-                          "name": "search-input",
-                          "width": "fill_container",
-                          "layout": "horizontal",
-                          "padding": "$space-xs",
-                          "fill": "$color-bg",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "L062f415d16",
-                              "name": "lib-label",
-                              "content": "search-input",
-                              "fontFamily": "$font-mono",
-                              "fontSize": "$text-label",
-                              "fill": "$color-muted",
-                              "metadata": {
-                                "type": "ikas-lib",
-                                "textClass": "code",
-                                "code": "lib"
-                              }
-                            }
-                          ],
-                          "metadata": {
-                            "type": "ikas-lib",
-                            "lib": "req"
-                          }
-                        },
-                        {
-                          "type": "frame",
-                          "id": "Lc81b8b7d3b",
-                          "name": "search-clear",
-                          "width": "fill_container",
-                          "layout": "horizontal",
-                          "padding": "$space-xs",
-                          "fill": "$color-bg",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "Lcdc0a14c8b",
-                              "name": "lib-label",
-                              "content": "search-clear",
-                              "fontFamily": "$font-mono",
-                              "fontSize": "$text-label",
-                              "fill": "$color-muted",
-                              "metadata": {
-                                "type": "ikas-lib",
-                                "textClass": "code",
-                                "code": "lib"
-                              }
-                            }
-                          ],
-                          "metadata": {
-                            "type": "ikas-lib",
-                            "lib": "req"
-                          }
-                        },
-                        {
-                          "type": "frame",
-                          "id": "L3ed11d0a14",
-                          "name": "search-submit",
-                          "width": "fill_container",
-                          "layout": "horizontal",
-                          "padding": "$space-xs",
-                          "fill": "$color-bg",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "La731a569d8",
-                              "name": "lib-label",
-                              "content": "search-submit",
-                              "fontFamily": "$font-mono",
-                              "fontSize": "$text-label",
-                              "fill": "$color-muted",
-                              "metadata": {
-                                "type": "ikas-lib",
-                                "textClass": "code",
-                                "code": "lib"
-                              }
-                            }
-                          ],
-                          "metadata": {
-                            "type": "ikas-lib",
-                            "lib": "req"
-                          }
-                        },
-                        {
-                          "type": "frame",
-                          "id": "L8c80a6b1ad",
-                          "name": "search-count",
-                          "width": "fill_container",
-                          "layout": "horizontal",
-                          "padding": "$space-xs",
-                          "fill": "$color-bg",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "Ld62a76884a",
-                              "name": "lib-label",
-                              "content": "search-count · opt",
-                              "fontFamily": "$font-mono",
-                              "fontSize": "$text-label",
-                              "fill": "$color-muted",
-                              "metadata": {
-                                "type": "ikas-lib",
-                                "textClass": "code",
-                                "code": "lib"
-                              }
-                            }
-                          ],
-                          "metadata": {
-                            "type": "ikas-lib",
-                            "lib": "opt",
-                            "ikas": "yes"
-                          },
-                          "enabled": false
-                        }
-                      ]
-                    },
-                    {
-                      "type": "ref",
-                      "id": "L06b3bd165d",
-                      "ref": "L277c74dfcc",
-                      "name": "P/Block/SearchField — dolu",
-                      "context": "state dolu"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "L30aa1a636f",
-                      "ref": "L277c74dfcc",
-                      "name": "P/Block/SearchField — odak",
-                      "context": "state odak"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
                   "id": "L1b7e44e96f",
                   "name": "NoResults",
                   "layout": "vertical",
@@ -7358,289 +7638,6 @@
                           "enabled": false
                         }
                       ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "L2f67803e6e",
-                  "name": "NewsletterForm",
-                  "layout": "vertical",
-                  "gap": "$space-md",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "L1b04213838",
-                      "name": "P/Block/NewsletterForm",
-                      "reusable": true,
-                      "width": 360,
-                      "layout": "vertical",
-                      "gap": "$space-xs",
-                      "padding": "$space-sm",
-                      "fill": "$color-surface",
-                      "stroke": "$color-line",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "metadata": {
-                        "type": "ikas-lib",
-                        "role": "block",
-                        "ikas": "NewsletterForm",
-                        "layer": "component",
-                        "lib": 1,
-                        "host": "Footer"
-                      },
-                      "context": "states varsayılan, eklendi, hata, bülten onay hatası",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "L7529bc7dc1",
-                          "name": "newsletter-input",
-                          "width": "fill_container",
-                          "layout": "horizontal",
-                          "padding": "$space-xs",
-                          "fill": "$color-bg",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "L2d2455b281",
-                              "name": "lib-label",
-                              "content": "newsletter-input",
-                              "fontFamily": "$font-mono",
-                              "fontSize": "$text-label",
-                              "fill": "$color-muted",
-                              "metadata": {
-                                "type": "ikas-lib",
-                                "textClass": "code",
-                                "code": "lib"
-                              }
-                            }
-                          ],
-                          "metadata": {
-                            "type": "ikas-lib",
-                            "lib": "req"
-                          }
-                        },
-                        {
-                          "type": "frame",
-                          "id": "L88d754ef92",
-                          "name": "newsletter-submit",
-                          "width": "fill_container",
-                          "layout": "horizontal",
-                          "padding": "$space-xs",
-                          "fill": "$color-bg",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "L1b9aea994d",
-                              "name": "lib-label",
-                              "content": "newsletter-submit",
-                              "fontFamily": "$font-mono",
-                              "fontSize": "$text-label",
-                              "fill": "$color-muted",
-                              "metadata": {
-                                "type": "ikas-lib",
-                                "textClass": "code",
-                                "code": "lib"
-                              }
-                            }
-                          ],
-                          "metadata": {
-                            "type": "ikas-lib",
-                            "lib": "req"
-                          }
-                        },
-                        {
-                          "type": "frame",
-                          "id": "L1341c07987",
-                          "name": "newsletter-consent",
-                          "width": "fill_container",
-                          "layout": "horizontal",
-                          "padding": "$space-xs",
-                          "fill": "$color-bg",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "L41bb5ade46",
-                              "name": "lib-label",
-                              "content": "newsletter-consent · opt",
-                              "fontFamily": "$font-mono",
-                              "fontSize": "$text-label",
-                              "fill": "$color-muted",
-                              "metadata": {
-                                "type": "ikas-lib",
-                                "textClass": "code",
-                                "code": "lib"
-                              }
-                            }
-                          ],
-                          "metadata": {
-                            "type": "ikas-lib",
-                            "lib": "opt",
-                            "ikas": "yes"
-                          },
-                          "enabled": false
-                        }
-                      ]
-                    },
-                    {
-                      "type": "ref",
-                      "id": "L7bc59fdb4a",
-                      "ref": "L1b04213838",
-                      "name": "P/Block/NewsletterForm — eklendi",
-                      "context": "state eklendi"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "Lfdbc2a2e73",
-                      "ref": "L1b04213838",
-                      "name": "P/Block/NewsletterForm — hata",
-                      "context": "state hata"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "L337f07a570",
-                      "ref": "L1b04213838",
-                      "name": "P/Block/NewsletterForm — bülten onay hatası",
-                      "context": "state bülten onay hatası"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "L3b26c4dba1",
-                  "name": "AddressForm",
-                  "layout": "vertical",
-                  "gap": "$space-md",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "Lc03479cc5f",
-                      "name": "P/Block/AddressForm",
-                      "reusable": true,
-                      "width": 360,
-                      "layout": "vertical",
-                      "gap": "$space-xs",
-                      "padding": "$space-sm",
-                      "fill": "$color-surface",
-                      "stroke": "$color-line",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "metadata": {
-                        "type": "ikas-lib",
-                        "role": "block",
-                        "ikas": "AddressForm",
-                        "layer": "component",
-                        "lib": 1,
-                        "host": "Account"
-                      },
-                      "context": "states varsayılan, hata, yükleniyor · must explain why the phone number is needed (49%)",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "L91dd29b054",
-                          "name": "address-fields",
-                          "width": "fill_container",
-                          "layout": "horizontal",
-                          "padding": "$space-xs",
-                          "fill": "$color-bg",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "L7aeec976c6",
-                              "name": "lib-label",
-                              "content": "address-fields",
-                              "fontFamily": "$font-mono",
-                              "fontSize": "$text-label",
-                              "fill": "$color-muted",
-                              "metadata": {
-                                "type": "ikas-lib",
-                                "textClass": "code",
-                                "code": "lib"
-                              }
-                            }
-                          ],
-                          "metadata": {
-                            "type": "ikas-lib",
-                            "lib": "req"
-                          },
-                          "context": "name, phone, country → city → district, address"
-                        },
-                        {
-                          "type": "frame",
-                          "id": "La480ab549f",
-                          "name": "address-corporate",
-                          "width": "fill_container",
-                          "layout": "horizontal",
-                          "padding": "$space-xs",
-                          "fill": "$color-bg",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "Ld8cc9dcd08",
-                              "name": "lib-label",
-                              "content": "address-corporate · opt",
-                              "fontFamily": "$font-mono",
-                              "fontSize": "$text-label",
-                              "fill": "$color-muted",
-                              "metadata": {
-                                "type": "ikas-lib",
-                                "textClass": "code",
-                                "code": "lib"
-                              }
-                            }
-                          ],
-                          "metadata": {
-                            "type": "ikas-lib",
-                            "lib": "opt",
-                            "ikas": "yes"
-                          },
-                          "enabled": false
-                        },
-                        {
-                          "type": "frame",
-                          "id": "Lf1a4c67479",
-                          "name": "address-phone-note",
-                          "width": "fill_container",
-                          "layout": "horizontal",
-                          "padding": "$space-xs",
-                          "fill": "$color-bg",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "L710c828822",
-                              "name": "lib-label",
-                              "content": "address-phone-note",
-                              "fontFamily": "$font-mono",
-                              "fontSize": "$text-label",
-                              "fill": "$color-muted",
-                              "metadata": {
-                                "type": "ikas-lib",
-                                "textClass": "code",
-                                "code": "lib"
-                              }
-                            }
-                          ],
-                          "metadata": {
-                            "type": "ikas-lib",
-                            "lib": "req"
-                          },
-                          "context": "why the phone is asked"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "ref",
-                      "id": "La2af6bdfe5",
-                      "ref": "Lc03479cc5f",
-                      "name": "P/Block/AddressForm — hata",
-                      "context": "state hata"
-                    },
-                    {
-                      "type": "ref",
-                      "id": "L2413c7a7d6",
-                      "ref": "Lc03479cc5f",
-                      "name": "P/Block/AddressForm — yükleniyor",
-                      "context": "state yükleniyor"
                     }
                   ]
                 }
@@ -8188,7 +8185,8 @@
                             "lib": "opt",
                             "ikas": "yes"
                           },
-                          "enabled": false
+                          "enabled": false,
+                          "context": "sub NewsletterForm"
                         },
                         {
                           "type": "frame",
@@ -8383,7 +8381,7 @@
                             "type": "ikas-lib",
                             "lib": "req"
                           },
-                          "context": "ProductGallery block"
+                          "context": "ProductGallery block · block ProductGallery"
                         },
                         {
                           "type": "frame",
@@ -8413,7 +8411,7 @@
                             "type": "ikas-lib",
                             "lib": "req"
                           },
-                          "context": "BuyBox block"
+                          "context": "BuyBox block · block BuyBox"
                         },
                         {
                           "type": "frame",
@@ -8809,7 +8807,7 @@
                             "type": "ikas-lib",
                             "lib": "req"
                           },
-                          "context": "ListToolbar block"
+                          "context": "ListToolbar block · block ListToolbar"
                         },
                         {
                           "type": "frame",
@@ -8839,7 +8837,7 @@
                             "type": "ikas-lib",
                             "lib": "req"
                           },
-                          "context": "FacetFilter block (desktop)"
+                          "context": "FacetFilter block (desktop) · block FacetFilter"
                         },
                         {
                           "type": "frame",
@@ -8929,7 +8927,7 @@
                             "type": "ikas-lib",
                             "lib": "req"
                           },
-                          "context": "SearchField block, search mode"
+                          "context": "SearchField block, search mode · sub SearchField"
                         },
                         {
                           "type": "frame",
@@ -8959,7 +8957,7 @@
                             "type": "ikas-lib",
                             "lib": "req"
                           },
-                          "context": "NoResults block"
+                          "context": "NoResults block · block NoResults"
                         }
                       ]
                     },
@@ -10005,7 +10003,7 @@
                             "type": "ikas-lib",
                             "lib": "req"
                           },
-                          "context": "AddressForm block"
+                          "context": "AddressForm block · sub AddressForm"
                         },
                         {
                           "type": "frame",
@@ -13077,7 +13075,7 @@
                             "type": "ikas-lib",
                             "lib": "req"
                           },
-                          "context": "NewsletterForm"
+                          "context": "NewsletterForm · sub NewsletterForm"
                         }
                       ]
                     },
@@ -14170,7 +14168,8 @@
                           "metadata": {
                             "type": "ikas-lib",
                             "lib": "req"
-                          }
+                          },
+                          "context": "sub SearchField"
                         },
                         {
                           "type": "frame",
@@ -14340,7 +14339,7 @@
                             "type": "ikas-lib",
                             "lib": "req"
                           },
-                          "context": "FacetFilter"
+                          "context": "FacetFilter · block FacetFilter"
                         },
                         {
                           "type": "frame",
@@ -15264,7 +15263,7 @@
                             "type": "ikas-lib",
                             "lib": "req"
                           },
-                          "context": "AddressForm"
+                          "context": "AddressForm · sub AddressForm"
                         }
                       ]
                     },
