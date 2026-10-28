@@ -18,8 +18,9 @@
 // coupon. No catalogue in the plan: WARN skip (contract 1: PASS).
 // temp (07 §7): every "(geçici)" top-level frame other than the one "Öneriler (geçici)" container fails; the
 // container must sit below every <P>/ root (WARN). Runs in full mode only.
-// subfit (02 §1): a non-text child with a fixed width of half the Sub or more, directly inside a layout:none frame
-// of a Sub root (PriceRange rail, progress bar), warns: the Sub must size from its instance.
+// subfit (02 §1): a non-text child with a fixed width of half the Sub or more (and at least 120px, so icons in a
+// layout:none stack pass), directly inside a layout:none frame of a Sub root (PriceRange rail, progress bar),
+// warns: the Sub must size from its instance.
 // spacing (02 §3b): on every Page, in order (Header skipped): the first section's top padding is $space-page
 // (0 = WARN, transparent header), each next one's is a $space-* token ($space-section, else WARN), every
 // section's bottom padding is 0, the Footer's top is $space-section (instance padding overrides count).
@@ -40,8 +41,9 @@
 // cornerRadius (missing = 0) -> FAIL when they differ; the control Subs (Button, FormField, VariantChip,
 // QuantitySelector) whose root sets a cornerRadius share one value -> WARN when they differ. PASS with a note
 // when neither group is on the canvas.
-// dividers (08 §8): no divider between rows or list items. A visible layer named *divider*, *separator*,
-// *hairline* or *rule in a Section component, Sub root or Overlay root fails (contract 1: WARN) unless it is a
+// dividers (08 §8): no divider between rows or list items. A visible line (at most 2px thick) named *divider*,
+// *separator*, *hairline* or *rule in a Section component, Sub root or Overlay root fails (a wrapper that only
+// keeps the name, e.g. social-divider holding "ya da", passes) (contract 1: WARN) unless it is a
 // structural edge named *-edge (sticky bar top, group boundary in a small panel, article end); a thin unnamed
 // rectangle/line (<= 2px, >= 24px long) that is not an underline, indicator, progress, track, rail, bar or
 // strike warns. DS frames and temp frames are out of scope.
@@ -290,7 +292,7 @@ if (MODE === "manifest") {
         if (n.id === r.id) { W = c.bounds.width || 0; }
         if (n.layout === "none" && n.id !== r.id) stage.add(n.id);
         const par = c.parentCtx && c.parentCtx.node;
-        if (par && stage.has(par.id) && n.type !== "text" && typeof n.width === "number" && W && n.width >= W * 0.5) hits.push(rest(r) + ">" + (n.name || n.id) + "=" + n.width);
+        if (par && stage.has(par.id) && n.type !== "text" && typeof n.width === "number" && W && n.width >= Math.max(120, W * 0.5)) hits.push(rest(r) + ">" + (n.name || n.id) + "=" + n.width);
         return undefined;
       });
     });
@@ -511,7 +513,7 @@ if (MODE === "manifest") {
       if (n.enabled === false) { c.skipChildren(); return; }
       const nm = n.name || n.type, t = Math.min(c.bounds.width, c.bounds.height), isThin = (n.type === "rectangle" || n.type === "line") && t <= 2 && Math.max(c.bounds.width, c.bounds.height) >= 24;
       if (seen.has(nm) || EDGE.test(nm)) return;
-      if (NAMED.test(nm)) { seen.add(nm); named.push(lab + ">" + nm); }
+      if (NAMED.test(nm) && t <= 2) { seen.add(nm); named.push(lab + ">" + nm); }
       else if (isThin && !KEEP.test(nm)) { seen.add(nm); thin.push(lab + ">" + nm); }
     }); });
     const list = a => a.slice(0, 8).join(",") + (a.length > 8 ? ",+" + (a.length - 8) : "");

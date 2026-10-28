@@ -91,7 +91,7 @@ When unsure whether a line is structural, show it to the user with and without (
 
 Out of scope: design-system documentation frames (`P/DS/*` spec rows, colour slot rows) and temp frames; nothing there is ported.
 
-CHK `dividers` fails on a visible `*divider*`, `*separator*`, `*hairline*` or `*rule` layer in a Section, Sub or Overlay that is not named `*-edge`, and warns on thin unnamed lines.
+CHK `dividers` fails on a visible line (≤ 2 px) named `*divider*`, `*separator*`, `*hairline*` or `*rule` in a Section, Sub or Overlay that is not named `*-edge`, and warns on thin unnamed lines.
 
 ## 9. Images
 
