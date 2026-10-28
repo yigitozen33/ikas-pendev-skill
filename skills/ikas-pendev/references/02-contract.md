@@ -157,6 +157,9 @@ metadata: {type:"<slug>", role:"section", ikas:"HeroSlider", device:"desktop", v
            prop:"backgroundColor", propType:"COLOR"}            // prop/propType on section roots only
 // role: "ds" | "sub" | "section" | "overlay" | "page" | "motion"
 
+// state root "<root> — <state>": a frame around one ref of the root (a bare ref keeps no metadata, 05 §25)
+metadata: {type:"<slug>", role:"sub", ikas:"ProductCard", state:"sepette"}   // + device on section/overlay states
+
 // text bound to a prop
 metadata: {type:"<slug>", role:"prop", textClass:"prop", prop:"title", propType:"TEXT"}
 // text bound to storefront data
