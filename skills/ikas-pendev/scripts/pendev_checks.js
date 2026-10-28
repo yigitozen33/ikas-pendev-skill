@@ -9,8 +9,8 @@
 //   manifest         one ROOT line per root frame (port dump, docs/port/canvas-dump.txt)
 //
 // Output: CHK|<id>|PASS|FAIL|WARN|<n>|<detail<=200>  ...  SUMMARY|pass=..|fail=..|warn=..|mode=..
-// CHK ids: vars ds sections overlays pages spacing anim hardcoded textclass clip rootmeta bgprop
-//          parity props data placeholder refassets storefront dividers radius
+// CHK ids: vars ds sections overlays pages spacing seed temp subfit anim hardcoded textclass clip rootmeta
+//          bgprop parity props data placeholder refassets storefront dividers radius
 // seed (plan §6.6): a node whose context has "seed <key>" shows that catalogue product; inside it (instances
 // resolved, disabled layers skipped) data texts for the name, brand, prices, option names and line quantity, any
 // "N / M" or "En fazla N" limit, and image-fill urls must match the product. Cart total and subtotal texts
