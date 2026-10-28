@@ -11,6 +11,8 @@
 // Output: CHK|<id>|PASS|FAIL|WARN|<n>|<detail<=200>  ...  SUMMARY|pass=..|fail=..|warn=..|mode=..
 // CHK ids: vars ds sections overlays pages spacing anim hardcoded textclass clip rootmeta bgprop
 //          parity props data placeholder refassets storefront dividers radius
+// subfit (02 §1): a non-text child with a fixed width of half the Sub or more, directly inside a layout:none frame
+// of a Sub root (PriceRange rail, progress bar), warns: the Sub must size from its instance.
 // spacing (02 §3b): on every Page, in order (Header skipped): the first section's top padding is $space-page
 // (0 = WARN, transparent header), each next one's is a $space-* token ($space-section, else WARN), every
 // section's bottom padding is 0, the Footer's top is $space-section (instance padding overrides count).
@@ -115,7 +117,7 @@ if (MODE === "manifest") {
   };
   const U = roots.filter(inUnit);
   if (unit && !isBand && (EXP.sections || []).indexOf(unit) < 0 && (EXP.overlays || []).indexOf(unit) < 0) chk("sections", "FAIL", 0, "unknown unit key " + unit + " (not a plan Section/Overlay)");
-  const run = id => { if (EXP.only && EXP.only.indexOf(id) < 0) return false; if (!unit) return true; if (unit === "DS") return ["vars", "ds", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Page") return ["pages", "spacing", "rootmeta", "placeholder"].indexOf(id) >= 0; if (unit === "Motion") return ["hardcoded", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Sub") return ["anim", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; if (unit === "Overlays") return ["overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "parity", "props", "data", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; return ["sections", "overlays", "spacing", "anim", "hardcoded", "textclass", "clip", "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers", "radius"].indexOf(id) >= 0; };
+  const run = id => { if (EXP.only && EXP.only.indexOf(id) < 0) return false; if (!unit) return true; if (unit === "DS") return ["vars", "ds", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Page") return ["pages", "spacing", "rootmeta", "placeholder"].indexOf(id) >= 0; if (unit === "Motion") return ["hardcoded", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Sub") return ["subfit", "anim", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; if (unit === "Overlays") return ["overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "parity", "props", "data", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; return ["sections", "overlays", "spacing", "subfit", "anim", "hardcoded", "textclass", "clip", "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers", "radius"].indexOf(id) >= 0; };
   const find = nm => roots.find(r => r.name === nm);
   const findPre = pre => roots.filter(r => r.name === pre || r.name.indexOf(pre + " ") === 0);
 
@@ -213,6 +215,20 @@ if (MODE === "manifest") {
     const badSeams = new Set(bad.map(b => b.replace(/-[a-z-]+=.*$/, ""))).size;
     chk("spacing", bad.length ? (CONTRACT < 2 ? "WARN" : "FAIL") : (warnL.length ? "WARN" : "PASS"), seams - badSeams,
       (seams - badSeams) + "/" + seams + " page seams" + (bad.length ? " bad:" + bad.join(",") : "") + (warnL.length ? " check:" + warnL.join(",") : ""));
+  }
+  if (run("subfit")) {
+    const hits = [];
+    U.filter(r => band(r) === "Sub" && r.name.indexOf(" \u2014 ") < 0).forEach(r => {
+      let W = 0; const stage = new Set();
+      Get(r.id, (n, c) => {
+        if (n.id === r.id) { W = c.bounds.width || 0; }
+        if (n.layout === "none" && n.id !== r.id) stage.add(n.id);
+        const par = c.parentCtx && c.parentCtx.node;
+        if (par && stage.has(par.id) && n.type !== "text" && typeof n.width === "number" && W && n.width >= W * 0.5) hits.push(rest(r) + ">" + (n.name || n.id) + "=" + n.width);
+        return undefined;
+      });
+    });
+    chk("subfit", hits.length ? "WARN" : "PASS", hits.length, hits.length ? "fixed inner width in a layout:none frame of a Sub, size it from the instance (02 §1): " + hits.join(",") : "no fixed rails in Subs");
   }
   if (run("anim")) {
     const want = unit ? ((EXP.unit && EXP.unit.ids) || []) : (EXP.ids || []);

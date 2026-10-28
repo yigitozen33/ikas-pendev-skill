@@ -96,6 +96,16 @@ if command -v node >/dev/null; then
   python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); r={n["id"]:n for n in d["children"]}; r["s1"]["padding"]=[0,16,0,16]; r["s4"]["children"][0]["gap"]=40; r["s3"]["children"][0]["gap"]=24; d["children"]=[n for n in d["children"] if n["id"]!="p2"]; json.dump(d,open(sys.argv[2],"w"))' "$FX/spacing-canvas.json" "$OUT/spacing-warn.json"
   node "$HERE/tools/mock_pen.js" "$OUT/checks-spacing.js" "$OUT/spacing-warn.json" > "$OUT/spacing-warn.txt" 2>&1
   grep -q '^CHK|spacing|WARN|4|4/4 page seams check:Section/Header@desktop:side=16,Section/Shelf@desktop>shelf-grid:grid-gap=24,Section/ProductDetail@desktop>pdp-main:split-gap=40$' "$OUT/spacing-warn.txt" && ok "spacing: an off-token page edge, grid gap or column split warns (02 §3b)" || bad "spacing: an off-token page edge, grid gap or column split warns (02 §3b)" "$(grep spacing "$OUT/spacing-warn.txt")"
+  python3 "$S/extract_targets.py" "$OUT/plan-mini.md" --js all --checks subfit > "$OUT/checks-subfit.js"
+  python3 -c 'import json,sys
+def rng(w, fixed):
+    rail = {"id": "rail", "name": "range-rail", "type": "rectangle", "x": 0, "y": 8, "width": 320 if fixed else "fill_container", "height": 4}
+    return {"children": [{"id": "pr", "name": "K/Sub/PriceRange", "type": "frame", "reusable": True, "x": 0, "y": 0, "width": w, "height": 80,
+            "children": [{"id": "trk", "name": "range-track", "type": "frame", "layout": "none" if fixed else "horizontal", "x": 0, "y": 0, "width": "fill_container", "height": 20, "children": [rail]}]}]}
+json.dump(rng(276, True), open(sys.argv[1], "w")); json.dump(rng(276, False), open(sys.argv[2], "w"))' "$OUT/subfit-bad.json" "$OUT/subfit-ok.json"
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-subfit.js" "$OUT/subfit-bad.json" > "$OUT/subfit-bad.txt" 2>&1
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-subfit.js" "$OUT/subfit-ok.json" > "$OUT/subfit-ok.txt" 2>&1
+  grep -q '^CHK|subfit|WARN|1|.*Sub/PriceRange>range-rail=320' "$OUT/subfit-bad.txt" && grep -q '^CHK|subfit|PASS' "$OUT/subfit-ok.txt" && ok "subfit: a fixed 320 rail in a 276 PriceRange warns, a fill rail passes (02 §1)" || bad "subfit: a fixed 320 rail in a 276 PriceRange warns, a fill rail passes (02 §1)" "$(cat "$OUT/subfit-bad.txt" "$OUT/subfit-ok.txt")"
 fi
 
 # 6. analyze_site on offline fixture
