@@ -25,7 +25,7 @@ What separates a designed theme from a generated one. Read before writing plan �
 | **Stock team** | smiling people around a laptop, handshake, office | imagery from the art direction in `P/DS/Imagery` |
 | **Purple default** | violet-to-blue gradients, glassmorphism | colours from the reference analysis and the brief |
 | **Soft hero** | a full-bleed photo that is blurry or pixelated on a large screen, or text on a busy photo with no veil | §9: files at 2× the frame, a `*-veil` layer with an opacity prop |
-| **Line noise** | a rule under every heading, between every list row, around every panel and filter group, in full-strength `$color-line` | group with spacing first; keep a line only where it separates two things that would otherwise read as one, in the footer's style (§8). CHK `dividers` warns |
+| **Line noise** | a rule under every heading, between every list row, around every panel and filter group | no divider between rows or list items: group with spacing; a line only on a structural edge named `*-edge` (§8). CHK `dividers` fails |
 
 ## 3. Identity = MASTER + per-section overrides
 
@@ -80,12 +80,18 @@ Before marking a section (or sub) done in `build-log.md`, take one screenshot an
 
 ## 8. Dividers
 
-Lines are the cheapest way to separate things, so they multiply. A theme reads calmer when spacing does most of the grouping:
+**No divider between rows or list items.** Spacing separates them: order-summary items and totals, PDP tier and store rows, the "ya da" line on login, filter groups, menu groups, account menu entries, cart lines, footer columns. A line between repeated rows reads as clutter.
 
-- **Spacing first.** A heading and its content, a filter group and its values, a menu title and its links are grouped by a smaller gap, not by a line.
-- **One line per boundary.** A boundary gets one line, never a border on both neighbours. No line directly above or below a panel edge, a sticky bar's own border or a full-bleed image.
-- **Soft colour.** Dividers inside content (list rows, filter groups, menu groups, account panels) use `$color-line` at about half strength: a softer variable in the palette, or the port's `color-mix(in srgb, var(--line) 50%, transparent)`. Full-strength `$color-line` is kept for structural edges (the header bottom, the footer top) and for inputs.
-- **The footer's language everywhere.** There is no count limit. What matters is that every divider speaks one language: the same colour, thickness and spacing as the footer's dividers, on the category page, the mobile menu, the cart, the account panels and the blog. Review them together, not one by one.
+A line is kept only where it marks a **structural edge**, named `*-edge`:
+- the top edge of a fixed or sticky bottom bar over scrolling content (cart checkout bar, add-to-cart bar, filter drawer footer, modal actions);
+- a boundary between two different groups in a small panel (language | currency in the locale switcher);
+- the end of an article (the top of the blog share row).
+
+When unsure whether a line is structural, show it to the user with and without (a before/after in the options box, 07 §7) instead of deciding.
+
+Out of scope: design-system documentation frames (`P/DS/*` spec rows, colour slot rows) and temp frames; nothing there is ported.
+
+CHK `dividers` fails on a visible `*divider*`, `*separator*`, `*hairline*` or `*rule` layer in a Section, Sub or Overlay that is not named `*-edge`, and warns on thin unnamed lines.
 
 ## 9. Images
 

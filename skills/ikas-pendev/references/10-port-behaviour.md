@@ -31,7 +31,7 @@ Add a criterion when a review finds a behaviour defect that the canvas could not
 | PB-11 | ProductList; SEARCH | The search page had no field of its own; once added, the URL sync overwrote what was being typed. |
 | PB-12 | always | A fold that started open in unstyled HTML played its close animation on page load when the CSS arrived late. |
 | PB-13 | ProductList; CATEGORY, SEARCH | The result count showed twice on one layout and nowhere on another after the search field moved it. |
-| PB-14 | always | Category page, mobile menu and account panels used more and harsher dividers than the footer (`08-quality.md` §8). |
+| PB-14 | always | Order summary, PDP tiers and store rows, login and the account menu drew lines between rows; the user removed them all and kept only structural edges (`08-quality.md` §8). |
 | PB-15 | QuickBuy | QuickBuy sent every product with an option set or a bundle to the product page, because list data carries neither and add-to-cart rejects a product whose set is not loaded. |
 | PB-16 | ProductDetail, QuickBuy, CartPage, CartDrawer | Every personalisation upload failed with "Dosya yüklenemedi": the upload set the multipart header by hand and storage rejected it. Once fixed, the cart line printed the file's full storage URL. |
 | PB-17 | CartPage, CartDrawer, QuickBuy | Editing a cart line always opened the product page with an update button that shoppers missed; replacing a line by remove-then-add made the cart flash empty. |

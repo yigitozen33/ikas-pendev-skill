@@ -35,9 +35,11 @@
 // cornerRadius (missing = 0) -> FAIL when they differ; the control Subs (Button, FormField, VariantChip,
 // QuantitySelector) whose root sets a cornerRadius share one value -> WARN when they differ. PASS with a note
 // when neither group is on the canvas.
-// dividers (08 §8): WARN when a visible divider layer of a Section component (*divider*, *separator*, *rule,
-// *line, *hairline, or a rectangle/line at most 2px thick) has a style (fill, stroke, opacity, thickness) that no
-// Footer divider has. No count limit. PASS with a note when the Footer has no divider to compare with.
+// dividers (08 §8): no divider between rows or list items. A visible layer named *divider*, *separator*,
+// *hairline* or *rule in a Section component, Sub root or Overlay root fails (contract 1: WARN) unless it is a
+// structural edge named *-edge (sticky bar top, group boundary in a small panel, article end); a thin unnamed
+// rectangle/line (<= 2px, >= 24px long) that is not an underline, indicator, progress, track, rail, bar or
+// strike warns. DS frames and temp frames are out of scope.
 // data: every {data:<source>} / {code:<name>} of a key's §6.2 tree is found on its component roots (overlay: any
 // root) as textClass data+source / code (code also by layer name), as a context mark "data <source>" /
 // "code <name>", or inside a Sub the same tree line names; a context mark the plan does not know fails.
@@ -454,21 +456,20 @@ if (MODE === "manifest") {
     else chk("radius", "PASS", mk.length + ck.length, mk.length || ck.length ? "product media " + (mk[0] || "-") + ", controls " + (ck[0] || "-") : "no product media or control Subs on the canvas");
   }
   if (run("dividers")) {
-    const DIV = /divider|separator|hairline|(^|-)(rule|line)$/i;
-    const divs = r => { const out = []; walk(r, (n, c) => {
-      if (n.enabled === false) return;
-      const t = Math.min(c.bounds.width, c.bounds.height), thin = (n.type === "rectangle" || n.type === "line") && t <= 2 && Math.max(c.bounds.width, c.bounds.height) >= 24;
-      if (DIV.test(n.name || "") || thin) out.push([n.name || n.type, JSON.stringify([n.fill === undefined ? null : n.fill, n.stroke === undefined ? null : n.stroke, n.opacity === undefined ? 1 : n.opacity, thin ? Math.round(t) : null])]);
-    }); return out; };
-    const comp = r => band(r) === "Section" && r.name.indexOf(" \u2014 ") < 0;
-    const ref = new Set();
-    roots.filter(r => comp(r) && keyOf(r) === "Footer").forEach(r => divs(r).forEach(x => ref.add(x[1])));
-    if (!ref.size) chk("dividers", "PASS", 0, "no Footer divider to compare with (08 \u00a78)");
-    else {
-      const off = [];
-      U.filter(r => comp(r) && keyOf(r) !== "Footer").forEach(r => { const seen = new Set(); divs(r).forEach(x => { if (!ref.has(x[1]) && !seen.has(x[0])) { seen.add(x[0]); off.push(keyOf(r) + "@" + devOf(r.name) + ">" + x[0]); } }); });
-      chk("dividers", off.length ? "WARN" : "PASS", off.length, off.length ? "divider style differs from the Footer's (08 \u00a78): " + off.slice(0, 8).join(",") + (off.length > 8 ? ",+" + (off.length - 8) : "") : "every divider matches a Footer divider style");
-    }
+    const NAMED = /divider|separator|hairline|(^|-)rule$/i, EDGE = /-edge$/i, KEEP = /edge|underline|indicator|progress|track|rail|bar|strike|link-line|cursor|caret|swatch|star|dot/i;
+    const scope = U.filter(r => (band(r) === "Overlay") || ((band(r) === "Section" || band(r) === "Sub") && r.name.indexOf(" \u2014 ") < 0));
+    const named = [], thin = [];
+    scope.forEach(r => { const seen = new Set(), lab = rest(r).replace(/^(Section|Sub|Overlay)\//, ""); walk(r, (n, c) => {
+      if (n.enabled === false) { c.skipChildren(); return; }
+      const nm = n.name || n.type, t = Math.min(c.bounds.width, c.bounds.height), isThin = (n.type === "rectangle" || n.type === "line") && t <= 2 && Math.max(c.bounds.width, c.bounds.height) >= 24;
+      if (seen.has(nm) || EDGE.test(nm)) return;
+      if (NAMED.test(nm)) { seen.add(nm); named.push(lab + ">" + nm); }
+      else if (isThin && !KEEP.test(nm)) { seen.add(nm); thin.push(lab + ">" + nm); }
+    }); });
+    const list = a => a.slice(0, 8).join(",") + (a.length > 8 ? ",+" + (a.length - 8) : "");
+    chk("dividers", named.length ? (CONTRACT < 2 ? "WARN" : "FAIL") : (thin.length ? "WARN" : "PASS"), named.length + thin.length,
+      named.length ? "row dividers (08 \u00a78; spacing, or *-edge): " + list(named) + (thin.length ? " · check:" + list(thin) : "")
+        : (thin.length ? "thin lines, a row divider? (08 \u00a78): " + list(thin) : "no row or item dividers"));
   }
   if (run("placeholder")) {
     const ph = U.filter(r => r.placeholder).map(rest);

@@ -137,11 +137,11 @@
   },
   {
    "id": "PB-14",
-   "title": "Ayraçlar footer'la aynı dilde",
+   "title": "Satır arası çizgi yok",
    "keys": [],
    "pageTypes": [],
-   "rule": "Sayı sınırı yok; her ayraç footer'daki ayraçlarla aynı renk, kalınlık ve aralıktadır. İçerik içi çizgiler (liste satırları, filtre grupları, menü grupları, hesap panelleri) önce boşlukla gruplanır, bir sınırda tek çizgi olur.",
-   "test": "Kategori sayfası, mobil menü, sepet, hesap ve blog footer'la yan yana karşılaştırıldığında aynı ayraç dilini kullanır."
+   "rule": "Satırlar ve liste öğeleri (sipariş özeti, kademeler, mağaza satırları, menü ve hesap menüsü, filtre grupları, sepet satırları) arasında çizgi yok, boşlukla ayrılır. Çizgi yalnız canvas'ta `*-edge` adlı yapısal kenarlarda: yapışkan alt çubuğun üst kenarı, küçük paneldeki iki grubun sınırı, blog paylaşım satırının üstü.",
+   "test": "Kategori sayfası, mobil menü, sepet, hesap, ürün sayfası ve giriş sayfasında satırlar arasında çizgi yok; görünen her çizgi canvas'taki bir `*-edge` katmanına karşılık gelir."
   },
   {
    "id": "PB-15",
