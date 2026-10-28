@@ -59,7 +59,8 @@ def plan_data(plan):
     return out
 CHECK_EXP = {"vars": ("vars",), "ds": ("ds",), "overlays": ("overlayDevices",), "pages": ("pages", "pageExpand"),
              "anim": ("ids", "idOwner"), "parity": ("parity", "overlayDevices"), "props": ("props",),
-             "data": ("data",), "refassets": ("referenceHost",), "seed": ("seed",)}
+             "data": ("data",), "refassets": ("referenceHost",), "seed": ("seed",),
+             "spacing": ("spacing",)}
 LAYER_TYPES = ("TEXT", "RICH_TEXT", "IMAGE", "IMAGE_LIST", "VIDEO", "SVG", "SVG_LIST")
 
 
@@ -127,6 +128,8 @@ def build_exp(plan, mode, mode_only):
                idOwner={t["id"]: t.get("section") for t in plan.targets if isinstance(t.get("id"), str)
                         and t.get("section") and not str(t.get("section")).startswith("Sub/")})
     exp["seed"] = sample_catalog(plan)
+    import spacing as SP
+    exp["spacing"] = SP.from_plan(plan.md.text)
     if mode.startswith("section:"):
         key = mode.split(":", 1)[1]
         band = BANDS.get(key)
@@ -144,7 +147,7 @@ def build_exp(plan, mode, mode_only):
         exp["unit"] = dict(key=band or key, ids=uids)
         if mode_only:
             keep = dict(prefix=P, slug=slug, contract=contract, referenceHost=exp["referenceHost"], unit=exp["unit"],
-                        idOwner=exp["idOwner"], seed=exp["seed"])
+                        idOwner=exp["idOwner"], seed=exp["seed"], spacing=exp["spacing"])
             if band == "DS":
                 keep.update(vars=variables, ds=exp["ds"])
             elif band == "Page":

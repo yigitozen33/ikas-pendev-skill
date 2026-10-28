@@ -121,13 +121,16 @@ Notlar:
 | Çizgi kalınlığı | … | `size-line` | … |
 | İçerik genişliği | … | — | … |
 
-Boşluk kuralı (`02-contract.md` §3b; sayfada CHK `spacing`):
-- Sayfa kenarı = `space-page`: her bandın yan boşluğu (bölüm içeriği, header şeridi ya da kapsülü, hero, footer, paneller); mobilde de tek değer.
-- Header → ilk bölüm = `space-page` (ilk bölümün üst iç boşluğu; şeffaf header altında 0).
-- Bölüm → bölüm = `space-section`, alttaki bölümün üst iç boşluğu; bölümlerin alt iç boşluğu 0.
-- Son bölüm → footer = `space-section`, footer kökünün üst iç boşluğu (kök şeffaf).
-- Sütun bölmesi (galeri ↔ satın alma, filtre ↔ ızgara, satırlar ↔ özet, hesap menüsü ↔ panel) = `space-page`.
-- Kart ızgarası ve ray = `space-grid`.
+Boşluk sistemi (`02-contract.md` §3b; plandata `spacing`, sayfada CHK `spacing`). Roller sabit; her rolün token'ı ve değeri referanstan ölçülür. Temaya özgü token gerekiyorsa (ör. yüzen bantlar için `space-band`) değişkenlere eklenir.
+
+| Rol | Ne | Token | Masaüstü / mobil | Referans |
+|---|---|---|---|---|
+| `pageEdge` | her bandın yan boşluğu (bölüm, header, hero, footer, paneller) | … | … | … |
+| `headerGap` | header → ilk bölüm | … | … | … |
+| `sectionGap` | bölüm → bölüm (alttakinin üst iç boşluğu, alt iç boşluk 0) | … | … | … |
+| `footerGap` | son bölüm → footer (footer kökünün üst iç boşluğu, kök şeffaf) | … | … | … |
+| `split` | sütun bölmesi (galeri ↔ satın alma, filtre ↔ ızgara, satırlar ↔ özet) | … | … | … |
+| `grid` | kart ızgarası ve ray | … | … | … |
 
 Grid düzenleri:
 - …

@@ -106,6 +106,16 @@ if command -v node >/dev/null; then
   node "$HERE/tools/mock_pen.js" "$OUT/checks-spacing.js" "$OUT/overlap-bad.json" > "$OUT/overlap-bad.txt" 2>&1
   node "$HERE/tools/mock_pen.js" "$OUT/checks-spacing.js" "$OUT/overlap-ok.json" > "$OUT/overlap-ok.txt" 2>&1
   grep -q '^CHK|spacing|FAIL|.*Shelf-overlap=prev ref needs clip:false' "$OUT/overlap-bad.txt" && grep -q '^CHK|spacing|PASS|4|' "$OUT/overlap-ok.txt" && ok "spacing: a riding section needs the ref above shortened with clip off (02 §3c)" || bad "spacing: a riding section needs the ref above shortened with clip off (02 §3c)" "$(cat "$OUT/overlap-bad.txt" "$OUT/overlap-ok.txt")"
+  SPD="$OUT/sproles"; rm -rf "$SPD"; mkdir -p "$SPD"; cp -R "$FX/mini-plandata" "$SPD/pd"
+  python3 -c 'import json,sys; t=json.load(open(sys.argv[1])); t["variables"]["numbers"]["space-band"]=[20,8]; t["spacing"]={"pageEdge":"space-band","headerGap":"space-band"}; json.dump(t,open(sys.argv[1],"w"),ensure_ascii=False)' "$SPD/pd/theme.json"
+  python3 -I "$S/gen_plan.py" "$SPD/pd" --stdout > "$SPD/plan.md" 2>"$SPD/gen.log" && grep -q '^### 3b. Boşluk sistemi' "$SPD/plan.md" && grep -q '| `pageEdge` | `$space-band` |' "$SPD/plan.md" && python3 "$S/lint_plan.py" "$SPD/plan.md" >/dev/null 2>&1 && ok "gen_plan renders the theme's spacing roles (plan §3b)" || bad "gen_plan renders the theme's spacing roles (plan §3b)" "$(cat "$SPD/gen.log")"
+  python3 "$S/extract_targets.py" "$SPD/plan.md" --js all --checks spacing > "$SPD/checks.js"
+  python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); r={n["id"]:n for n in d["children"]}; r["s1"]["padding"]=[0,"$space-band",0,"$space-band"]; r["s2"]["padding"]=["$space-band","$space-band",0,"$space-band"]; [r[k].__setitem__("padding",[r[k]["padding"][0],"$space-band",r[k]["padding"][2],"$space-band"]) for k in ("s3","s4","s5")]; d["children"]=[n for n in d["children"] if n["id"]!="p2"]; json.dump(d,open(sys.argv[2],"w"))' "$FX/spacing-canvas.json" "$SPD/band.json"
+  node "$HERE/tools/mock_pen.js" "$SPD/checks.js" "$SPD/band.json" > "$SPD/theme.txt" 2>&1
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-spacing.js" "$SPD/band.json" > "$SPD/default.txt" 2>&1
+  grep -q '^CHK|spacing|PASS|4|' "$SPD/theme.txt" && grep -q '^CHK|spacing|WARN|4|.*Hero-first-top=\$space-band.*Header@desktop:side=\$space-band' "$SPD/default.txt" && ok "spacing: a 20/8 band edge passes when the theme names it, warns against the default roles" || bad "spacing: a 20/8 band edge passes when the theme names it, warns against the default roles" "$(cat "$SPD/theme.txt" "$SPD/default.txt" | grep spacing)"
+  python3 -c 'import json,sys; t=json.load(open(sys.argv[1])); t["spacing"]={"pageEdge":"space-nope","gutter":"space-grid"}; json.dump(t,open(sys.argv[1],"w"),ensure_ascii=False)' "$SPD/pd/theme.json"
+  python3 -I "$S/gen_plan.py" "$SPD/pd" --validate-only > "$SPD/invalid.log" 2>&1; [ $? = 1 ] && grep -q 'spacing.pageEdge: "space-nope" is not in' "$SPD/invalid.log" && grep -q 'unknown role "gutter"' "$SPD/invalid.log" && ok "gen_plan rejects an unknown spacing role or token" || bad "gen_plan rejects an unknown spacing role or token" "$(cat "$SPD/invalid.log")"
   python3 "$S/extract_targets.py" "$OUT/plan-mini.md" --js all --checks temp > "$OUT/checks-temp.js"
   python3 -c 'import json,sys
 d = json.load(open(sys.argv[1]))

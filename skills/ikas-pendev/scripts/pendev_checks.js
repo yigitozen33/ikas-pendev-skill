@@ -21,13 +21,14 @@
 // subfit (02 §1): a non-text child with a fixed width of half the Sub or more (and at least 120px, so icons in a
 // layout:none stack pass), directly inside a layout:none frame of a Sub root (PriceRange rail, progress bar),
 // warns: the Sub must size from its instance.
-// spacing (02 §3b): on every Page, in order (Header skipped): the first section's top padding is $space-page
-// (0 = WARN, transparent header), each next one's is a $space-* token ($space-section, else WARN), every
-// section's bottom padding is 0, the Footer's top is $space-section (instance padding overrides count).
+// spacing (02 §3b): the theme's spacing roles come from the plan §3b block (EXP.spacing; defaults when the plan
+// has none). On every Page, in order (Header skipped): the first section's top padding is headerGap (0 or another
+// variable = WARN, a raw number FAIL), each next one's is a variable (sectionGap, another variable WARN, a raw
+// number FAIL), every section's bottom padding is 0, the Footer's top is footerGap (instance overrides count).
 // A section whose root context has "overlap $<var>" rides over the one above (02 §3c): the page ref before it
-// must have clip:false and a numeric (shortened) height, else FAIL; its own top may be any $space-* token.
-// Section components: side padding $space-page or 0 (WARN); a horizontal row of refs to one component is a grid
-// with gap $space-grid, a wide row with two or more wide columns is a split with gap $space-page (WARN).
+// must have clip:false and a numeric (shortened) height, else FAIL; its own top may be any variable.
+// Section components: side padding pageEdge or 0 (WARN); a horizontal row of refs to one component is a grid with
+// gap `grid`, a wide row with two or more wide columns is a split with gap `split` (WARN).
 // storefront (06 §3d): P/Sub/ProductCard has card-media, card-fav, card-swatches, card-cart, card-customize and the
 // states "renk seçili", "ayrık varyant", "kişiselleştirme"; every card-fav (Sub roots plus the unit's Section
 // components and Overlay roots, instances resolved) sits in the same corner of its card-media, whatever corner;
@@ -186,7 +187,8 @@ if (MODE === "manifest") {
   if (run("spacing")) {
     const pad4 = p => { if (p === undefined || p === null) return [0, 0, 0, 0]; if (!Array.isArray(p)) return [p, p, p, p]; if (p.length === 2) return [p[0], p[1], p[0], p[1]]; if (p.length === 4) return p; return [0, 0, 0, 0]; };
     const zero = v => v === 0 || v === "0" || v === undefined;
-    const tok = v => typeof v === "string" && /^\$space-/.test(v);
+    const tok = v => typeof v === "string" && /^\$[a-z]/.test(v);
+    const R = Object.assign({ pageEdge: "$space-page", headerGap: "$space-page", sectionGap: "$space-section", footerGap: "$space-section", split: "$space-page", grid: "$space-grid" }, EXP.spacing || {});
     const master = {}, info = id => { if (!(id in master)) { const n = Get(id, { depth: 0 }) || {}; master[id] = { padding: n.padding, overlap: /(^|\u00b7)\s*overlap\s+\$[a-z-]+/.test(n.context || "") }; } return master[id]; };
     const padOf = id => info(id).padding;
     const bad = [], soft = []; let seams = 0;
@@ -202,17 +204,17 @@ if (MODE === "manifest") {
         if (ride && prev && !(prev.clip === false && typeof prev.height === "number")) bad.push(pg + ":" + key + "-overlap=prev ref needs clip:false + shortened height");
         const p = pad4(k.padding !== undefined ? k.padding : padOf(t.id)), top = p[0];
         seams++;
-        if (key === "Footer") { if (top !== "$space-section") bad.push(pg + ":Footer-top=" + top); return; }
+        if (key === "Footer") { if (top !== R.footerGap) bad.push(pg + ":Footer-top=" + top); return; }
         if (!zero(p[2])) bad.push(pg + ":" + key + "-bottom=" + p[2]);
-        if (first) { first = false; if (top !== "$space-page") (zero(top) ? soft : bad).push(pg + ":" + key + "-first-top=" + top); return; }
+        if (first) { first = false; if (top !== R.headerGap) (zero(top) || tok(top) ? soft : bad).push(pg + ":" + key + "-first-top=" + top); return; }
         if (!tok(top)) bad.push(pg + ":" + key + "-top=" + top);
-        else if (top !== "$space-section" && !ride) soft.push(pg + ":" + key + "-top=" + top);
+        else if (top !== R.sectionGap && !ride) soft.push(pg + ":" + key + "-top=" + top);
       });
     });
     const split = [], edge = [];
     U.filter(r => band(r) === "Section" && r.name.indexOf(" \u2014 ") < 0).forEach(r => {
       const rn = Get(r.id, { depth: 0 }) || {}, rp = pad4(rn.padding);
-      const side = [rp[1], rp[3]].filter(v => !zero(v) && v !== "$space-page");
+      const side = [rp[1], rp[3]].filter(v => !zero(v) && v !== R.pageEdge);
       if (side.length) edge.push(rest(r) + ":side=" + side[0]);
       let W = 0;
       Get(r.id, (n, c) => {
@@ -222,8 +224,8 @@ if (MODE === "manifest") {
         if (vis.length < 2) return undefined;
         const refs = vis.filter(x => x.type === "ref"), same = refs.length === vis.length && refs.every(x => x.ref === refs[0].ref);
         const wide = vis.filter(x => typeof x.width === "number" ? x.width >= W * 0.15 : x.width === "fill_container").length;
-        if (same && vis.length >= 2) { if (n.gap !== "$space-grid") split.push(rest(r) + ">" + (n.name || n.id) + ":grid-gap=" + n.gap); }
-        else if (wide >= 2 && (c.bounds.width || 0) >= W * 0.6 && n.gap !== "$space-page") split.push(rest(r) + ">" + (n.name || n.id) + ":split-gap=" + n.gap);
+        if (same && vis.length >= 2) { if (n.gap !== R.grid) split.push(rest(r) + ">" + (n.name || n.id) + ":grid-gap=" + n.gap); }
+        else if (wide >= 2 && (c.bounds.width || 0) >= W * 0.6 && n.gap !== R.split) split.push(rest(r) + ">" + (n.name || n.id) + ":split-gap=" + n.gap);
         return undefined;
       });
     });

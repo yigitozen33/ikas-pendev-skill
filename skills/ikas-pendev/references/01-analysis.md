@@ -42,7 +42,7 @@ Prompt-only: no script parses images. Work image by image.
 | **Palette → roles** | List the 6–12 dominant flat colours (backgrounds, text, lines, fills). Merge near-duplicates (ΔE < 3 by eye). Assign each to a role: bg, text, muted, line, surface, inverse-bg/text, accent, accent-text, scrim, danger, success. A role nobody shows stays empty → note "referansta yok". The colour schemes are built from these roles afterwards (`11-color.md`). |
 | **Type scale** | Measure cap height of each distinct text size; `font-size ≈ cap_height / 0.70` (condensed grotesks ≈ 0.72, serifs ≈ 0.66). Group into the 11 presets (display … price). Record ratios between steps (e.g. display/h2 = 1.5); keep ratios when snapping to integers. Weight: light/regular/bold/black by stroke. Case: uppercase or not. Letter-spacing: tight/normal/wide. |
 | **Font family** | Classify (condensed grotesk, geometric sans, serif, mono). Propose 1–2 Google Fonts candidates per role that are valid in pen.dev (see `05-pendev-pitfalls.md`). Never claim the exact face. |
-| **Spacing rhythm** | Measure page margin, gutter between cards, card padding, panel padding, gap label↔title, section top spacing. Find the base unit (4 or 5 or 8) and snap to it. |
+| **Spacing rhythm** | Measure page margin, gutter between cards, card padding, panel padding, gap label↔title, section top spacing. Find the base unit (4 or 5 or 8) and snap to it. Then fill the spacing-system roles (`02-contract.md` §3b): band edge vs content edge (one value or two?), header → first section, section → section, last section → footer, column split, grid. Each role gets one token; a second edge becomes a theme extra (`space-band`). |
 | **Grid** | Count columns per row type (product grid, category tiles, footer). Record column width, gutter, aspect ratios of media (3:4, 4:5, 16:9). |
 | **Lines, radius, depth** | Line thickness (1 / 2 px), where lines sit (cell, row bottom, header top+bottom), corner radius, shadow yes/no, gradient overlays on images. |
 | **Component inventory** | Every repeated unit (card, button, chip, badge, field, tab, accordion row) and every section band top to bottom. |
@@ -94,7 +94,7 @@ Measure at desktop (≥1200, ideally 1440) **and** mobile (<768, ideally 390). T
 - [ ] Colours: bg, text, muted, line, surface, inverse bg/text, accent (+ text on accent), scrim (alpha + blur), danger, success.
 - [ ] Fonts: families per role (display, ui, body, price, mono), weights, uppercase usage, letter-spacing.
 - [ ] 11 type presets × 4 breakpoint columns (≥1200 · 992–1199 · 768–991 · <768) with weight and line-height.
-- [ ] Spacing: page margin, grid gap, card padding, panel padding, xs/sm/md gaps, section spacing.
+- [ ] Spacing: page margin, grid gap, card padding, panel padding, xs/sm/md gaps, section spacing; the six spacing-system roles in `globals.md` §3, each bound to one token.
 - [ ] Sizes: header height, line thickness, logo height, hero height rule, content max-width.
 - [ ] Radius and shadow (usually one value each or "yok").
 - [ ] Grid layouts per section type (columns × width, gutter, media aspect ratio).

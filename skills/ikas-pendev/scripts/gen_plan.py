@@ -452,6 +452,9 @@ def validate(d, origins, cat):
         for j, e in enumerate(p.get('expand') or []):
             if not (isinstance(e, dict) and isinstance(e.get('name'), str) and e.get('pageType') in PAGE_TYPES):
                 err('%s.expand[%d]' % (path, j), 'needs name and a valid pageType')
+    if d.get('spacing') is not None:
+        import spacing as SP
+        errs.extend(SP.validate(d['spacing'], (d.get('variables') or {}).get('numbers') or {}))
     if d.get('sampleCatalog') is not None:
         import sample_catalog
         errs.extend(sample_catalog.validate(d['sampleCatalog']))
@@ -649,6 +652,13 @@ class Plan:
         out.append(fill('01-kimlik.md', c))
         out.append(fill('02-canvas.md', c))
         out.append(fill('03-degiskenler.md', c))
+        if self.c2 and d.get('spacing'):
+            import spacing as SP
+            out.append('### 3b. Boşluk sistemi\n')
+            out.append('Roller sabit, her rolün token\'ı ve değeri bu temanın (`02-contract.md` §3b). Bölüm, sayfa ve sütun '
+                       'aralıkları yalnız bu tablodan gelir; CHK `spacing` canvas\'ı bu blokla karşılaştırır.\n')
+            out.append(SP.markdown(d['spacing']))
+            out.append(SP.block(d['spacing']))
         out.append(fill('04-adlandirma.md', c))
         out.append(fill('05-anim-kurallari.md', c))
         if self.local:
