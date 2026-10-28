@@ -58,6 +58,8 @@ if command -v node >/dev/null; then sed -n '/^const dataMarks/p' "$OUT/checks-mi
   echo 'const r = dataMarks("I-PDP-02 · M-02 · not · data product.image, product.video · code index · props title TEXT"); if (JSON.stringify(r) !== JSON.stringify([["data","product.image"],["data","product.video"],["code","index"]])) { console.error(JSON.stringify(r)); process.exit(1); }' >> "$OUT/datamarks.js"
   node "$OUT/datamarks.js" 2>"$OUT/datamarks.log" && ok "data mark grammar parses" || bad "data mark grammar parses" "$(cat "$OUT/datamarks.log")"
 fi
+python3 "$S/extract_targets.py" "$OUT/plan-mini.md" --js motion > "$OUT/checks-motion.js" 2>"$OUT/motion.log" && grep -q '"unit":{"key":"Motion"' "$OUT/checks-motion.js" && ok "extract --js motion is the Motion band" || bad "extract --js motion is the Motion band" "$(cat "$OUT/motion.log")"
+python3 "$S/extract_targets.py" --help | tr -s " \n" " " | grep -q "Overlays or Motion" && ok "extract --help lists the bands" || bad "extract --help lists the bands"
 python3 "$S/extract_targets.py" "$OUT/plan-mini.md" --js all --checks bogus >/dev/null 2>&1 && bad "extract rejects unknown CHK id" || ok "extract rejects unknown CHK id"
 python3 "$S/extract_targets.py" "$OUT/plan-mini.md" --js all --checks storefront,dividers > "$OUT/checks-storefront.js" && ok "extract --checks storefront,dividers renders" || bad "extract --checks storefront,dividers renders"
 if command -v node >/dev/null; then

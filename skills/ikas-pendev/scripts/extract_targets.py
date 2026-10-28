@@ -14,7 +14,8 @@ Usage:
                into one read-only `mcp__pencil__execute` call.
                MODE: all | section:<Key> | manifest. <Key> is a §6.2 Section/Overlay key, or a
                build-unit band: DS | Sub | Page | Overlays | Motion (aliases ds, subs, pages,
-               overlays, motion).
+               overlays, motion). A band or key also works alone: `--js motion` is
+               `--js section:Motion`, `--js Hero` is `--js section:Hero`.
 --mode-only    embed only the expectations the chosen mode needs (smaller snippet).
 --checks IDS   comma list of CHK ids to run (default: all of the mode). Use when one execute
                call times out on a large canvas, e.g. --checks anim, then --checks parity. Only the
@@ -203,17 +204,23 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0],
                                  formatter_class=argparse.RawDescriptionHelpFormatter, epilog=__doc__)
     ap.add_argument("plan")
-    ap.add_argument("--format", choices=["tsv", "json", "ids"], default="tsv")
-    ap.add_argument("--js", metavar="MODE")
-    ap.add_argument("--mode-only", action="store_true")
-    ap.add_argument("--checks", metavar="IDS")
-    ap.add_argument("--part", metavar="K/N")
+    ap.add_argument("--format", choices=["tsv", "json", "ids"], default="tsv",
+                    help="target list format (default tsv)")
+    ap.add_argument("--js", metavar="MODE",
+                    help="render the check snippet. MODE: all | manifest | section:<Key> | <band>. "
+                         "<Key> is a §6.2 Section/Overlay key; <band> is DS, Sub, Page, Overlays or Motion "
+                         "(also ds, subs, pages, overlays, motion), alone or as section:<band>")
+    ap.add_argument("--mode-only", action="store_true", help="embed only what the mode needs")
+    ap.add_argument("--checks", metavar="IDS", help="comma list of CHK ids: " + " ".join(CHK_IDS))
+    ap.add_argument("--part", metavar="K/N", help="walk every N-th root starting at K")
     args = ap.parse_args(argv)
     plan = L.Plan(args.plan, open(args.plan, encoding="utf-8").read())
     if args.js:
         mode = args.js
+        if mode in BANDS or mode in plan.entries:
+            mode = "section:" + mode
         if not (mode in ("all", "manifest") or re.match(r"^section:[A-Za-z][A-Za-z0-9]*$", mode)):
-            ap.error("--js must be all, manifest or section:<Key>")
+            ap.error("--js must be all, manifest, section:<Key> or a band (%s)" % ", ".join(sorted(set(BANDS.values()))))
         exp, P, slug, contract = build_exp(plan, mode, args.mode_only)
         if args.checks:
             ids = [x.strip() for x in args.checks.split(",") if x.strip()]
