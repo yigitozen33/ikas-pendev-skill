@@ -9,8 +9,13 @@
 //   manifest         one ROOT line per root frame (port dump, docs/port/canvas-dump.txt)
 //
 // Output: CHK|<id>|PASS|FAIL|WARN|<n>|<detail<=200>  ...  SUMMARY|pass=..|fail=..|warn=..|mode=..
-// CHK ids: vars ds sections overlays pages anim hardcoded textclass clip rootmeta bgprop
+// CHK ids: vars ds sections overlays pages spacing anim hardcoded textclass clip rootmeta bgprop
 //          parity props data placeholder refassets storefront dividers radius
+// spacing (02 §3b): on every Page, in order (Header skipped): the first section's top padding is $space-page
+// (0 = WARN, transparent header), each next one's is a $space-* token ($space-section, else WARN), every
+// section's bottom padding is 0, the Footer's top is $space-section (instance padding overrides count).
+// Section components: side padding $space-page or 0 (WARN); a horizontal row of refs to one component is a grid
+// with gap $space-grid, a wide row with two or more wide columns is a split with gap $space-page (WARN).
 // storefront (06 §3d): P/Sub/ProductCard has card-media, card-fav, card-swatches, card-cart, card-customize and the
 // states "renk seçili", "ayrık varyant", "kişiselleştirme"; every card-fav (Sub roots plus the unit's Section
 // components and Overlay roots, instances resolved) sits in the same corner of its card-media, whatever corner;
@@ -110,7 +115,7 @@ if (MODE === "manifest") {
   };
   const U = roots.filter(inUnit);
   if (unit && !isBand && (EXP.sections || []).indexOf(unit) < 0 && (EXP.overlays || []).indexOf(unit) < 0) chk("sections", "FAIL", 0, "unknown unit key " + unit + " (not a plan Section/Overlay)");
-  const run = id => { if (EXP.only && EXP.only.indexOf(id) < 0) return false; if (!unit) return true; if (unit === "DS") return ["vars", "ds", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Page") return ["pages", "rootmeta", "placeholder"].indexOf(id) >= 0; if (unit === "Motion") return ["hardcoded", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Sub") return ["anim", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; if (unit === "Overlays") return ["overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "parity", "props", "data", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; return ["sections", "overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers", "radius"].indexOf(id) >= 0; };
+  const run = id => { if (EXP.only && EXP.only.indexOf(id) < 0) return false; if (!unit) return true; if (unit === "DS") return ["vars", "ds", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Page") return ["pages", "spacing", "rootmeta", "placeholder"].indexOf(id) >= 0; if (unit === "Motion") return ["hardcoded", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Sub") return ["anim", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; if (unit === "Overlays") return ["overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "parity", "props", "data", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; return ["sections", "overlays", "spacing", "anim", "hardcoded", "textclass", "clip", "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers", "radius"].indexOf(id) >= 0; };
   const find = nm => roots.find(r => r.name === nm);
   const findPre = pre => roots.filter(r => r.name === pre || r.name.indexOf(pre + " ") === 0);
 
@@ -162,6 +167,52 @@ if (MODE === "manifest") {
     }));
     const ok = names.filter(pg => !bad.some(b => b.indexOf(pg + "@") === 0)).length;
     chk("pages", bad.length ? "FAIL" : (diff.length ? "WARN" : "PASS"), ok, ok + "/" + names.length + (bad.length ? " " + bad.join(",") : "") + (diff.length ? " order/composition differs:" + diff.join(",") : ""));
+  }
+  if (run("spacing")) {
+    const pad4 = p => { if (p === undefined || p === null) return [0, 0, 0, 0]; if (!Array.isArray(p)) return [p, p, p, p]; if (p.length === 2) return [p[0], p[1], p[0], p[1]]; if (p.length === 4) return p; return [0, 0, 0, 0]; };
+    const zero = v => v === 0 || v === "0" || v === undefined;
+    const tok = v => typeof v === "string" && /^\$space-/.test(v);
+    const master = {}, padOf = id => { if (!(id in master)) { const n = Get(id, { depth: 0 }); master[id] = n ? n.padding : undefined; } return master[id]; };
+    const bad = [], soft = []; let seams = 0;
+    U.filter(r => band(r) === "Page").forEach(r => {
+      const node = Get(r.id, { depth: 1 }), kids = (node && Array.isArray(node.children)) ? node.children : [];
+      const secs = kids.map(k => ({ k, t: k && k.ref ? byId[k.ref] : null })).filter(x => x.t && rest(x.t).indexOf("Section/") === 0);
+      const pg = rest(r).slice(5);
+      let first = true;
+      secs.forEach(({ k, t }) => {
+        const key = keyOf(t);
+        if (key === "Header") return;
+        const p = pad4(k.padding !== undefined ? k.padding : padOf(t.id)), top = p[0];
+        seams++;
+        if (key === "Footer") { if (top !== "$space-section") bad.push(pg + ":Footer-top=" + top); return; }
+        if (!zero(p[2])) bad.push(pg + ":" + key + "-bottom=" + p[2]);
+        if (first) { first = false; if (top !== "$space-page") (zero(top) ? soft : bad).push(pg + ":" + key + "-first-top=" + top); return; }
+        if (!tok(top)) bad.push(pg + ":" + key + "-top=" + top);
+        else if (top !== "$space-section") soft.push(pg + ":" + key + "-top=" + top);
+      });
+    });
+    const split = [], edge = [];
+    U.filter(r => band(r) === "Section" && r.name.indexOf(" \u2014 ") < 0).forEach(r => {
+      const rn = Get(r.id, { depth: 0 }) || {}, rp = pad4(rn.padding);
+      const side = [rp[1], rp[3]].filter(v => !zero(v) && v !== "$space-page");
+      if (side.length) edge.push(rest(r) + ":side=" + side[0]);
+      let W = 0;
+      Get(r.id, (n, c) => {
+        if (n.id === r.id) { W = c.bounds.width || 0; return undefined; }
+        if (n.layout !== "horizontal" || n.enabled === false || !W) return undefined;
+        const kids = Get(n.id, { depth: 1 }).children || [], vis = kids.filter(x => x.enabled !== false);
+        if (vis.length < 2) return undefined;
+        const refs = vis.filter(x => x.type === "ref"), same = refs.length === vis.length && refs.every(x => x.ref === refs[0].ref);
+        const wide = vis.filter(x => typeof x.width === "number" ? x.width >= W * 0.15 : x.width === "fill_container").length;
+        if (same && vis.length >= 2) { if (n.gap !== "$space-grid") split.push(rest(r) + ">" + (n.name || n.id) + ":grid-gap=" + n.gap); }
+        else if (wide >= 2 && (c.bounds.width || 0) >= W * 0.6 && n.gap !== "$space-page") split.push(rest(r) + ">" + (n.name || n.id) + ":split-gap=" + n.gap);
+        return undefined;
+      });
+    });
+    const warnL = soft.concat(edge, split);
+    const badSeams = new Set(bad.map(b => b.replace(/-[a-z-]+=.*$/, ""))).size;
+    chk("spacing", bad.length ? (CONTRACT < 2 ? "WARN" : "FAIL") : (warnL.length ? "WARN" : "PASS"), seams - badSeams,
+      (seams - badSeams) + "/" + seams + " page seams" + (bad.length ? " bad:" + bad.join(",") : "") + (warnL.length ? " check:" + warnL.join(",") : ""));
   }
   if (run("anim")) {
     const want = unit ? ((EXP.unit && EXP.unit.ids) || []) : (EXP.ids || []);

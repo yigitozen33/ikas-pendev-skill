@@ -8,7 +8,7 @@ The fixed agreement between the plan, the pen.dev canvas and the ikas port. Scri
 
 1. Canvas bands and layout
 2. Naming ↔ code
-3. Core variables (41)
+3. Core variables (41) · 3b. Spacing rule
 4. Type-style mapping
 5. Metadata schema
 6. Tree notation
@@ -135,6 +135,24 @@ Rules:
 - Structural `1` px hairlines (form-field border, `link-line`) when `size-line` is thicker.
 - Geometry (width, height, x, y, rotation) is never tokenised.
 - `opacity` equal to the `opacity-inactive` value: the canvas does not render a `$variable` on `opacity` (05 §15). Write the number and add `opacity: $opacity-inactive` to the node's `context` so the port uses the token.
+
+## 3b. Spacing rule
+
+Every gap between bands, sections and columns comes from this table, never from a per-section guess. A section's own inner rhythm (heading → content, card padding) uses the smaller `space-*` tokens freely; the gaps below are fixed.
+
+| Gap | Token | Carried by |
+|---|---|---|
+| Page edge: the side inset of every band (section content, Header bar or capsule, Hero band, Footer, panels) | `space-page` | each Section root's left/right padding; a full-bleed band (photo, colour panel edge to edge) has side padding 0 and keeps its content at `space-page` inside |
+| Header → first section | `space-page` | the first section's top padding (Hero, page sections). 0 only under a transparent Header state, where the section runs behind it |
+| Section → section | `space-section` | the **lower** section's top padding; every section's bottom padding is 0, so gaps never add up |
+| Last section → Footer | `space-section` | the Footer root's top padding; the Footer root stays transparent and its colour sits on an inner band |
+| Column split: gallery ↔ buy box, filters ↔ grid, lines ↔ summary, account nav ↔ panel, form ↔ channels | `space-page` | the gap of the row that holds the columns |
+| Card grid and rail: cards, tiles, offer cards | `space-grid` | the gap of the grid row |
+
+- Mobile follows the same rows with the mobile values of the same tokens; never type a mobile number. Every band's mobile edge is the same `space-page`, the Header capsule included.
+- A section that needs a different top gap (a tighter strip under the Hero, a tile row riding up over it) uses another `space-*` token or the overlap convention (§3c), and the plan's `**Desktop:**` / `**Mobil:**` line says why. A raw number is never right.
+- On pages a section instance may override its top padding (first section on one page, second on another); the master keeps `space-section`.
+- CHK `spacing` reads every Page in order (first section top, section → section, bottom 0, Footer top) and the column-split and grid gaps of Section components. Confirm the seams on a full-resolution export of each page (05 §23a).
 
 ## 4. Type-style mapping
 

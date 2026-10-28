@@ -57,6 +57,7 @@ Emitted by `pendev_checks.js` as `CHK|<id>|PASS|FAIL|WARN|<n>|<detail≤200>`, c
 | `sections` | section frames | every plan §6.2 Section key has `P/Section/<Key>@desktop` and `@mobile`, both `reusable: true` | same |
 | `pages` | page composition | every plan §6.3 page exists at both devices; children are only `ref`s to `P/Section/*` of the same device | same |
 | `overlays` | overlay frames | every plan overlay × listed state × device has a root `P/Overlay/<Name>@device — <state>` | same |
+| `spacing` | spacing rule (`02-contract.md` §3b) | on every Page, in order: first section top `$space-page` (0 → WARN, transparent Header), each next top a `$space-*` token (`$space-section`, other tokens WARN), every bottom 0, Footer top `$space-section`; Section components: side padding `$space-page` or 0, grid rows gap `$space-grid`, wide column splits gap `$space-page` (WARN) | `WARN` instead of FAIL |
 | `anim` | animation targets | set of ids from `metadata.anim` ∪ `context` regex over Section/Sub components and every Overlay root (a `resolveInstances: true` pass only while ids are missing) equals the plan's id set, both directions; no Section/Overlay root carries an id the plan gives another key (`foreign`); backdrop refs to other Sections are skipped (02 §5b) | regex `C-[A-Z]{2,}-\d\d` style (prefix-specific), same equality |
 | `textclass` | text classification | 0 text nodes without `textClass`; `prop` has `prop`+`propType` (one of the 30); `data` has `source` | `WARN` with the unmarked count (ornek baseline ≈ 350); never FAIL |
 | `clip` | clipped content | 0 nodes with `ctx.problems`, excluding descendants of layers named `*mask*`, `*track*`, `marquee`, `ticker`, `*pin*`, `*stage*`, `*curtain*` | same |
@@ -78,6 +79,7 @@ Design side — every item maps to a CHK or a manual check:
 - [ ] `GetVariables()` contains all plan §3 variables; no hardcoded hex / font size / font family (`vars`, `hardcoded`).
 - [ ] Every §6.2 section has reusable `@desktop` and `@mobile` roots (`sections`).
 - [ ] Every §6.3 page consists only of Section instances (`pages`); every overlay state exists at both devices (`overlays`).
+- [ ] Gaps follow the spacing rule (`spacing`): no section touches the Header or the Footer, no double gaps, page edges and column splits on one token; checked again on a full-resolution export of every page (manual).
 - [ ] The **union** of `metadata.anim` and the `context` scan (plan §8 step 2) equals the §7 id list exactly (`anim`).
 - [ ] Every text layer has `textClass`; `prop` texts carry `prop`+`propType`, `data` texts carry `source` (`textclass`).
 - [ ] No clipped-content warning on any frame, masks and tracks excepted (`clip`).

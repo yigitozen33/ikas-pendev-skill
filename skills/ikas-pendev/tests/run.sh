@@ -87,6 +87,15 @@ if command -v node >/dev/null; then
   python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); d["children"][-1]["cornerRadius"]=4; json.dump(d,open(sys.argv[2],"w"))' "$FX/storefront-canvas.json" "$OUT/radius-raw.json"
   node "$HERE/tools/mock_pen.js" "$OUT/checks-radius.js" "$OUT/radius-raw.json" > "$OUT/radius-raw.txt" 2>&1
   grep -q '^CHK|hardcoded|FAIL|1|.*cornerRadius=1' "$OUT/radius-raw.txt" && grep -q '^CHK|radius|WARN|2|control Subs radius differs' "$OUT/radius-raw.txt" && ok "radius: raw cornerRadius is hardcoded, controls on two values warn" || bad "radius: raw cornerRadius is hardcoded, controls on two values warn" "$(grep 'hardcoded\|radius' "$OUT/radius-raw.txt")"
+  python3 "$S/extract_targets.py" "$OUT/plan-mini.md" --js all --checks spacing > "$OUT/checks-spacing.js"
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-spacing.js" "$FX/spacing-canvas.json" > "$OUT/spacing.txt" 2>&1
+  grep -q '^CHK|spacing|PASS|7|7/7 page seams$' "$OUT/spacing.txt" && ok "spacing: page seams, Footer top, a first-section override, grid and split gaps pass (02 §3b)" || bad "spacing: page seams, Footer top, a first-section override, grid and split gaps pass (02 §3b)" "$(grep spacing "$OUT/spacing.txt")"
+  python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); r={n["id"]:n for n in d["children"]}; r["s5"]["padding"]=[0,"$space-page","$space-page","$space-page"]; r["s3"]["padding"]=[48,"$space-page","$space-section","$space-page"]; d["children"]=[n for n in d["children"] if n["id"]!="p2"]; json.dump(d,open(sys.argv[2],"w"))' "$FX/spacing-canvas.json" "$OUT/spacing-bad.json"
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-spacing.js" "$OUT/spacing-bad.json" > "$OUT/spacing-bad.txt" 2>&1
+  grep -q '^CHK|spacing|FAIL|2|2/4 page seams bad:Home@desktop:Shelf-bottom=\$space-section,Home@desktop:Shelf-top=48,Home@desktop:Footer-top=0$' "$OUT/spacing-bad.txt" && ok "spacing: Footer on the last section, double gaps and raw tops fail (02 §3b)" || bad "spacing: Footer on the last section, double gaps and raw tops fail (02 §3b)" "$(grep spacing "$OUT/spacing-bad.txt")"
+  python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); r={n["id"]:n for n in d["children"]}; r["s1"]["padding"]=[0,16,0,16]; r["s4"]["children"][0]["gap"]=40; r["s3"]["children"][0]["gap"]=24; d["children"]=[n for n in d["children"] if n["id"]!="p2"]; json.dump(d,open(sys.argv[2],"w"))' "$FX/spacing-canvas.json" "$OUT/spacing-warn.json"
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-spacing.js" "$OUT/spacing-warn.json" > "$OUT/spacing-warn.txt" 2>&1
+  grep -q '^CHK|spacing|WARN|4|4/4 page seams check:Section/Header@desktop:side=16,Section/Shelf@desktop>shelf-grid:grid-gap=24,Section/ProductDetail@desktop>pdp-main:split-gap=40$' "$OUT/spacing-warn.txt" && ok "spacing: an off-token page edge, grid gap or column split warns (02 §3b)" || bad "spacing: an off-token page edge, grid gap or column split warns (02 §3b)" "$(grep spacing "$OUT/spacing-warn.txt")"
 fi
 
 # 6. analyze_site on offline fixture

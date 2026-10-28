@@ -121,6 +121,14 @@ Notlar:
 | Çizgi kalınlığı | … | `size-line` | … |
 | İçerik genişliği | … | — | … |
 
+Boşluk kuralı (`02-contract.md` §3b; sayfada CHK `spacing`):
+- Sayfa kenarı = `space-page`: her bandın yan boşluğu (bölüm içeriği, header şeridi ya da kapsülü, hero, footer, paneller); mobilde de tek değer.
+- Header → ilk bölüm = `space-page` (ilk bölümün üst iç boşluğu; şeffaf header altında 0).
+- Bölüm → bölüm = `space-section`, alttaki bölümün üst iç boşluğu; bölümlerin alt iç boşluğu 0.
+- Son bölüm → footer = `space-section`, footer kökünün üst iç boşluğu (kök şeffaf).
+- Sütun bölmesi (galeri ↔ satın alma, filtre ↔ ızgara, satırlar ↔ özet, hesap menüsü ↔ panel) = `space-page`.
+- Kart ızgarası ve ray = `space-grid`.
+
 Grid düzenleri:
 - …
 

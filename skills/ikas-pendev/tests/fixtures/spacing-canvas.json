@@ -1,0 +1,339 @@
+{
+ "children": [
+  {
+   "id": "c1",
+   "name": "K/Sub/ProductCard",
+   "type": "frame",
+   "reusable": true,
+   "x": 0,
+   "y": -1000,
+   "width": 300,
+   "height": 400,
+   "children": []
+  },
+  {
+   "id": "s1",
+   "name": "K/Section/Header@desktop",
+   "type": "frame",
+   "reusable": true,
+   "x": 0,
+   "y": 1000,
+   "width": 1440,
+   "height": 600,
+   "padding": [
+    0,
+    "$space-page",
+    0,
+    "$space-page"
+   ],
+   "layout": "vertical",
+   "metadata": {
+    "type": "kaya",
+    "role": "section"
+   },
+   "children": []
+  },
+  {
+   "id": "s2",
+   "name": "K/Section/Hero@desktop",
+   "type": "frame",
+   "reusable": true,
+   "x": 0,
+   "y": 2000,
+   "width": 1440,
+   "height": 600,
+   "padding": [
+    "$space-page",
+    "$space-page",
+    0,
+    "$space-page"
+   ],
+   "layout": "vertical",
+   "metadata": {
+    "type": "kaya",
+    "role": "section"
+   },
+   "children": []
+  },
+  {
+   "id": "s3",
+   "name": "K/Section/Shelf@desktop",
+   "type": "frame",
+   "reusable": true,
+   "x": 0,
+   "y": 3000,
+   "width": 1440,
+   "height": 600,
+   "padding": [
+    "$space-section",
+    "$space-page",
+    0,
+    "$space-page"
+   ],
+   "layout": "vertical",
+   "metadata": {
+    "type": "kaya",
+    "role": "section"
+   },
+   "children": [
+    {
+     "id": "g1",
+     "name": "shelf-grid",
+     "type": "frame",
+     "layout": "horizontal",
+     "gap": "$space-grid",
+     "x": 0,
+     "y": 0,
+     "width": 1376,
+     "height": 400,
+     "children": [
+      {
+       "id": "g1r0",
+       "name": "card",
+       "type": "ref",
+       "ref": "c1",
+       "x": 0,
+       "y": 0,
+       "width": 300,
+       "height": 400
+      },
+      {
+       "id": "g1r1",
+       "name": "card",
+       "type": "ref",
+       "ref": "c1",
+       "x": 310,
+       "y": 0,
+       "width": 300,
+       "height": 400
+      },
+      {
+       "id": "g1r2",
+       "name": "card",
+       "type": "ref",
+       "ref": "c1",
+       "x": 620,
+       "y": 0,
+       "width": 300,
+       "height": 400
+      },
+      {
+       "id": "g1r3",
+       "name": "card",
+       "type": "ref",
+       "ref": "c1",
+       "x": 930,
+       "y": 0,
+       "width": 300,
+       "height": 400
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "s4",
+   "name": "K/Section/ProductDetail@desktop",
+   "type": "frame",
+   "reusable": true,
+   "x": 0,
+   "y": 4000,
+   "width": 1440,
+   "height": 600,
+   "padding": [
+    "$space-section",
+    "$space-page",
+    0,
+    "$space-page"
+   ],
+   "layout": "vertical",
+   "metadata": {
+    "type": "kaya",
+    "role": "section"
+   },
+   "children": [
+    {
+     "id": "m1",
+     "name": "pdp-main",
+     "type": "frame",
+     "layout": "horizontal",
+     "gap": "$space-page",
+     "x": 0,
+     "y": 0,
+     "width": 1376,
+     "height": 600,
+     "children": [
+      {
+       "id": "m1a",
+       "name": "pdp-gallery",
+       "type": "frame",
+       "x": 0,
+       "y": 0,
+       "width": 640,
+       "height": 600
+      },
+      {
+       "id": "m1b",
+       "name": "pdp-buybox",
+       "type": "frame",
+       "x": 700,
+       "y": 0,
+       "width": 576,
+       "height": 600
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "s5",
+   "name": "K/Section/Footer@desktop",
+   "type": "frame",
+   "reusable": true,
+   "x": 0,
+   "y": 5000,
+   "width": 1440,
+   "height": 600,
+   "padding": [
+    "$space-section",
+    "$space-page",
+    "$space-page",
+    "$space-page"
+   ],
+   "layout": "vertical",
+   "metadata": {
+    "type": "kaya",
+    "role": "section"
+   },
+   "children": []
+  },
+  {
+   "id": "p1",
+   "name": "K/Page/Home@desktop",
+   "type": "frame",
+   "x": 2000,
+   "y": 0,
+   "width": 1440,
+   "height": 4000,
+   "layout": "vertical",
+   "metadata": {
+    "type": "kaya",
+    "role": "page"
+   },
+   "children": [
+    {
+     "id": "p1r1",
+     "name": "header",
+     "type": "ref",
+     "ref": "s1",
+     "x": 0,
+     "y": 600,
+     "width": 1440,
+     "height": 600
+    },
+    {
+     "id": "p1r2",
+     "name": "hero",
+     "type": "ref",
+     "ref": "s2",
+     "x": 0,
+     "y": 1200,
+     "width": 1440,
+     "height": 600
+    },
+    {
+     "id": "p1r3",
+     "name": "shelf",
+     "type": "ref",
+     "ref": "s3",
+     "x": 0,
+     "y": 1800,
+     "width": 1440,
+     "height": 600
+    },
+    {
+     "id": "p1r4",
+     "name": "pdp",
+     "type": "ref",
+     "ref": "s4",
+     "x": 0,
+     "y": 2400,
+     "width": 1440,
+     "height": 600
+    },
+    {
+     "id": "p1r5",
+     "name": "footer",
+     "type": "ref",
+     "ref": "s5",
+     "x": 0,
+     "y": 3000,
+     "width": 1440,
+     "height": 600
+    }
+   ]
+  },
+  {
+   "id": "p2",
+   "name": "K/Page/Product@desktop",
+   "type": "frame",
+   "x": 4000,
+   "y": 0,
+   "width": 1440,
+   "height": 3000,
+   "layout": "vertical",
+   "metadata": {
+    "type": "kaya",
+    "role": "page"
+   },
+   "children": [
+    {
+     "id": "p2r1",
+     "name": "header",
+     "type": "ref",
+     "ref": "s1",
+     "x": 0,
+     "y": 0,
+     "width": 1440,
+     "height": 100
+    },
+    {
+     "id": "p2r4",
+     "name": "pdp",
+     "type": "ref",
+     "ref": "s4",
+     "padding": [
+      "$space-page",
+      "$space-page",
+      0,
+      "$space-page"
+     ],
+     "x": 0,
+     "y": 100,
+     "width": 1440,
+     "height": 600
+    },
+    {
+     "id": "p2r3",
+     "name": "shelf",
+     "type": "ref",
+     "ref": "s3",
+     "x": 0,
+     "y": 700,
+     "width": 1440,
+     "height": 600
+    },
+    {
+     "id": "p2r5",
+     "name": "footer",
+     "type": "ref",
+     "ref": "s5",
+     "x": 0,
+     "y": 1300,
+     "width": 1440,
+     "height": 600
+    }
+   ]
+  }
+ ]
+}

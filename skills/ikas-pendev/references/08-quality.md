@@ -21,6 +21,7 @@ What separates a designed theme from a generated one. Read before writing plan �
 | **Filler copy** | English or lorem ipsum, "Welcome to our store" | Turkish copy in the brand's voice (§6) |
 | **Fake proof** | invented stats ("10k+ happy customers"), testimonials with stock faces, fake press logos | only what the brief supplies; otherwise leave the section out or make it a prop with an empty default |
 | **Identical rhythm** | every section = title, subtitle, 4-column grid, same padding | vary density and scale: one full-bleed, one tight list, one oversized type moment |
+| **Guessed gaps** | the Hero touches the Header, the last section touches the Footer, the mobile Header sits 16 from the edge while every band sits 8, two-column splits at 24 / 40 / 48 / 64 / 80 | one spacing rule (`02-contract.md` §3b): page edge, header → first, section → section, last → footer, splits and grids each come from one token; CHK `spacing` |
 | **Stock team** | smiling people around a laptop, handshake, office | imagery from the art direction in `P/DS/Imagery` |
 | **Purple default** | violet-to-blue gradients, glassmorphism | colours from the reference analysis and the brief |
 | **Soft hero** | a full-bleed photo that is blurry or pixelated on a large screen, or text on a busy photo with no veil | §9: files at 2× the frame, a `*-veil` layer with an opacity prop |
