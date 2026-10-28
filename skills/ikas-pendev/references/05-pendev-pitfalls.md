@@ -3,7 +3,7 @@
 This file only adds what the official pen.dev skill does not say, or says in a place that is easy to miss. It never restates the API: read the official files first (`mcp__pencil__read_skill()` → `SKILL.md`, `pen-schema.md`, `execute.md`; `generate.md` before any `Generate`; `guide/components.md` before building Subs). "Official" lines point to the file and section to open. Items marked *observed* were found on real canvases and are not in the official docs.
 
 ## Contents
-1. Metadata is only kept at creation · 2. `Replace` on a normal layer · 3. Instances drop metadata · 4. Invalid fonts · 5. Translucent colours · 6. `Generate` is async · 7. No wrap · 8. Invisible text · 9. One scope per call · 10. Placement · 11. Failed `execute` · 12. Multiplayer · 13. `fit_content` / `fill_container` loop · 14. Screenshot discipline · 15. Variable opacity · 16. Hidden layers count as clipped · 17. Copied state frames lose frame props · 18. Transparent and dark-scoped overrides · 19. Opacity-0 empty states · 20. Insert index · 21. Copied anim ids, backdrop instances · 22. Strikethrough not stored · 23. Moving layers in a master drops overrides
+1. Metadata is only kept at creation · 2. `Replace` on a normal layer · 3. Instances drop metadata · 4. Invalid fonts · 5. Translucent colours · 6. `Generate` is async · 7. No wrap · 8. Invisible text · 9. One scope per call · 10. Placement · 11. Failed `execute` · 12. Multiplayer · 13. `fit_content` / `fill_container` loop · 14. Screenshot discipline · 15. Variable opacity · 16. Hidden layers count as clipped · 17. Copied state frames lose frame props · 18. Transparent and dark-scoped overrides · 19. Opacity-0 empty states · 20. Insert index · 21. Copied anim ids, backdrop instances · 22. Strikethrough not stored · 23. Moving layers in a master drops overrides · 24. Stale bounds, false clip · 25. State alternatives need wrapper frames · 26. `letterSpacing` is px · 27. False sizing warnings inside instances · 28. Copies into `layout: "none"` stages
 
 ## 1. Metadata is only kept at creation *(observed)*
 - **Symptom:** `Update(id, {metadata:{…}})` returns without error, but a later `Get` shows the old or no metadata; CHK `rootmeta`, `anim` or `textclass` fails on a layer you "fixed".
@@ -137,3 +137,28 @@ This file only adds what the official pen.dev skill does not say, or says in a p
 ## 23. Moving a layer inside a component master drops instance overrides *(observed)*
 - **Symptom:** after `Move(textId, wrapperId)` inside a reusable component, every instance that had `descendants[textId]` (content, `enabled`, `opacity`) loses that override.
 - **Fix:** before the move, list all refs whose `descendants` keys end with the moved id and save the values; after the move, write them back with `Update(refId + "/" + id, {...})` (or onto the new wrapper, for `enabled` / `opacity`). Check one instance per key with `Get(refId).descendants`.
+
+## 24. Stale bounds report a false clip *(observed)*
+- **Symptom:** right after a resize, CHK `clip` (or `ctx.problems`) reports a child overflowing its parent, but the screenshot shows it fits.
+- **Cause:** bounds read in the same call as the change, or right after it, can still hold the old layout.
+- **Fix:** nudge the parent's size by ±1 and back (two `Update`s), then run CHK `clip` again in the **next** call. Only a clip that survives the recheck is real.
+
+## 25. State alternatives need wrapper frames *(observed)*
+- **Symptom:** a state copied as a `ref` (`— sepette`, `— tükendi`) loses `{type, role, state}`; CHK `rootmeta` fails on it and the manifest misses the state.
+- **Cause:** a `ref` cannot hold its own metadata (§3), so a bare ref root has none.
+- **Fix:** every state alternative is a plain frame that carries `{type, role, state}` and holds the state `ref` as its only child. Build the wrapper in the same `Insert` as the state.
+
+## 26. `letterSpacing` is in px *(observed)*
+- **Symptom:** a heading looks crushed or spread far apart after you copy tracking from the reference CSS.
+- **Cause:** pen.dev reads `letterSpacing` as px. CSS tracking often comes in `em` (`0.02em`) or %.
+- **Fix:** convert before writing: `px = em × fontSize`. Keep the `em` value in the typography token's `context` for the port.
+
+## 27. False sizing warnings inside instances *(observed)*
+- **Symptom:** `execute` warns "Collapsed size" or reports a `fill_container` loop on a layer inside a `ref`, but the instance renders at the right size.
+- **Cause:** the check runs on the instance tree before the master's sizes resolve.
+- **Fix:** if the master shows no warning and the instance screenshot is right, ignore it. If the master warns too, fix it there (§13).
+
+## 28. Copies into a `layout: "none"` stage need fixed widths *(observed)*
+- **Symptom:** a frame copied into a motion stage (`layout: "none"`) collapses or stretches. Its text wraps per letter, or it runs off the stage.
+- **Cause:** `fill_container` has no flex parent to fill inside `layout: "none"`.
+- **Fix:** in the same call as the `Copy`, set a fixed `width` (and `height` when needed) on each copied root, for example the device width or the source's measured width.
