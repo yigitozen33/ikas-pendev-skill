@@ -3,7 +3,7 @@
 This file only adds what the official pen.dev skill does not say, or says in a place that is easy to miss. It never restates the API: read the official files first (`mcp__pencil__read_skill()` → `SKILL.md`, `pen-schema.md`, `execute.md`; `generate.md` before any `Generate`; `guide/components.md` before building Subs). "Official" lines point to the file and section to open. Items marked *observed* were found on real canvases and are not in the official docs.
 
 ## Contents
-1. Metadata is only kept at creation · 2. `Replace` on a normal layer · 3. Instances drop metadata · 4. Invalid fonts · 5. Translucent colours · 6. `Generate` is async · 7. No wrap · 8. Invisible text · 9. One scope per call · 10. Placement · 11. Failed `execute` · 12. Multiplayer · 13. `fit_content` / `fill_container` loop · 14. Screenshot discipline · 15. Variable opacity · 16. Hidden layers count as clipped · 17. Copied state frames lose frame props · 18. Transparent and dark-scoped overrides · 19. Opacity-0 empty states · 20. Insert index · 21. Copied anim ids, backdrop instances · 22. Strikethrough not stored · 23. Moving layers in a master drops overrides · 24. Stale bounds, false clip · 25. State alternatives need wrapper frames · 26. `letterSpacing` is px · 27. False sizing warnings inside instances · 28. Copies into `layout: "none"` stages
+1. Metadata is only kept at creation · 2. `Replace` on a normal layer · 3. Instances drop metadata · 4. Invalid fonts · 5. Translucent colours · 6. `Generate` is async · 7. No wrap · 8. Invisible text · 9. One scope per call · 10. Placement · 11. Failed `execute` · 12. Multiplayer · 13. `fit_content` / `fill_container` loop · 14. Screenshot discipline · 15. Variable opacity · 16. Hidden layers count as clipped · 17. Copied state frames lose frame props · 18. Transparent and dark-scoped overrides · 19. Opacity-0 empty states · 20. Insert index · 21. Copied anim ids, backdrop instances · 22. Strikethrough not stored · 23. Moving layers in a master drops overrides (23a. size changes not reaching instances) · 24. Stale bounds, false clip · 25. State alternatives need wrapper frames · 26. `letterSpacing` is px · 27. False sizing warnings inside instances · 28. Copies into `layout: "none"` stages
 
 ## 1. Metadata is only kept at creation *(observed)*
 - **Symptom:** `Update(id, {metadata:{…}})` returns without error, but a later `Get` shows the old or no metadata; CHK `rootmeta`, `anim` or `textclass` fails on a layer you "fixed".
@@ -135,8 +135,18 @@ This file only adds what the official pen.dev skill does not say, or says in a p
 - **Fix:** wrap the text in a vertical frame and draw the line as a sibling: `{type: "frame", layout: "vertical", gap: floor(h/2) - h, padding: [0, 0, h - floor(h/2) - 1, 0]}` with the text first and `{type: "rectangle", width: "fill_container", height: 1, fill: <text fill>}` second. The line follows the text width, so content overrides on instances still fit. The tool warns about circular sizing on the wrapper; the render is correct. Keep the text's visibility or opacity on the wrapper so the line hides with it.
 
 ## 23. Moving a layer inside a component master drops instance overrides *(observed)*
-- **Symptom:** after `Move(textId, wrapperId)` inside a reusable component, every instance that had `descendants[textId]` (content, `enabled`, `opacity`) loses that override.
-- **Fix:** before the move, list all refs whose `descendants` keys end with the moved id and save the values; after the move, write them back with `Update(refId + "/" + id, {...})` (or onto the new wrapper, for `enabled` / `opacity`). Check one instance per key with `Get(refId).descendants`.
+- **Symptom:** after `Move(textId, wrapperId)` inside a reusable component, every instance that had `descendants[textId]` (content, `enabled`, `opacity`) loses that override. Nothing warns. In sevgi, regrouping inside `ProductCard` wiped the titles and brands of 53 cards; they came back only from the last saved `.pen` copy.
+- **Rule:** never regroup (`Move` into a new frame) inside a master that has overridden instances. Add a new wrapper as a fresh layer, or read and re-apply the overrides **in the same call** as the move.
+- **Fix:** before the move, list all refs whose `descendants` keys end with the moved id and save the values; after the move, write them back with `Update(refId + "/" + id, {...})` (or onto the new wrapper, for `enabled` / `opacity`). Check one instance per key with `Get(refId).descendants`. Save a copy of the `.pen` before any master restructure.
+
+### 23a. Master size changes do not always reach instances *(observed)*
+- **Symptom:**
+  - after resizing a master frame, its instances keep the old size;
+  - a page (refs of sections that hold card refs) keeps rendering the old nested layout, while the section master itself looks right.
+- **Fix:**
+  - update the master frame once more (nudge ±1 and back);
+  - nudge **every** section master that holds the changed Sub, not only the Sub.
+- **Verify:** export the **page** at full resolution and look at it. Bounds and a section screenshot can look right while the page is still wrong.
 
 ## 24. Stale bounds report a false clip *(observed)*
 - **Symptom:** right after a resize, CHK `clip` (or `ctx.problems`) reports a child overflowing its parent, but the screenshot shows it fits.
