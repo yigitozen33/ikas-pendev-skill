@@ -59,6 +59,7 @@ Emitted by `pendev_checks.js` as `CHK|<id>|PASS|FAIL|WARN|<n>|<detail≤200>`, c
 | `overlays` | overlay frames | every plan overlay × listed state × device has a root `P/Overlay/<Name>@device — <state>` | same |
 | `spacing` | spacing rule (`02-contract.md` §3b) | on every Page, in order: first section top `$space-page` (0 → WARN, transparent Header), each next top a `$space-*` token (`$space-section`, other tokens WARN), every bottom 0, Footer top `$space-section`; Section components: side padding `$space-page` or 0, grid rows gap `$space-grid`, wide column splits gap `$space-page` (WARN); before a section marked `overlap $size-overlap` the page ref has `clip: false` and a shortened height (§3c) | `WARN` instead of FAIL |
 | `subfit` | Subs size from the instance (`02-contract.md` §1) | `WARN` when a non-text child of a Sub's `layout: "none"` frame has a fixed width of half the Sub or more (PriceRange rail, progress bar) | same |
+| `temp` | options box (§7) | no top-level frame named `… (geçici)` other than the one `Öneriler (geçici)` container (FAIL); the container sits below every `P/` root (WARN) | same |
 | `anim` | animation targets | set of ids from `metadata.anim` ∪ `context` regex over Section/Sub components and every Overlay root (a `resolveInstances: true` pass only while ids are missing) equals the plan's id set, both directions; no Section/Overlay root carries an id the plan gives another key (`foreign`); backdrop refs to other Sections are skipped (02 §5b) | regex `C-[A-Z]{2,}-\d\d` style (prefix-specific), same equality |
 | `textclass` | text classification | 0 text nodes without `textClass`; `prop` has `prop`+`propType` (one of the 30); `data` has `source` | `WARN` with the unmarked count (ornek baseline ≈ 350); never FAIL |
 | `clip` | clipped content | 0 nodes with `ctx.problems`, excluding descendants of layers named `*mask*`, `*track*`, `marquee`, `ticker`, `*pin*`, `*stage*`, `*curtain*` | same |
@@ -130,10 +131,12 @@ Fixes after the fact get a new line with the same root and `düzeltme:` in the n
 
 Use this whenever the user asks for options, alternatives, proposals, motion ideas, or "what else could we do". It applies in every phase, including revisions after verify.
 
-**1. Open the temp frame.**
-- Reuse the open temp frame, or create one root frame named `<Konu> önerileri (geçici)`.
-- Do not give it the `P/` prefix: CHK ignores it, and nothing in it is a contract node.
-- Place it with `FindEmptySpace`, right of the band it concerns. Use `fill: $color-surface`, vertical layout, `gap: 56`, `padding: 64`.
+**1. Open the temp frame inside the options box.** All temp frames live in one place, away from the real design:
+- One top-level container `Öneriler (geçici)`: horizontal layout, `gap: 200`, no fill, in its own row **below every root** of the canvas (x 0, y = bottom of the lowest root + 2000). Create it on first use; afterwards find it by name and reuse it. Never create a second one.
+- Each topic is a child frame `<Konu> önerileri (geçici)` of the container, never a root. Reuse the topic's frame when it exists; a new topic goes first: `Insert` into the container, then `Move(id, box, 0)` (newest leftmost).
+- The topic frame's first child is a `topic-title` text: topic, date and option numbers (`Sepet · 2026-10-28 · 1–4`); update the numbers when options are added or transferred.
+- Do not give these frames the `P/` prefix: nothing in them is a contract node. Use `fill: $color-surface`, vertical layout, `gap: 56`, `padding: 64`.
+- CHK `temp` fails on a `(geçici)` frame outside the container and warns when the container is not below every root.
 
 **2. Draw numbered options.** Each option is:
 - an `opt-label`, holding an `opt-title` ("N · Ad") and an `opt-desc`. For motion the description gives values, duration and easing, implementation (`css-transition` / `animejs` / `io-hook` …), mobile behaviour and reduced motion; for layout it gives sizes and what changes.
@@ -150,8 +153,8 @@ Use this whenever the user asks for options, alternatives, proposals, motion ide
 1. Plan data first: tree, props, anims; a local `<P>-M-NN` recipe for new motion. Then `gen_plan.py` and `lint_plan.py` → `LINT OK`.
 2. Canvas: build the option inside the real Section/Sub. Put anim ids in `metadata` at creation, or in `context`. Add a `— <state>` frame if the layout changes.
 3. Motion frames: `Move` the option's `motion-frame`s from the temp frame into a new `P/Motion/<recipe> <Section>` root, which carries motion metadata and is placed in the Motion band. Update their notes to the real values. Add a legend note to `P/DS/Motion`.
-4. Delete the transferred option's label and row from the temp frame. Leave the other options.
+4. Delete the transferred option's label and row from the topic frame and leave the other options. When the topic frame has no option left, delete it.
 5. Run the unit checks (`--js section:<Key>`), then a full `--js all` when bands moved. Then append to the build-log and verify-report, and update `globals.md` / `components.md`.
 
-**6. Delete the temp frame only when the user says so.** Before `handoff`, ask whether the remaining options should go. Phase 5 does not start while a temp frame still holds undecided options, unless the user lists them as open questions.
+**6. Delete temp frames only when the user says so.** Before `handoff`, ask once whether the remaining options should go; on yes, delete the whole `Öneriler (geçici)` container. Phase 5 does not start while the container still holds undecided options, unless the user lists them as open questions.
 

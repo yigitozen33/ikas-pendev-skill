@@ -41,7 +41,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import lint_plan as L  # noqa: E402
 
-CHK_IDS = ("vars", "ds", "sections", "overlays", "pages", "spacing", "subfit", "anim", "hardcoded", "textclass", "clip",
+CHK_IDS = ("vars", "ds", "sections", "overlays", "pages", "spacing", "subfit", "temp", "anim", "hardcoded", "textclass", "clip",
            "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers", "radius")
 
 

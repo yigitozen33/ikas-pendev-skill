@@ -11,6 +11,8 @@
 // Output: CHK|<id>|PASS|FAIL|WARN|<n>|<detail<=200>  ...  SUMMARY|pass=..|fail=..|warn=..|mode=..
 // CHK ids: vars ds sections overlays pages spacing anim hardcoded textclass clip rootmeta bgprop
 //          parity props data placeholder refassets storefront dividers radius
+// temp (07 §7): every "(geçici)" top-level frame other than the one "Öneriler (geçici)" container fails; the
+// container must sit below every <P>/ root (WARN). Runs in full mode only.
 // subfit (02 §1): a non-text child with a fixed width of half the Sub or more, directly inside a layout:none frame
 // of a Sub root (PriceRange rail, progress bar), warns: the Sub must size from its instance.
 // spacing (02 §3b): on every Page, in order (Header skipped): the first section's top padding is $space-page
@@ -119,7 +121,7 @@ if (MODE === "manifest") {
   };
   const U = roots.filter(inUnit);
   if (unit && !isBand && (EXP.sections || []).indexOf(unit) < 0 && (EXP.overlays || []).indexOf(unit) < 0) chk("sections", "FAIL", 0, "unknown unit key " + unit + " (not a plan Section/Overlay)");
-  const run = id => { if (EXP.only && EXP.only.indexOf(id) < 0) return false; if (!unit) return true; if (unit === "DS") return ["vars", "ds", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Page") return ["pages", "spacing", "rootmeta", "placeholder"].indexOf(id) >= 0; if (unit === "Motion") return ["hardcoded", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Sub") return ["subfit", "anim", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; if (unit === "Overlays") return ["overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "parity", "props", "data", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; return ["sections", "overlays", "spacing", "subfit", "anim", "hardcoded", "textclass", "clip", "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers", "radius"].indexOf(id) >= 0; };
+  const run = id => { if (EXP.only && EXP.only.indexOf(id) < 0) return false; if (!unit) return true; if (unit === "DS") return ["vars", "ds", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Page") return ["pages", "spacing", "rootmeta", "placeholder"].indexOf(id) >= 0; if (unit === "Motion") return ["hardcoded", "clip", "rootmeta", "placeholder", "refassets"].indexOf(id) >= 0; if (unit === "Sub") return ["subfit", "anim", "hardcoded", "textclass", "clip", "rootmeta", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; if (unit === "Overlays") return ["overlays", "anim", "hardcoded", "textclass", "clip", "rootmeta", "parity", "props", "data", "placeholder", "refassets", "storefront", "radius"].indexOf(id) >= 0; return ["sections", "overlays", "spacing", "subfit", "temp", "anim", "hardcoded", "textclass", "clip", "rootmeta", "bgprop", "parity", "props", "data", "placeholder", "refassets", "storefront", "dividers", "radius"].indexOf(id) >= 0; };
   const find = nm => roots.find(r => r.name === nm);
   const findPre = pre => roots.filter(r => r.name === pre || r.name.indexOf(pre + " ") === 0);
 
@@ -220,6 +222,15 @@ if (MODE === "manifest") {
     const badSeams = new Set(bad.map(b => b.replace(/-[a-z-]+=.*$/, ""))).size;
     chk("spacing", bad.length ? (CONTRACT < 2 ? "WARN" : "FAIL") : (warnL.length ? "WARN" : "PASS"), seams - badSeams,
       (seams - badSeams) + "/" + seams + " page seams" + (bad.length ? " bad:" + bad.join(",") : "") + (warnL.length ? " check:" + warnL.join(",") : ""));
+  }
+  if (run("temp")) {
+    const BOX = "\u00d6neriler (ge\u00e7ici)", tmp = /\(ge\u00e7ici\)\s*$/;
+    const tb = Get((n, c) => { c.skipChildren(); return { name: n.name || "", y: c.bounds.y || 0, h: c.bounds.height || 0 }; });
+    const loose = tb.filter(r => tmp.test(r.name) && r.name !== BOX).map(r => r.name);
+    const boxes = tb.filter(r => r.name === BOX), low = Math.max.apply(null, [0].concat(tb.filter(r => r.name.indexOf(P + "/") === 0).map(r => r.y + r.h)));
+    const above = boxes.filter(b => b.y < low).length;
+    if (boxes.length > 1) loose.push(boxes.length + "\u00d7 " + BOX);
+    chk("temp", loose.length ? "FAIL" : (above ? "WARN" : "PASS"), loose.length, loose.length ? "temp frames outside the options box (07 \u00a77): " + loose.join(",") : (above ? "options box overlaps the design rows; move it below every root" : (boxes.length ? "one options box below the design" : "no temp frames")));
   }
   if (run("subfit")) {
     const hits = [];

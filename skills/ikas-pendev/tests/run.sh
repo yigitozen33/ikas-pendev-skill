@@ -100,6 +100,16 @@ if command -v node >/dev/null; then
   node "$HERE/tools/mock_pen.js" "$OUT/checks-spacing.js" "$OUT/overlap-bad.json" > "$OUT/overlap-bad.txt" 2>&1
   node "$HERE/tools/mock_pen.js" "$OUT/checks-spacing.js" "$OUT/overlap-ok.json" > "$OUT/overlap-ok.txt" 2>&1
   grep -q '^CHK|spacing|FAIL|.*Shelf-overlap=prev ref needs clip:false' "$OUT/overlap-bad.txt" && grep -q '^CHK|spacing|PASS|4|' "$OUT/overlap-ok.txt" && ok "spacing: a riding section needs the ref above shortened with clip off (02 §3c)" || bad "spacing: a riding section needs the ref above shortened with clip off (02 §3c)" "$(cat "$OUT/overlap-bad.txt" "$OUT/overlap-ok.txt")"
+  python3 "$S/extract_targets.py" "$OUT/plan-mini.md" --js all --checks temp > "$OUT/checks-temp.js"
+  python3 -c 'import json,sys
+d = json.load(open(sys.argv[1]))
+box = {"id": "box", "name": "Öneriler (geçici)", "type": "frame", "layout": "horizontal", "x": 0, "y": 9000, "width": 2000, "height": 900,
+       "children": [{"id": "t1", "name": "Sepet önerileri (geçici)", "type": "frame", "x": 0, "y": 0, "width": 900, "height": 900}]}
+d["children"].append(box); json.dump(d, open(sys.argv[2], "w"))
+d["children"].append({"id": "t2", "name": "PDP önerileri (geçici)", "type": "frame", "x": 51030, "y": -20000, "width": 900, "height": 900}); json.dump(d, open(sys.argv[3], "w"))' "$FX/spacing-canvas.json" "$OUT/temp-ok.json" "$OUT/temp-bad.json"
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-temp.js" "$OUT/temp-ok.json" > "$OUT/temp-ok.txt" 2>&1
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-temp.js" "$OUT/temp-bad.json" > "$OUT/temp-bad.txt" 2>&1
+  grep -q '^CHK|temp|PASS|0|one options box below the design' "$OUT/temp-ok.txt" && grep -q '^CHK|temp|FAIL|1|.*PDP önerileri (geçici)$' "$OUT/temp-bad.txt" && ok "temp: topic frames live in the one options box below the design (07 §7)" || bad "temp: topic frames live in the one options box below the design (07 §7)" "$(cat "$OUT/temp-ok.txt" "$OUT/temp-bad.txt")"
   python3 "$S/extract_targets.py" "$OUT/plan-mini.md" --js all --checks subfit > "$OUT/checks-subfit.js"
   python3 -c 'import json,sys
 def rng(w, fixed):
