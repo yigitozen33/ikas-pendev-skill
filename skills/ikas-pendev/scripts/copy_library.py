@@ -14,6 +14,9 @@ What is copied:
     copied under the theme's section key;
   * the optional overlays named with --with (Toast, ConfirmModal …) when plandata does not
     already list them.
+Layout: one row per library layer, top to bottom. In a row each root is followed by its states
+on the same y, then the next device, then the next component. Slots are sized for the grown
+root (device width, floor heights in MIN_H), so nothing overlaps after the build fills them in.
 What changes on the way:
   * root names take the theme prefix (P/Sub/Button → K/Sub/Button); sections and overlays
     get one root per device (@desktop / @mobile); every extra state is a frame named
@@ -53,7 +56,10 @@ LIB = os.path.join(os.path.dirname(HERE), "library", "ikas-ecommerce.lib.pen")
 INV = os.path.join(os.path.dirname(HERE), "library", "inventory.json")
 TAG = "ikas-lib"
 DEVICES = ("desktop", "mobile")
-GAP = 120
+GAP = 200        # between frames (02 §1)
+BAND_GAP = 800   # between bands (02 §1)
+WIDTH_FALLBACK = 360
+MIN_H = {"sub": 480, "block": 960, "section": 1600, "overlay": 960}  # floor heights of a grown root
 
 
 def die(msg, code=1):
@@ -150,6 +156,18 @@ class Copier:
         return n
 
 
+def footprint(kind, dev, root, sizes):
+    """(horizontal pitch, band height) a root reserves. The build grows every skeleton to its real
+    size, so the slot is sized for the grown root, not the skeleton: sections and overlays get the
+    device width, and every kind a floor height. States sit to the right of their root on the same
+    row, so a root that grows down never covers its own states (sevgi QuickBuy)."""
+    w = root["width"] if isinstance(root.get("width"), (int, float)) else WIDTH_FALLBACK
+    if dev and kind in ("section", "overlay"):
+        w = max(w, sizes[dev]["width"])
+    est_h = 48 + 44 * sum(1 for p in root["children"] if p.get("enabled", True))
+    return w + GAP, max(est_h, MIN_H[kind])
+
+
 def state_wrapper(cp, root, kind, target, suffix, dev, state, x, y):
     """A state root: a plain frame that carries {type, role, state} and holds the state ref.
     A bare ref cannot keep metadata (05 §3, §25), so CHK rootmeta and the manifest need the frame."""
@@ -241,7 +259,7 @@ def main():
     last_layer = None
     for c, target in pick:
         if c["layer"] != last_layer and last_layer is not None:
-            x, y_band, band_h = 0, y_band + band_h + GAP * 2, 0
+            x, y_band, band_h = 0, y_band + band_h + BAND_GAP, 0
         last_layer = c["layer"]
         lib_root = roots[c["name"]]
         devs = DEVICES if c["kind"] in ("section", "overlay") else (None,)
@@ -262,19 +280,16 @@ def main():
                 root["theme"] = {"device": dev}
                 if c["kind"] == "section":
                     root["width"] = sizes[dev]["width"]
-            est_h = 48 + 44 * sum(1 for p in root["children"] if p.get("enabled", True))
-            y = y_band
-            root.update({"x": x, "y": y})
+            pitch, est_h = footprint(c["kind"], dev, root, sizes)
+            root.update({"x": x, "y": y_band})
             out_nodes.append(root)
-            y += est_h + GAP // 2
+            x += pitch
             if c["kind"] != "block":
                 for ref in states.get(c["name"], []):
                     st = ref["name"].split(" — ", 1)[1]
-                    out_nodes.append(state_wrapper(cp, root, c["kind"], target, suffix, dev, st, x, y))
-                    y += est_h + GAP // 2
-            band_h = max(band_h, y - y_band)
-            w = root["width"] if isinstance(root.get("width"), (int, float)) else 360
-            x += w + GAP
+                    out_nodes.append(state_wrapper(cp, root, c["kind"], target, suffix, dev, st, x, y_band))
+                    x += pitch
+            band_h = max(band_h, est_h)
 
     var, themes = theme_variables(pd)
     missing = sorted(tokens_used(out_nodes) - set(var))
@@ -304,7 +319,7 @@ def main():
         top = max((n.get("y", 0) + (n.get("height") if isinstance(n.get("height"), (int, float)) else 0)
                    for n in doc.get("children", [])), default=0)
         for n in out_nodes:
-            n["y"] += top + GAP * 4 if doc.get("children") else 0
+            n["y"] += top + BAND_GAP if doc.get("children") else 0
     doc.setdefault("variables", {}).update(var)
     doc_themes = doc.setdefault("themes", {})
     for axis, values in themes.items():

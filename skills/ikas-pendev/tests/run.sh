@@ -275,6 +275,19 @@ if pc.get("type") != "kaya" or pc.get("variant") != "K" or pc.get("contract") !=
 errs += [f"device root lacks theme.device {n['name']}" for n in roots.values()
          if "@" in n["name"] and " — " not in n["name"] and n.get("theme", {}).get("device") != n["name"].split("@")[1]]
 if "prop" in pc: errs.append("a Sub root got the section backgroundColor prop")
+byid = {n["id"]: n for n in t["children"]}
+def box(n):
+    tgt = byid.get(n["children"][0]["ref"]) if n["type"] == "frame" and n.get("metadata", {}).get("state") else n
+    w = tgt["width"] if isinstance(tgt.get("width"), (int, float)) else 360
+    return (n["x"], n["y"], n["x"] + w, n["y"] + 400)
+bx = [(n["name"], box(n)) for n in t["children"]]
+for i, (a, A) in enumerate(bx):
+    for b, B in bx[i + 1:]:
+        if A[0] < B[2] and B[0] < A[2] and A[1] < B[3] and B[1] < A[3]: errs.append(f"overlap {a} / {b}")
+for n in t["children"]:
+    if n.get("metadata", {}).get("state"):
+        r = byid[n["children"][0]["ref"]]
+        if n["y"] != r["y"] or n["x"] <= r["x"]: errs.append(f"state not right of its root {n['name']}")
 if "ikas-lib" in json.dumps(t): errs.append("library tag left in theme")
 if t.get("themes", {}).get("mode") != ["light", "dark"] or t["variables"]["color-bg"]["value"][0]["value"] != "#E9E7E2": errs.append("plandata tokens not written")
 if "#F4F4F4" in json.dumps(t["variables"]): errs.append("library placeholder value survived")
