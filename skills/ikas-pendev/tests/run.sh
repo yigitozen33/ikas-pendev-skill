@@ -96,6 +96,10 @@ if command -v node >/dev/null; then
   python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); r={n["id"]:n for n in d["children"]}; r["s1"]["padding"]=[0,16,0,16]; r["s4"]["children"][0]["gap"]=40; r["s3"]["children"][0]["gap"]=24; d["children"]=[n for n in d["children"] if n["id"]!="p2"]; json.dump(d,open(sys.argv[2],"w"))' "$FX/spacing-canvas.json" "$OUT/spacing-warn.json"
   node "$HERE/tools/mock_pen.js" "$OUT/checks-spacing.js" "$OUT/spacing-warn.json" > "$OUT/spacing-warn.txt" 2>&1
   grep -q '^CHK|spacing|WARN|4|4/4 page seams check:Section/Header@desktop:side=16,Section/Shelf@desktop>shelf-grid:grid-gap=24,Section/ProductDetail@desktop>pdp-main:split-gap=40$' "$OUT/spacing-warn.txt" && ok "spacing: an off-token page edge, grid gap or column split warns (02 §3b)" || bad "spacing: an off-token page edge, grid gap or column split warns (02 §3b)" "$(grep spacing "$OUT/spacing-warn.txt")"
+  python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); r={n["id"]:n for n in d["children"]}; r["s3"]["context"]="overlap $size-overlap"; r["s3"]["padding"][0]="$space-md"; d["children"]=[n for n in d["children"] if n["id"]!="p2"]; json.dump(d,open(sys.argv[2],"w")); r["p1"]["children"][1].update({"clip": False, "height": 552}); json.dump(d,open(sys.argv[3],"w"))' "$FX/spacing-canvas.json" "$OUT/overlap-bad.json" "$OUT/overlap-ok.json"
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-spacing.js" "$OUT/overlap-bad.json" > "$OUT/overlap-bad.txt" 2>&1
+  node "$HERE/tools/mock_pen.js" "$OUT/checks-spacing.js" "$OUT/overlap-ok.json" > "$OUT/overlap-ok.txt" 2>&1
+  grep -q '^CHK|spacing|FAIL|.*Shelf-overlap=prev ref needs clip:false' "$OUT/overlap-bad.txt" && grep -q '^CHK|spacing|PASS|4|' "$OUT/overlap-ok.txt" && ok "spacing: a riding section needs the ref above shortened with clip off (02 §3c)" || bad "spacing: a riding section needs the ref above shortened with clip off (02 §3c)" "$(cat "$OUT/overlap-bad.txt" "$OUT/overlap-ok.txt")"
   python3 "$S/extract_targets.py" "$OUT/plan-mini.md" --js all --checks subfit > "$OUT/checks-subfit.js"
   python3 -c 'import json,sys
 def rng(w, fixed):

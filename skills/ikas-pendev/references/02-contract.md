@@ -8,7 +8,7 @@ The fixed agreement between the plan, the pen.dev canvas and the ikas port. Scri
 
 1. Canvas bands and layout
 2. Naming ↔ code
-3. Core variables (41) · 3b. Spacing rule
+3. Core variables (41) · 3b. Spacing rule · 3c. Section overlap
 4. Type-style mapping
 5. Metadata schema
 6. Tree notation
@@ -154,6 +154,17 @@ Every gap between bands, sections and columns comes from this table, never from 
 - A section that needs a different top gap (a tighter strip under the Hero, a tile row riding up over it) uses another `space-*` token or the overlap convention (§3c), and the plan's `**Desktop:**` / `**Mobil:**` line says why. A raw number is never right.
 - On pages a section instance may override its top padding (first section on one page, second on another); the master keeps `space-section`.
 - CHK `spacing` reads every Page in order (first section top, section → section, bottom 0, Footer top) and the column-split and grid gaps of Section components. Confirm the seams on a full-resolution export of each page (05 §23a).
+
+## 3c. Section overlap
+
+A section that rides up over the one above it (category tiles over the Hero's bottom edge, a card row over a photo band) follows one convention, so the canvas shows it and the port can build it:
+
+- **Prop:** the riding section has a BOOLEAN prop `overlapTop` (plan props line; default as designed). Off, it behaves like any section (§3b).
+- **Amount:** one number variable, `size-overlap` (theme extra after the 41, device axis, listed in plan §3). The riding section's root `context` carries `overlap $size-overlap` (metadata cannot be added later, 05 §1).
+- **Section frame:** drawn on its own, with its normal top padding. The section above keeps its content out of its bottom `size-overlap` (no dots, tabs or text there).
+- **Pages:** the canvas has no negative margin. Shorten the **previous** section's ref on the page by `size-overlap` (`height` = its master height − the value) and set that ref's `clip: false`, so it runs under the riding section, which is drawn after it. Never move the riding section with `y`.
+- **Port:** `margin-top: calc(-1 * var(--size-overlap))` and a higher `z-index` on the riding section while `overlapTop` is on; the section above adds nothing.
+- CHK `spacing` reads the mark: on a page, the ref before a riding section must have `clip: false` and a fixed height, or it FAILs; the riding section's top may be any `space-*` token.
 
 ## 4. Type-style mapping
 

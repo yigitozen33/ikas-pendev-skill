@@ -16,6 +16,8 @@
 // spacing (02 §3b): on every Page, in order (Header skipped): the first section's top padding is $space-page
 // (0 = WARN, transparent header), each next one's is a $space-* token ($space-section, else WARN), every
 // section's bottom padding is 0, the Footer's top is $space-section (instance padding overrides count).
+// A section whose root context has "overlap $<var>" rides over the one above (02 §3c): the page ref before it
+// must have clip:false and a numeric (shortened) height, else FAIL; its own top may be any $space-* token.
 // Section components: side padding $space-page or 0 (WARN); a horizontal row of refs to one component is a grid
 // with gap $space-grid, a wide row with two or more wide columns is a split with gap $space-page (WARN).
 // storefront (06 §3d): P/Sub/ProductCard has card-media, card-fav, card-swatches, card-cart, card-customize and the
@@ -174,23 +176,26 @@ if (MODE === "manifest") {
     const pad4 = p => { if (p === undefined || p === null) return [0, 0, 0, 0]; if (!Array.isArray(p)) return [p, p, p, p]; if (p.length === 2) return [p[0], p[1], p[0], p[1]]; if (p.length === 4) return p; return [0, 0, 0, 0]; };
     const zero = v => v === 0 || v === "0" || v === undefined;
     const tok = v => typeof v === "string" && /^\$space-/.test(v);
-    const master = {}, padOf = id => { if (!(id in master)) { const n = Get(id, { depth: 0 }); master[id] = n ? n.padding : undefined; } return master[id]; };
+    const master = {}, info = id => { if (!(id in master)) { const n = Get(id, { depth: 0 }) || {}; master[id] = { padding: n.padding, overlap: /(^|\u00b7)\s*overlap\s+\$[a-z-]+/.test(n.context || "") }; } return master[id]; };
+    const padOf = id => info(id).padding;
     const bad = [], soft = []; let seams = 0;
     U.filter(r => band(r) === "Page").forEach(r => {
       const node = Get(r.id, { depth: 1 }), kids = (node && Array.isArray(node.children)) ? node.children : [];
       const secs = kids.map(k => ({ k, t: k && k.ref ? byId[k.ref] : null })).filter(x => x.t && rest(x.t).indexOf("Section/") === 0);
       const pg = rest(r).slice(5);
       let first = true;
-      secs.forEach(({ k, t }) => {
+      secs.forEach(({ k, t }, i) => {
         const key = keyOf(t);
         if (key === "Header") return;
+        const ride = info(t.id).overlap, prev = i > 0 ? secs[i - 1].k : null;
+        if (ride && prev && !(prev.clip === false && typeof prev.height === "number")) bad.push(pg + ":" + key + "-overlap=prev ref needs clip:false + shortened height");
         const p = pad4(k.padding !== undefined ? k.padding : padOf(t.id)), top = p[0];
         seams++;
         if (key === "Footer") { if (top !== "$space-section") bad.push(pg + ":Footer-top=" + top); return; }
         if (!zero(p[2])) bad.push(pg + ":" + key + "-bottom=" + p[2]);
         if (first) { first = false; if (top !== "$space-page") (zero(top) ? soft : bad).push(pg + ":" + key + "-first-top=" + top); return; }
         if (!tok(top)) bad.push(pg + ":" + key + "-top=" + top);
-        else if (top !== "$space-section") soft.push(pg + ":" + key + "-top=" + top);
+        else if (top !== "$space-section" && !ride) soft.push(pg + ":" + key + "-top=" + top);
       });
     });
     const split = [], edge = [];

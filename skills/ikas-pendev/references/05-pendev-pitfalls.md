@@ -3,7 +3,7 @@
 This file only adds what the official pen.dev skill does not say, or says in a place that is easy to miss. It never restates the API: read the official files first (`mcp__pencil__read_skill()` → `SKILL.md`, `pen-schema.md`, `execute.md`; `generate.md` before any `Generate`; `guide/components.md` before building Subs). "Official" lines point to the file and section to open. Items marked *observed* were found on real canvases and are not in the official docs.
 
 ## Contents
-1. Metadata is only kept at creation · 2. `Replace` on a normal layer · 3. Instances drop metadata · 4. Invalid fonts · 5. Translucent colours · 6. `Generate` is async · 7. No wrap · 8. Invisible text · 9. One scope per call · 10. Placement · 11. Failed `execute` · 12. Multiplayer · 13. `fit_content` / `fill_container` loop · 14. Screenshot discipline · 15. Variable opacity and size · 16. Hidden layers count as clipped · 17. Copied state frames lose frame props · 18. Transparent and dark-scoped overrides · 19. Opacity-0 empty states · 20. `Insert` has no index · 21. Copied anim ids, backdrop instances · 22. Strikethrough not stored · 23. Moving layers in a master drops overrides (23a. size changes not reaching instances) · 24. Stale bounds, false clip · 25. State alternatives need wrapper frames · 26. `letterSpacing` is px · 27. False sizing warnings inside instances · 28. Copies into `layout: "none"` stages
+1. Metadata is only kept at creation · 2. `Replace` on a normal layer · 3. Instances drop metadata · 4. Invalid fonts · 5. Translucent colours · 6. `Generate` is async · 7. No wrap · 8. Invisible text · 9. One scope per call · 10. Placement · 11. Failed `execute` · 12. Multiplayer · 13. `fit_content` / `fill_container` loop · 14. Screenshot discipline · 15. Variable opacity and size · 15a. No negative margin · 16. Hidden layers count as clipped · 17. Copied state frames lose frame props · 18. Transparent and dark-scoped overrides · 19. Opacity-0 empty states · 20. `Insert` has no index · 21. Copied anim ids, backdrop instances · 22. Strikethrough not stored · 23. Moving layers in a master drops overrides (23a. size changes not reaching instances) · 24. Stale bounds, false clip · 25. State alternatives need wrapper frames · 26. `letterSpacing` is px · 27. False sizing warnings inside instances · 28. Copies into `layout: "none"` stages
 
 ## 1. Metadata is only kept at creation *(observed)*
 - **Symptom:** `Update(id, {metadata:{…}})` returns without error, but a later `Get` shows the old or no metadata; CHK `rootmeta`, `anim` or `textclass` fails on a layer you "fixed".
@@ -96,6 +96,10 @@ This file only adds what the official pen.dev skill does not say, or says in a p
 - **Cause:** pen.dev accepts a number variable on `opacity` but renders the node as fully transparent.
 - **Fix:** write the variable's number (e.g. `0.4`) and append `opacity: $opacity-inactive` to the node's `context`; `02-contract.md` §3 allows this raw value. Find old cases with `Get(n => n.opacity === "$opacity-inactive" …)`, including `descendants` overrides on refs.
 - **Same for sizes:** `height: "$size-hero"` on a frame does not resolve; the frame collapses to fit its content. Write the number (`height: 640`) and append `height: $size-hero` to `context`. Size variables stay in the DS for the port.
+
+## 15a. No negative margin on pages *(observed)*
+- **Symptom:** a section meant to ride over the one above (tiles over the Hero) sits below it on the page, or moving it with `y` breaks the page's vertical layout.
+- **Fix:** follow `02-contract.md` §3c: shorten the previous section's ref by `size-overlap` and set its `clip: false`.
 
 ## 16. Hidden layers and hidden refs count as clipped *(observed)*
 - **Symptom:** CHK `clip` warns on many children of blocks that are `enabled:false` (state-only blocks such as a bundle list or a back-in-stock form).
