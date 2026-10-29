@@ -187,16 +187,20 @@ def fill_slots(cp, root, comp, roots, sub_ids, scope):
                                  "name": p["sub"][0].lower() + p["sub"][1:], "width": "fill_container"}]
 
 
-def apply_spacing(root, name, roles):
-    """Library section padding → the theme's spacing roles (02 §3b): sides pageEdge, a `$space-page` top
-    (Hero families) headerGap, a `$space-section` top sectionGap (Footer: footerGap), Footer bottom pageEdge."""
+def apply_spacing(root, name, roles, edges=None, key=None, dev=None):
+    """Library section padding → the theme's spacing roles (02 §3b): sides pageEdge (or the theme's
+    `edges` entry for this section, e.g. a floating band), a `$space-page` top (Hero families) headerGap,
+    a `$space-section` top sectionGap (Footer: footerGap), Footer bottom pageEdge."""
     pad = root.get("padding")
     if not (isinstance(pad, list) and len(pad) == 4):
         return
     v = lambda r: "$" + roles[r]
+    edges, key = edges or {}, key or name
+    e = edges.get("%s@%s" % (key, dev), edges.get(key)) if dev else edges.get(key)
+    side = v("pageEdge") if e is None else (0 if e == "0" else "$" + e)
     top = {"$space-page": v("headerGap"), "$space-section": v("footerGap") if name == "Footer" else v("sectionGap")}.get(pad[0], pad[0])
     bottom = v("pageEdge") if pad[2] == "$space-page" else pad[2]
-    root["padding"] = [top, v("pageEdge"), bottom, v("pageEdge")]
+    root["padding"] = [top, side, bottom, side]
 
 
 def footprint(kind, dev, root, sizes):
@@ -324,7 +328,7 @@ def main():
                 meta["libComponent"] = c["name"]
             if c["kind"] == "section":
                 meta.update({"prop": "backgroundColor", "propType": "COLOR"})
-                apply_spacing(root, c["name"], roles)
+                apply_spacing(root, c["name"], roles, (pd.get("spacing") or {}).get("edges"), target, dev)
             if dev:
                 meta["device"] = dev
                 root["theme"] = {"device": dev}

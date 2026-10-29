@@ -172,7 +172,7 @@ Notlar:
 | Çizgi kalınlığı | … | `size-line` | … |
 | İçerik genişliği | … | — | … |
 
-Boşluk sistemi (`02-contract.md` §3b; plandata `spacing`, sayfada CHK `spacing`). Roller sabit; her rolün token'ı ve değeri referanstan ölçülür. Temaya özgü token gerekiyorsa (ör. yüzen bantlar için `space-band`) değişkenlere eklenir.
+Boşluk sistemi (`02-contract.md` §3b; plandata `spacing`, sayfada CHK `spacing`). Roller sabit; her rolün token'ı ve değeri referanstan ölçülür. Temaya özgü token gerekiyorsa (ör. yüzen bantlar için `space-band`) değişkenlere eklenir. Roldan farklı duran bölümler (yüzen bantlar, hero'nun devamı olan liste, şeffaf header altındaki hero) tablonun altında "Bölüm istisnaları" olarak yazılır; plandata'da `spacing.edges` / `spacing.seams` olur.
 
 | Rol | Ne | Token | Masaüstü / mobil | Referans |
 |---|---|---|---|---|

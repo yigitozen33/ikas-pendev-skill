@@ -61,7 +61,7 @@ After the copy the theme owns everything. Library fixes do not flow into existin
 - Components are grey anatomy frames: neutral fill, one placeholder font, no shadow, no radius.
 - Every size, gap, padding, radius, colour and font is a token reference. A literal value in a library component is a lint error.
 - Layout is the minimum that keeps the parts visible (a vertical stack in anatomy order). It is not a layout proposal, and the build must not keep it unless the theme's own choice (§6) is the same.
-- Section roots carry the spacing roles as padding (`02-contract.md` §3b), with the default tokens in the library: sides `pageEdge`; Header top 0; Hero families top `headerGap`; every other section top `sectionGap` and bottom 0; Footer top `footerGap`. `copy_library.py` swaps in the tokens the theme's plandata `spacing` names.
+- Section roots carry the spacing roles as padding (`02-contract.md` §3b), with the default tokens in the library: sides `pageEdge`; Header top 0; Hero families top `headerGap`; every other section top `sectionGap` and bottom 0; Footer top `footerGap`. `copy_library.py` swaps in the tokens the theme's plandata `spacing` names, and a section listed in `spacing.edges` gets its own side token.
 - Each component carries its parts list and states as named child frames, so the build can check completeness by name.
 - No library component has a "default variant" of a structural axis. Every default pulls themes toward the median.
 

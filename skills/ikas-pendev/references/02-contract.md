@@ -141,7 +141,7 @@ Rules:
 
 Every theme has its own spacing structure: a floating-band theme keeps its bands 20 / 8 from the edge and its content 80 / 16, a full-bleed theme has one edge. What is fixed is that the structure is **declared once and followed everywhere**, never guessed per section.
 
-**Roles (fixed).** Each theme answers the same six questions in plandata `theme.json` → `spacing` (role → number variable). A role it leaves out uses the default.
+**Roles (fixed).** Each theme answers the same six questions in plandata `theme.json` → `spacing` (role → number variable). A role it leaves out uses the default for new plans and copied skeletons, but CHK `spacing` does not check it: the defaults are a starting point, not a standard the design is measured against.
 
 | Role | Gap | Carried by | Default |
 |---|---|---|---|
@@ -152,16 +152,25 @@ Every theme has its own spacing structure: a floating-band theme keeps its bands
 | `split` | column split: gallery ↔ buy box, filters ↔ grid, lines ↔ summary, account nav ↔ panel, form ↔ channels | the gap of the row that holds the columns | `space-page` |
 | `grid` | card grid and rail | the gap of the grid row | `space-grid` |
 
+**Edges and seams (per section, the theme's).** A design is rarely one inset and one gap everywhere. Floating bands (a Header capsule, a 404 band, mobile cards that run almost edge to edge) sit closer to the edge than plain sections; a list that continues the hero above it starts closer than an unrelated section; a Hero under a transparent Header starts at 0. Declare these in the same object, never bend the design to the role:
+
+| Key | Form | Value | Example |
+|---|---|---|---|
+| `edges` | `Section` or `Section@desktop` / `Section@mobile` | the section's left/right padding token, or `"0"` (full-bleed) | `"Header": "space-band"`, `"FeaturedProduct@mobile": "space-band"` |
+| `seams` | `Prev>Section`, `*>Section` (after anything), optional `@device`; the first section follows `Header` | the section's top padding token there, or `"0"` | `"Header>Hero@desktop": "0"`, `"CollectionHero>ProductList": "space-head"`, `"*>EmailVerification": "space-intro"` |
+
+A seam or edge is a design decision: write it from the reference and the canvas, with a reason in the section's `**Desktop:**` / `**Mobil:**` line. When CHK `spacing` warns, compare the two versions on the canvas before changing anything; never move a section to a role's token only to silence the check.
+
 **Tokens and values (the theme's).** A role may point at a core variable or at a theme extra declared after the 41 (e.g. `space-band`). The analyze phase records the system in `globals.md` §3 from the reference; the plan renders it in §3b. Values differ per device through the variable's device axis; never type a mobile number.
 
 **Invariants (every theme):**
 - Every gap is a variable; a raw number in a page seam is an error.
-- One role, one token, everywhere: the mobile Header capsule sits at the same `pageEdge` as every other band.
+- One role, one token, everywhere, except the sections the theme lists in `edges` / `seams`: a theme with floating bands names them there, it does not change `pageEdge` for every section.
 - No section touches the Header or the Footer by accident; 0 only under a transparent Header or with the overlap convention (§3c).
 - Gaps are carried on one side (top), so two sections never add their paddings.
-- A section that needs a different top gap (a tighter strip under the Hero) uses another variable, and the plan's `**Desktop:**` / `**Mobil:**` line says why. On pages a section instance may override its top (first on one page, second on another); the master keeps `sectionGap`.
+- A section that needs a different top gap (a tighter strip under the Hero, a list under a collection hero) uses another variable and a `seams` entry, and the plan's `**Desktop:**` / `**Mobil:**` line says why. On pages a section instance may override its top (first on one page, second on another); the master keeps `sectionGap`.
 
-CHK `spacing` reads the plan §3b block: every Page in order (first section top, section → section, bottom 0, Footer top) and the side insets, column splits and grid gaps of Section components. `copy_library.py` writes the roles into the copied section skeletons. Confirm the seams on a full-resolution export of each page (05 §23a).
+CHK `spacing` reads the plan §3b block: every Page in order (first section top, section → section, bottom 0, Footer top) and the side insets, column splits and grid gaps of Section components. It compares only what the theme declares (roles it names, `edges`, `seams`); undeclared roles are listed once as a WARN, and raw numbers, double gaps (a bottom padding) and a section touching the Header or Footer by accident fail either way. `copy_library.py` writes the roles into the copied section skeletons. Confirm the seams on a full-resolution export of each page (05 §23a).
 
 ## 3c. Section overlap
 

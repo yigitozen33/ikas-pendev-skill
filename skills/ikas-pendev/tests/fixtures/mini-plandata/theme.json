@@ -78,6 +78,7 @@
    "size-logo": [28, 22]
   }
  },
+ "spacing": {"pageEdge": "space-page", "headerGap": "space-page", "sectionGap": "space-section", "footerGap": "space-section", "split": "space-page", "grid": "space-grid"},
  "typeStyles": {
   "map": [
    {"styles": ["text-display", "text-h2", "text-h3", "text-h4"], "spec": "`$font-display`, satır yüksekliği 1.0"},
