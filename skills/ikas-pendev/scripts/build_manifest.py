@@ -683,6 +683,8 @@ class Builder:
                     anims.append(i)
                 elif i not in plan_ids:
                     owner = next((t['section'] for t in self.targets if t['id'] == i), '?')
+                    if any(i in r['anims'] for r in self.roots or [] if r['key'] == owner):
+                        continue  # a context copy of the owner (e.g. the Header drawn above a MegaMenu state)
                     self.q('anim-extra-on-canvas', '%s.%s' % (where, i),
                            "Hedef planda %s bölümüne ait, canvas'ta bu frame'de duruyor" % owner)
             for i in plan_ids:
