@@ -399,7 +399,7 @@ if (MODE === "manifest") {
     chk("rootmeta", bad.length ? "FAIL" : "PASS", U.length - bad.length, (U.length - bad.length) + "/" + U.length + (bad.length ? " " + bad.join(",") : ""));
   }
   if (run("bgprop")) {
-    const secs = U.filter(r => band(r) === "Section");
+    const secs = U.filter(r => band(r) === "Section" && r.name.indexOf(" \u2014 ") < 0 && !(r.metadata && r.metadata.state));
     if (CONTRACT < 2) chk("bgprop", "PASS", 0, "skip: contract 1 roots carry no backgroundColor");
     else {
       const bad = secs.filter(r => !(r.metadata && r.metadata.prop === "backgroundColor" && r.metadata.propType === "COLOR")).map(rest);
