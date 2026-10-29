@@ -247,8 +247,8 @@ if (MODE === "manifest") {
         const refs = vis.filter(x => x.type === "ref"), same2 = refs.length === vis.length && refs.every(x => x.ref === refs[0].ref);
         const wide = vis.filter(x => typeof x.width === "number" ? x.width >= W * 0.15 : x.width === "fill_container").length;
         const lab = rest(r) + ">" + (n.name || n.id), g = n.gap;
-        if (same2 && wide >= 2) { if (!tok(g)) soft.push(lab + ":grid-gap=" + g); else grids.push({ dv, top: g, lab: lab + ":grid-gap=" + g }); }
-        else if (wide >= 2 && (c.bounds.width || 0) >= W * 0.6) { if (!tok(g)) soft.push(lab + ":split-gap=" + g); else splits.push({ dv, top: g, lab: lab + ":split-gap=" + g }); }
+        if (same2 && wide >= 2) { if (zero(g)) { } else if (!tok(g)) soft.push(lab + ":grid-gap=" + g); else grids.push({ dv, top: g, lab: lab + ":grid-gap=" + g }); }
+        else if (wide >= 2 && (c.bounds.width || 0) >= W * 0.6) { if (zero(g)) { } else if (!tok(g)) soft.push(lab + ":split-gap=" + g); else splits.push({ dv, top: g, lab: lab + ":split-gap=" + g }); }
         return undefined;
       });
     });
