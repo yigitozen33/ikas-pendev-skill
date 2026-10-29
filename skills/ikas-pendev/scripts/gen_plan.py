@@ -656,7 +656,8 @@ class Plan:
             import spacing as SP
             out.append('### 3b. Boşluk sistemi\n')
             out.append('Roller sabit, her rolün token\'ı ve değeri bu temanın (`02-contract.md` §3b). Bölüm, sayfa ve sütun '
-                       'aralıkları yalnız bu tablodan gelir; CHK `spacing` canvas\'ı bu blokla karşılaştırır.\n')
+                       'aralıkları yalnız bu tablodan gelir; port her aralığın CSS değişkenini buradan okur. Kenar ve dikiş tabloları bilinçli '
+                       'istisnaları belgeler; CHK `spacing` canvas\'ı bu tabloyla değil kendi içindeki tutarlılıkla denetler.\n')
             out.append(SP.markdown(d['spacing']))
             out.append(SP.block(d['spacing']))
         out.append(fill('04-adlandirma.md', c))

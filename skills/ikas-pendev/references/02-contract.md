@@ -141,7 +141,7 @@ Rules:
 
 Every theme has its own spacing structure: a floating-band theme keeps its bands 20 / 8 from the edge and its content 80 / 16, a full-bleed theme has one edge. What is fixed is that the structure is **declared once and followed everywhere**, never guessed per section.
 
-**Roles (fixed).** Each theme answers the same six questions in plandata `theme.json` → `spacing` (role → number variable). A role it leaves out uses the default for new plans and copied skeletons, but CHK `spacing` does not check it: the defaults are a starting point, not a standard the design is measured against.
+**Roles (fixed).** Each theme answers the same six questions in plandata `theme.json` → `spacing` (role → number variable). A role it leaves out uses the default for new plans and copied skeletons. Roles are the port's map (which CSS spacing variable each gap uses), not targets: CHK `spacing` never compares the canvas with them.
 
 | Role | Gap | Carried by | Default |
 |---|---|---|---|
@@ -159,7 +159,7 @@ Every theme has its own spacing structure: a floating-band theme keeps its bands
 | `edges` | `Section` or `Section@desktop` / `Section@mobile` | the section's left/right padding token, or `"0"` (full-bleed) | `"Header": "space-band"`, `"FeaturedProduct@mobile": "space-band"` |
 | `seams` | `Prev>Section`, `*>Section` (after anything), optional `@device`; the first section follows `Header` | the section's top padding token there, or `"0"` | `"Header>Hero@desktop": "0"`, `"CollectionHero>ProductList": "space-head"`, `"*>EmailVerification": "space-intro"` |
 
-A seam or edge is a design decision: write it from the reference and the canvas, with a reason in the section's `**Desktop:**` / `**Mobil:**` line. When CHK `spacing` warns, compare the two versions on the canvas before changing anything; never move a section to a role's token only to silence the check.
+A seam or edge is a design decision: write it from the reference and the canvas, with a reason in the section's `**Desktop:**` / `**Mobil:**` line. It documents an intended outlier for the port and keeps CHK `spacing` quiet about it; it is not a value the check enforces. When CHK `spacing` warns, compare the two versions on the canvas before changing anything; never change a gap only to silence the check.
 
 **Tokens and values (the theme's).** A role may point at a core variable or at a theme extra declared after the 41 (e.g. `space-band`). The analyze phase records the system in `globals.md` §3 from the reference; the plan renders it in §3b. Values differ per device through the variable's device axis; never type a mobile number.
 
@@ -170,7 +170,9 @@ A seam or edge is a design decision: write it from the reference and the canvas,
 - Gaps are carried on one side (top), so two sections never add their paddings.
 - A section that needs a different top gap (a tighter strip under the Hero, a list under a collection hero) uses another variable and a `seams` entry, and the plan's `**Desktop:**` / `**Mobil:**` line says why. On pages a section instance may override its top (first on one page, second on another); the master keeps `sectionGap`.
 
-CHK `spacing` reads the plan §3b block: every Page in order (first section top, section → section, bottom 0, Footer top) and the side insets, column splits and grid gaps of Section components. It compares only what the theme declares (roles it names, `edges`, `seams`); undeclared roles are listed once as a WARN, and raw numbers, double gaps (a bottom padding) and a section touching the Header or Footer by accident fail either way. `copy_library.py` writes the roles into the copied section skeletons. Confirm the seams on a full-resolution export of each page (05 §23a).
+CHK `spacing` reads the plan §3b block: every Page in order (first section top, section → section, bottom 0, Footer top) and the side insets, column splits and grid gaps of Section components. It reads the theme's system from the canvas itself, the way design linters do (scale conformance, outliers), instead of measuring it against declared values:
+- **FAIL (invariants):** a raw number instead of a variable (page seam or side inset), a section bottom padding (double gap), a later section or the Footer with a 0 top (touching by accident), a riding section without the §3c page setup.
+- **WARN (outliers):** per device, a seam top, side inset, grid gap or column split whose token is used once while one token covers at least half of at least 6 cases; left and right insets that differ (one side 0 is a rail bleeding off the edge, fine); a first section with a 0 top (fine under a transparent Header); raw grid or split gaps. An outlier listed in `seams` / `edges` with the same token is intended and not reported. `copy_library.py` writes the roles into the copied section skeletons. Confirm the seams on a full-resolution export of each page (05 §23a).
 
 ## 3c. Section overlap
 

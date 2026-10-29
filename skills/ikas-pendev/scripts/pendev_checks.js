@@ -188,15 +188,26 @@ if (MODE === "manifest") {
     const pad4 = p => { if (p === undefined || p === null) return [0, 0, 0, 0]; if (!Array.isArray(p)) return [p, p, p, p]; if (p.length === 2) return [p[0], p[1], p[0], p[1]]; if (p.length === 4) return p; return [0, 0, 0, 0]; };
     const zero = v => v === 0 || v === "0" || v === undefined;
     const tok = v => typeof v === "string" && /^\$[a-z]/.test(v);
-    const SP = EXP.spacing || { none: true }, R = Object.assign({ pageEdge: "$space-page", headerGap: "$space-page", sectionGap: "$space-section", footerGap: "$space-section", split: "$space-page", grid: "$space-grid" }, SP.roles || {});
-    const D = new Set(SP.declared || []), EDG = SP.edges || {}, SEM = SP.seams || {};
+    const SP = EXP.spacing || {}, EDG = SP.edges || {}, SEM = SP.seams || {};
     const pick = (m, k, d) => (k + "@" + d) in m ? m[k + "@" + d] : (k in m ? m[k] : undefined);
     const same = (a, b) => (zero(a) && zero(b)) || a === b;
-    const master = {}, info = id => { if (!(id in master)) { const n = Get(id, { depth: 0 }) || {}; master[id] = { padding: n.padding, overlap: /(^|\u00b7)\s*overlap\s+\$[a-z-]+/.test(n.context || "") }; } return master[id]; };
+    const master = {}, info = id => { if (!(id in master)) { const n = Get(id, { depth: 0 }) || {}; master[id] = { padding: n.padding, overlap: /(^|·)\s*overlap\s+\$[a-z-]+/.test(n.context || "") }; } return master[id]; };
     const padOf = id => info(id).padding;
-    const bad = [], soft = []; let seams = 0;
+    // The theme's own system is read from the canvas, not from declared targets (02 §3b): a token used once
+    // where one token dominates is an outlier; `edges` / `seams` in the plan document intended outliers.
+    const rare = (items, val, keyOf2, note) => {
+      const by = {}; items.forEach(it => { const d = it.dv; (by[d] = by[d] || []).push(it); });
+      Object.keys(by).forEach(d => {
+        const L = by[d], cnt = {}; L.forEach(it => { cnt[val(it)] = (cnt[val(it)] || 0) + 1; });
+        const top = Object.keys(cnt).sort((x, y) => cnt[y] - cnt[x])[0];
+        if (L.length < 6 || cnt[top] / L.length < 0.5) return;
+        L.forEach(it => { if (cnt[val(it)] === 1 && val(it) !== top && !it.doc) soft.push(keyOf2(it) + " (" + note + " " + top + ")"); });
+      });
+    };
+    const bad = [], soft = [], mid = []; let seams = 0;
     U.filter(r => band(r) === "Page").forEach(r => {
-      const node = Get(r.id, { depth: 1 }), kids = (node && Array.isArray(node.children)) ? node.children : [];
+      const kids = [];
+      Get(r.id, (n, c) => { if (c.depth === 1) { kids.push(n); c.skipChildren(); } return undefined; });
       const secs = kids.map(k => ({ k, t: k && k.ref ? byId[k.ref] : null })).filter(x => x.t && rest(x.t).indexOf("Section/") === 0);
       const pg = rest(r).slice(5), dv = devOf(r.name);
       let first = true;
@@ -206,47 +217,46 @@ if (MODE === "manifest") {
         const ride = info(t.id).overlap, prev = i > 0 ? secs[i - 1].k : null, prevKey = i > 0 ? keyOf(secs[i - 1].t) : "";
         if (ride && prev && !(prev.clip === false && typeof prev.height === "number")) bad.push(pg + ":" + key + "-overlap=prev ref needs clip:false + shortened height");
         const p = pad4(k.padding !== undefined ? k.padding : padOf(t.id)), top = p[0];
-        let want = pick(SEM, prevKey + ">" + key, dv);
-        if (want === undefined) want = pick(SEM, "*>" + key, dv);
-        const raw = !zero(top) && !tok(top);
+        let doc = pick(SEM, prevKey + ">" + key, dv);
+        if (doc === undefined) doc = pick(SEM, "*>" + key, dv);
+        const raw = !zero(top) && !tok(top), lab = pg + ":" + key + (first ? "-first-top=" : "-top=") + top;
         seams++;
-        if (key === "Footer") {
-          if (want !== undefined) { if (!same(top, want)) soft.push(pg + ":Footer-top=" + top + "(plan " + want + ")"); }
-          else if (zero(top) || raw || (D.has("footerGap") && top !== R.footerGap)) bad.push(pg + ":Footer-top=" + top);
-          return;
-        }
+        if (key === "Footer") { if (zero(top) || raw) bad.push(pg + ":Footer-top=" + top); return; }
         if (!zero(p[2])) bad.push(pg + ":" + key + "-bottom=" + p[2]);
-        if (raw) bad.push(pg + ":" + key + (first ? "-first-top=" : "-top=") + top);
-        else if (want !== undefined) { if (!same(top, want)) soft.push(pg + ":" + key + (first ? "-first-top=" : "-top=") + top + "(plan " + want + ")"); }
-        else if (first) { if (D.has("headerGap") && !same(top, R.headerGap)) soft.push(pg + ":" + key + "-first-top=" + top); }
-        else if (zero(top)) bad.push(pg + ":" + key + "-top=0");
-        else if (D.has("sectionGap") && top !== R.sectionGap && !ride) soft.push(pg + ":" + key + "-top=" + top);
+        if (raw) bad.push(lab);
+        else if (first) { if (zero(top) && !(doc !== undefined && same(top, doc))) soft.push(lab + " (touches the Header; fine under a transparent Header, note it in plan spacing.seams)"); }
+        else if (zero(top) && !ride) bad.push(lab);
+        else if (!ride) mid.push({ dv, top, lab, doc: doc !== undefined && same(top, doc) });
         first = false;
       });
     });
-    const split = [], edge = [];
-    U.filter(r => band(r) === "Section" && r.name.indexOf(" \u2014 ") < 0).forEach(r => {
-      const rn = Get(r.id, { depth: 0 }) || {}, rp = pad4(rn.padding), ew = pick(EDG, keyOf(r), devOf(r.name)), want = ew !== undefined ? ew : (D.has("pageEdge") ? R.pageEdge : null);
-      const side = [rp[1], rp[3]].filter(v => !zero(v) && (want === null ? !tok(v) : !same(v, want)));
-      if (side.length) edge.push(rest(r) + ":side=" + side[0] + (ew !== undefined ? "(plan " + ew + ")" : ""));
+    rare(mid, it => it.top, it => it.lab, "rare seam; most seams use");
+    const sides = [], grids = [], splits = [];
+    U.filter(r => band(r) === "Section" && r.name.indexOf(" — ") < 0).forEach(r => {
+      const rn = Get(r.id, { depth: 0 }) || {}, rp = pad4(rn.padding), dv = devOf(r.name), doc = pick(EDG, keyOf(r), dv);
+      const rawS = [rp[1], rp[3]].filter(v => !zero(v) && !tok(v));
+      if (rawS.length) bad.push(rest(r) + ":side=" + rawS[0]);
+      else if (!zero(rp[1]) && !zero(rp[3]) && rp[1] !== rp[3]) soft.push(rest(r) + ":side=" + rp[3] + "/" + rp[1] + " (left and right differ)");
+      else if (!zero(rp[1]) && rp[1] === rp[3]) sides.push({ dv, top: rp[1], lab: rest(r) + ":side=" + rp[1], doc: doc !== undefined && same(rp[1], doc) });
       let W = 0;
       Get(r.id, (n, c) => {
         if (n.id === r.id) { W = c.bounds.width || 0; return undefined; }
-        if (n.layout !== "horizontal" || n.enabled === false || !W) return undefined;
-        const kids = Get(n.id, { depth: 1 }).children || [], vis = kids.filter(x => x.enabled !== false);
+        if (n.type !== "frame" || (n.layout || "horizontal") !== "horizontal" || n.enabled === false || !W) return undefined;
+        const kids = Get(n.id, { depth: 1 }).children || [], vis = kids.filter(x => x.enabled !== false && x.layoutPosition !== "absolute");
         if (vis.length < 2) return undefined;
         const refs = vis.filter(x => x.type === "ref"), same2 = refs.length === vis.length && refs.every(x => x.ref === refs[0].ref);
         const wide = vis.filter(x => typeof x.width === "number" ? x.width >= W * 0.15 : x.width === "fill_container").length;
-        if (same2 && vis.length >= 2) { if (D.has("grid") && n.gap !== R.grid) split.push(rest(r) + ">" + (n.name || n.id) + ":grid-gap=" + n.gap); }
-        else if (wide >= 2 && (c.bounds.width || 0) >= W * 0.6 && D.has("split") && n.gap !== R.split) split.push(rest(r) + ">" + (n.name || n.id) + ":split-gap=" + n.gap);
+        const lab = rest(r) + ">" + (n.name || n.id), g = n.gap;
+        if (same2 && wide >= 2) { if (!tok(g)) soft.push(lab + ":grid-gap=" + g); else grids.push({ dv, top: g, lab: lab + ":grid-gap=" + g }); }
+        else if (wide >= 2 && (c.bounds.width || 0) >= W * 0.6) { if (!tok(g)) soft.push(lab + ":split-gap=" + g); else splits.push({ dv, top: g, lab: lab + ":split-gap=" + g }); }
         return undefined;
       });
     });
-    const und = ["pageEdge", "headerGap", "sectionGap", "footerGap", "split", "grid"].filter(x => !D.has(x));
-    if (SP.none) soft.unshift("no spacing system in the plan (02 \u00a73b: plandata spacing); only seams and raw values checked");
-    else if (und.length) soft.unshift("roles not declared, not checked: " + und.join("/"));
-    const warnL = soft.concat(edge, split);
-    const badSeams = new Set(bad.map(b => b.replace(/-[a-z-]+=.*$/, ""))).size;
+    rare(sides, it => it.top, it => it.lab, "rare side inset; most sections use");
+    rare(grids, it => it.top, it => it.lab, "rare grid gap; most grids use");
+    rare(splits, it => it.top, it => it.lab, "rare column split; most splits use");
+    const warnL = soft;
+    const badSeams = new Set(bad.filter(b => b.indexOf("Section/") !== 0).map(b => b.replace(/-[a-z-]+=.*$/, ""))).size;
     chk("spacing", bad.length ? (CONTRACT < 2 ? "WARN" : "FAIL") : (warnL.length ? "WARN" : "PASS"), seams - badSeams,
       (seams - badSeams) + "/" + seams + " page seams" + (bad.length ? " bad:" + bad.join(",") : "") + (warnL.length ? " check:" + warnL.join(",") : ""));
   }

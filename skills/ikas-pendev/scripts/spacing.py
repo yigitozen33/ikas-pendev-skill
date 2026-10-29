@@ -14,9 +14,10 @@ say so, so the design is declared rather than forced onto a default:
   seams  "Prev>Section", "*>Section", optionally "@device" → token for Section's top padding when it
          follows Prev on a page ("Header>Hero" is the first section; "0" under a transparent Header)
 
-CHK `spacing` compares only what the theme declares: roles it names, edges and seams. A role it leaves
-out is reported once as undeclared, never checked against the default (the default only seeds new
-plans and copied skeletons).
+CHK `spacing` does not compare the canvas with any of this. It reads the system from the canvas
+(raw numbers and double gaps fail; a token used once where one token dominates warns) and treats an
+entry in edges / seams as a documented, intended outlier. The roles are the port's map: which CSS
+spacing variable each gap uses.
 
 gen_plan.py validates and renders the system in plan §3b with a machine-readable block; CHK `spacing`
 checks the canvas against it; copy_library.py writes it into the copied section skeletons.
@@ -97,7 +98,7 @@ def markdown(spacing):
     dec = declared(spacing)
     rows = ["| Rol | Token | Nerede |", "|---|---|---|"]
     for r, tok in resolve(spacing).items():
-        rows.append("| `%s` | %s | %s |" % (r, "`$%s`" % tok if r in dec else "tanımlanmadı (varsayılan `$%s`, kontrol edilmez)" % tok,
+        rows.append("| `%s` | %s | %s |" % (r, "`$%s`" % tok if r in dec else "tanımlanmadı (varsayılan `$%s`)" % tok,
                                              ROLES[r][1]))
     out = "\n".join(rows) + "\n"
     for m, head, what in (("edges", "Bölüm", "yan iç boşluk"), ("seams", "Dikiş", "üst iç boşluk")):
