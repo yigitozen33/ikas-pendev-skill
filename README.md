@@ -103,11 +103,13 @@ skills/ikas-pendev/
 │                       yapı kütüphanesi ve farklılaşma (12-library)
 ├── templates/          brief, globals, components, verify-report, port-manifest şablonları; plan prose parçaları; plandata şeması
 ├── library/            yapı kütüphanesi: inventory.json (parçalar, durumlar), axes.json (15 eksen), ikas-ecommerce.lib.pen (üretilir)
-├── scripts/            gen_plan · lint_plan · extract_targets · pendev_checks.js · analyze_site · build_manifest · huemint ·
+├── scripts/            gen_plan · lint_plan · extract_targets · pendev_checks.js · analyze_site · browse_site (+ browse_probe.js) ·
+│                       build_manifest · huemint ·
 │                       gen_library · copy_library · axes
 ├── examples/ornek/     anonim örnek tema, contract 1 (brief, plandata, globals, components, verify-report)
 ├── evals/evals.json    tetikleme senaryoları
-└── tests/run.sh        regresyon: gen_plan byte-exact, lint, extract, analyze_site fixture, renk şemaları, Huemint (çevrimdışı)
+└── tests/run.sh        regresyon: gen_plan byte-exact, lint, extract, analyze_site fixture, browse_site fixture (agent-browser varsa),
+                        renk şemaları, Huemint (çevrimdışı)
 ```
 
 ## Testler

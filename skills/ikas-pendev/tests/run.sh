@@ -205,6 +205,30 @@ else
   echo "SKIP  analyze_site fixture (site-snapshot.html not in git; run tests/tools/fetch_fixture.sh to enable)"
 fi
 
+# 6b. browse_site on a local fixture page (needs agent-browser + Chromium; skipped otherwise)
+if command -v agent-browser >/dev/null 2>&1; then
+  BR="$OUT/browse"; rm -rf "$BR"
+  python3 -I "$S/browse_site.py" "file://$FX/browse/index.html" --widths 1440,390 --shots 390 --session ikas-pendev-test --out-dir "$BR" --out "$BR/report.md" > "$BR.log" 2>&1 \
+    && ok "browse_site fixture runs" || bad "browse_site fixture runs" "$(tail -3 "$BR.log")"
+  R="$BR/report.md"
+  for want in '| `color-bg` | `#EFEBE2` |' '| `color-text` | `#1C1C1C` |' '| `color-muted` | `#7A7A7A` |' '| `color-inverse-bg` | `#1C1C1C` |' \
+              '| `color-line` | `#D6D0C4` |' '| `color-accent` | `#E4572E` |'; do
+    grep -qF "$want" "$R" && ok "browse role ${want%% |*}" || bad "browse role: $want" "$(grep -F "$(echo "$want" | cut -d'|' -f2)" "$R" | head -1)"
+  done
+  grep -qF '| Georgia | 72px | 40px | 700 | 1.05 |' "$R" && ok "browse pairs the h1 across widths (72 → 40)" || bad "browse pairs the h1 across widths (72 → 40)"
+  grep -qF '4×322px ara 24' "$R" && grep -qF '2×173px ara 12' "$R" && ok "browse finds the product grid at both widths" || bad "browse finds the product grid at both widths"
+  grep -qF 'div(consent' "$R" && ok "browse hides the cookie banner" || bad "browse hides the cookie banner"
+  grep -qF '`color 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)`' "$R" && grep -qF '`mq · 20000ms · linear · ∞ · span`' "$R" && grep -qF '`header a:hover`' "$R" \
+    && ok "browse reads transitions, running animations and :hover rules" || bad "browse reads transitions, running animations and :hover rules"
+  [ -s "$BR/shots/01-index-390.png" ] && [ ! -e "$BR/shots/01-index-1440.png" ] && ok "browse screenshots only the --shots widths" || bad "browse screenshots only the --shots widths"
+  grep -q 'Örnek başlık' "$R" && bad "browse report leaks reference copy" || ok "browse report keeps reference copy out"
+  grep -qF '| 1 (www.googletagmanager.com) |' "$R" && ok "browse blocks the tracking script" || bad "browse blocks the tracking script" "$(grep -F '/index.html |' "$R" | head -1)"
+  python3 -I "$S/browse_site.py" --from-json "$BR/browse.json" --out "$BR/again.md" 2>/dev/null && diff -q "$R" "$BR/again.md" >/dev/null \
+    && ok "browse --from-json re-renders the same report" || bad "browse --from-json re-renders the same report"
+else
+  echo "SKIP  browse_site fixture (agent-browser not installed: npm i -g agent-browser && agent-browser install)"
+fi
+
 # 7. build_manifest on the synthetic ornek canvas dump
 python3 "$S/build_manifest.py" --plandata "$EX/plandata.json" --plan "$OUT/plan-C.md" --dump "$FX/ornek-canvas-dump.txt" -o "$OUT/port" > "$OUT/manifest.log" 2>&1 && ok "build_manifest ornek exit 0" || bad "build_manifest ornek exit 0" "$(tail -3 "$OUT/manifest.log")"
 tail -1 "$OUT/manifest.log" | diff -q - "$EXP/manifest-ornek.txt" >/dev/null && ok "build_manifest summary snapshot" || bad "build_manifest summary snapshot" "$(tail -1 "$OUT/manifest.log")"

@@ -16,7 +16,9 @@
       "prompt": "https://example-store.framer.website/ sitesini analiz et, globals çıkar",
       "expect_trigger": true,
       "expected": [
-        "Runs scripts/analyze_site.py -I on the URL",
+        "Runs scripts/analyze_site.py -I on the URL (source pass)",
+        "Runs scripts/browse_site.py -I on the same pages (rendered pass with agent-browser) and reads the screenshots it writes",
+        "Merges the two reports per 01 §3 (rendered wins on conflict) instead of mapping CSS declaration frequency to colour roles",
         "Writes docs/referans/globals.md with [ölçüldü]/[tahmini] tags and pen.dev + ikas columns",
         "Runs lint_plan.py --globals before reporting done"
       ]

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fixture</title>
+<style>
+:root{--bg:#EFEBE2;--ink:#1C1C1C;--muted:#7A7A7A;--accent:#E4572E;--page:40px}
+html{background:var(--bg)}
+body{margin:0;font-family:Georgia,serif;color:var(--ink)}
+header{position:sticky;top:0;z-index:50;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--page);background:var(--bg);border-bottom:1px solid #D6D0C4}
+header nav{display:flex;gap:24px}
+header a{color:var(--ink);text-decoration:none;font:500 14px/1.4 Arial,sans-serif;text-transform:uppercase;letter-spacing:.06em;transition:color .2s cubic-bezier(.2,.8,.2,1)}
+header a:hover{color:var(--accent)}
+.hero{height:640px;background:#1C1C1C;color:#F5F2EA;padding:120px var(--page);box-sizing:border-box}
+.hero h1{font:700 72px/1.05 Georgia,serif;margin:0 0 24px;max-width:900px}
+.btn{display:inline-block;height:48px;line-height:48px;padding:0 28px;background:var(--accent);color:#fff;border-radius:999px;font:600 15px Arial,sans-serif;text-decoration:none;transition:transform .3s ease-out}
+.btn:hover{transform:translateY(-2px)}
+.grid{padding:96px var(--page);display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.card{background:#fff;border-radius:12px;padding:16px}
+.card img{display:block;width:100%;aspect-ratio:3/4;border-radius:8px;background:#ccc}
+.card h3{font:500 16px/1.4 Arial,sans-serif;margin:12px 0 4px}
+.card p{font:400 14px/1.5 Arial,sans-serif;color:var(--muted);margin:0}
+.marquee{overflow:hidden;white-space:nowrap;padding:24px 0;background:var(--accent);color:#fff;font:700 32px Arial,sans-serif}
+.marquee span{display:inline-block;animation:mq 20s linear infinite}
+@keyframes mq{to{transform:translateX(-50%)}}
+footer{padding:80px var(--page);background:#2A2A2A;color:#BDBDBD;font:400 14px/1.6 Arial,sans-serif}
+.cookie-banner{position:fixed;bottom:0;left:0;right:0;height:120px;background:#000;color:#fff}
+@media (max-width:767px){:root{--page:16px}.hero{height:520px;padding:80px var(--page)}.hero h1{font-size:40px}.grid{grid-template-columns:repeat(2,1fr);gap:12px;padding:48px var(--page)}}
+</style></head><body>
+<header><b>LOGO</b><nav><a href="#">Kadın</a><a href="#">Erkek</a><a href="#">Yeni</a></nav></header>
+<main>
+<section class="hero" data-section="hero"><h1>Örnek başlık metni burada durur</h1><a class="btn" href="#">Alışverişe başla</a></section>
+<section class="grid" data-section="products">
+<div class="card"><img alt=""><h3>Ürün adı bir</h3><p>Açıklama satırı ve fiyat bilgisi</p></div>
+<div class="card"><img alt=""><h3>Ürün adı iki</h3><p>Açıklama satırı ve fiyat bilgisi</p></div>
+<div class="card"><img alt=""><h3>Ürün adı üç</h3><p>Açıklama satırı ve fiyat bilgisi</p></div>
+<div class="card"><img alt=""><h3>Ürün adı dört</h3><p>Açıklama satırı ve fiyat bilgisi</p></div>
+</section>
+<section class="marquee" data-section="marquee"><span>KAYAN YAZI · KAYAN YAZI · KAYAN YAZI · KAYAN YAZI · KAYAN YAZI ·</span></section>
+</main>
+<footer><p>Alt bilgi metni, iletişim ve yasal bağlantılar burada yer alır.</p></footer>
+<div class="cookie-banner" id="cookie-consent"><button>Kabul et</button></div>
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-TEST"></script>
+</body></html>
